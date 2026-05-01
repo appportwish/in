@@ -9,33 +9,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = { 
-            theme: { extend: { colors: { cream: { 50: '#FCFAF8', 100: '#F7F4ED', 200: '#EBE5D9' }, black: '#2E2E2E' } } } 
-        }
+        tailwind.config = { theme: { extend: { colors: { cream: { 50: '#FCFAF8', 100: '#F7F4ED', 200: '#EBE5D9' }, black: '#2E2E2E' } } } }
     </script>
     <style>
-        :root { --primary: #2E2E2E; --bg: #FCFAF8; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--primary); }
-        .hide-scroll::-webkit-scrollbar { display: none; }
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content.active { display: block; }
+        :root { --primary: #2E2E2E; --bg: #FCFAF8; } body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--primary); }
+        .hide-scroll::-webkit-scrollbar { display: none; } .tab-content { display: none; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .input-box { width: 100%; border: 2px solid #e7e5e4; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; outline: none; background: #fff; }
-        .input-box:focus { border-color: var(--primary); }
-        .input-float { position: relative; margin-top: 8px; }
-        .input-float input, .input-float select { border: none; border-bottom: 2px solid #e7e5e4; border-radius: 0; padding: 20px 0 8px 0; background: transparent; transition: all 0.3s ease; outline: none; width: 100%; font-weight: 600; color: var(--primary); }
-        .input-float input:focus, .input-float select:focus { border-bottom-color: var(--primary); }
-        .input-float label { position: absolute; top: 16px; left: 0; color: #a8a29e; font-size: 14px; transition: all 0.3s ease; pointer-events: none; }
-        .input-float input:focus ~ label, .input-float input:not(:placeholder-shown) ~ label, .input-float select:focus ~ label, .input-float select:not([value=""]) ~ label { top: 0px; font-size: 10px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-        .loader { border: 3px solid #e7e5e4; border-top: 3px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; }
-        .loader-white { border-top-color: #fff; border-color: rgba(255,255,255,0.3); }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .input-box { width: 100%; border: 2px solid #e7e5e4; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; outline: none; background: #fff; } .input-box:focus { border-color: var(--primary); }
+        .input-float { position: relative; margin-top: 8px; } .input-float input, .input-float select { border: none; border-bottom: 2px solid #e7e5e4; border-radius: 0; padding: 20px 0 8px 0; background: transparent; transition: all 0.3s ease; outline: none; width: 100%; font-weight: 600; color: var(--primary); } .input-float input:focus, .input-float select:focus { border-bottom-color: var(--primary); } .input-float label { position: absolute; top: 16px; left: 0; color: #a8a29e; font-size: 14px; transition: all 0.3s ease; pointer-events: none; } .input-float input:focus ~ label, .input-float input:not(:placeholder-shown) ~ label, .input-float select:focus ~ label, .input-float select:not([value=""]) ~ label { top: 0px; font-size: 10px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .loader { border: 3px solid #e7e5e4; border-top: 3px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; } .loader-white { border-top-color: #fff; border-color: rgba(255,255,255,0.3); } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @media print { body * { visibility: hidden; } #invoiceModal, #invoiceModal * { visibility: visible; } #invoiceModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white; padding: 20px; } .no-print { display: none !important; } }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden selection:bg-black selection:text-white">
 
-    <!-- LOGIN GATE -->
     <div id="adminLoginGate" class="fixed inset-0 z-[999] bg-cream-50 flex items-center justify-center px-4 transition-opacity duration-500">
         <div class="bg-white w-full max-w-sm rounded-[32px] p-8 shadow-2xl border border-stone-200 text-center relative overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-stone-100 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl"></div>
@@ -53,7 +40,6 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="adminToast" class="fixed top-10 left-1/2 transform -translate-x-1/2 z-[1000] transition-all duration-500 translate-y-[-150%] opacity-0 pointer-events-none w-max max-w-[90vw]">
         <div class="bg-black/95 backdrop-blur-md text-white text-[11px] font-bold px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 border border-stone-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
@@ -61,7 +47,6 @@
         </div>
     </div>
 
-    <!-- SIDEBAR -->
     <aside class="w-64 bg-white border-r border-stone-200 flex flex-col justify-between hidden md:flex z-20">
         <div>
             <div class="h-20 flex items-center px-8 border-b border-stone-100">
@@ -80,7 +65,6 @@
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-1 overflow-y-auto bg-cream-50 relative">
         <header class="h-20 bg-white/90 backdrop-blur-md border-b border-stone-200 sticky top-0 z-10 flex items-center justify-between px-8 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
             <h2 class="text-xl font-extrabold tracking-tight" id="headerTitle">Dashboard Analytics</h2>
@@ -95,6 +79,7 @@
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Paket Dalam Perjalanan</p><h3 class="text-3xl font-extrabold" id="statOrders">0</h3></div></div>
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Verifikasi/Resi</p><h3 class="text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
                 </div>
+                
                 <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                         <div><h3 class="font-extrabold text-lg">Kurva Penjualan 2026</h3><p class="text-xs text-stone-500 font-medium">Statistik pendapatan per bulan</p></div>
@@ -102,16 +87,22 @@
                     </div>
                     <div class="w-full h-72"><canvas id="salesChart"></canvas></div>
                 </div>
+
                 <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
                     <div class="flex justify-between items-center mb-6">
                         <div><h3 class="font-extrabold text-lg">Transaksi Terkini</h3><p class="text-xs text-stone-500 font-medium">Pantau nama pemesan dan nomor resi terbaru</p></div>
                         <button onclick="switchTab('orders')" class="text-[10px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest transition-colors flex items-center">Lihat Semua <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                     </div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi Pengiriman</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead><tbody id="recentOrdersBody" class="text-sm"></tbody></table></div>
+                    <div class="overflow-x-auto hide-scroll">
+                        <table class="w-full text-left border-collapse whitespace-nowrap">
+                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi Pengiriman</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead>
+                            <tbody id="recentOrdersBody" class="text-sm"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- TAB 2: ORDERS -->
+            <!-- TAB 2: ORDERS & RESI -->
             <div id="ordersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 flex flex-col sm:flex-row justify-between items-center bg-cream-50/50 gap-4"><h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3><input type="text" placeholder="Cari ID / Nama..." class="input-box sm:w-64 py-2 text-sm font-semibold" oninput="filterOrders(this.value)"></div>
@@ -119,7 +110,7 @@
                 </div>
             </div>
 
-            <!-- TAB 3: TRACKING -->
+            <!-- TAB 3: TRACKING / LOGISTIK -->
             <div id="trackingTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 bg-blue-50/30"><h3 class="font-extrabold text-lg">Update Logistik Manual</h3><p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">IN TRANSIT</span>. Update status agar pembeli bisa melacak via web portwish.</p></div>
@@ -129,7 +120,13 @@
 
             <!-- TAB 4: CATALOG -->
             <div id="catalogTab" class="tab-content">
-                <div class="flex justify-between items-center mb-6"><h3 class="font-extrabold text-xl">Kelola Produk</h3><div class="flex space-x-3"><button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> Kelola Batch</button><button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Tambah Produk</button></div></div>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-xl">Kelola Produk</h3>
+                    <div class="flex space-x-3">
+                        <button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> Kelola Batch</button>
+                        <button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Tambah Produk</button>
+                    </div>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="adminCatalogGrid"></div>
             </div>
 
@@ -137,13 +134,13 @@
             <div id="usersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 bg-cream-50/50"><h3 class="font-extrabold text-lg">Database Akun Pelanggan</h3></div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
+                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold text-center">Aksi</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- INVOICE MODAL ADMIN -->
+    <!-- INVOICE MODAL -->
     <div id="invoiceModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print"><h3 class="font-extrabold text-lg text-black">Detail Invoice</h3><div class="flex space-x-2"><button onclick="printInvoice()" class="bg-black text-white text-[10px] font-extrabold px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-stone-800 transition">Print PDF</button><button onclick="closeInvoiceModal()" class="bg-white border border-stone-200 text-stone-600 px-3 py-2 rounded-lg hover:bg-stone-100"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div></div>
@@ -161,7 +158,7 @@
         <div class="bg-white rounded-[32px] p-6 max-w-sm w-full text-center relative border border-stone-100 shadow-2xl">
             <button onclick="closeProofModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black transition-colors border border-stone-200"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
             <h3 class="font-extrabold text-lg mb-4 text-black">Bukti Pembayaran</h3>
-            <div class="bg-cream-50 p-2 rounded-[24px] border border-stone-200 mb-4"><img id="proofImage" src="https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?auto=format&fit=crop&w=400&q=80" alt="Bukti Transfer" class="w-full rounded-[16px] object-cover max-h-[50vh]"></div>
+            <div class="bg-cream-50 p-2 rounded-[24px] border border-stone-200 mb-4"><img id="proofImage" src="https://placehold.co/400" alt="Bukti Transfer" class="w-full rounded-[16px] object-cover max-h-[50vh]"></div>
             <div class="flex space-x-3">
                 <a id="downloadProofBtn" href="#" download="Bukti_Transfer.jpg" class="w-1/3 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl shadow-sm hover:bg-stone-50 transition text-[11px] uppercase tracking-widest flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> UNDUH</a>
                 <button onclick="approveFromProof()" id="btnProofApprove" class="w-2/3 bg-black text-white font-extrabold py-3.5 rounded-2xl shadow-xl hover:bg-stone-800 transition text-[11px] uppercase tracking-widest">VERIFIKASI</button>
@@ -191,9 +188,7 @@
                 <div>
                     <label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-2 tracking-widest">Foto Produk</label>
                     <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-stone-200 border-dashed rounded-2xl cursor-pointer hover:bg-cream-50 transition-all bg-cream-50/50 overflow-hidden relative group" id="uploadArea">
-                        <div class="flex flex-col items-center justify-center text-stone-500 group-hover:scale-105 transition-transform" id="uploadPlaceholder">
-                            <div class="bg-white p-2 rounded-full shadow-sm mb-2 border border-stone-100"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg></div><p class="text-[10px] font-bold text-black">Klik untuk Upload Foto</p>
-                        </div>
+                        <div class="flex flex-col items-center justify-center text-stone-500 group-hover:scale-105 transition-transform" id="uploadPlaceholder"><div class="bg-white p-2 rounded-full shadow-sm mb-2 border border-stone-100"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg></div><p class="text-[10px] font-bold text-black">Klik untuk Upload Foto</p></div>
                         <img id="prodImgPreview" src="" class="hidden absolute inset-0 w-full h-full object-contain bg-white">
                         <input id="prodImgFile" type="file" class="hidden" accept="image/*" onchange="previewUploadedImage(event)" />
                     </label>
@@ -203,10 +198,7 @@
                     <div class="input-float"><input type="number" id="prodPrice" placeholder=" " required><label>Harga (Rp)</label></div>
                     <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black"><option value="Skincare">Skincare</option><option value="Fashion">Fashion</option><option value="Food">Food & Snacks</option></select></div>
                 </div>
-                <div class="relative mt-2">
-                    <label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label>
-                    <select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full"><option value="USA">USA</option><option value="JAPAN">Japan</option><option value="KOREA">Korea</option></select>
-                </div>
+                <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full"><option value="USA">USA</option><option value="JAPAN">Japan</option><option value="KOREA">Korea</option></select></div>
             </div>
             <div class="flex space-x-3 mt-8">
                 <button onclick="closeProductModal()" class="flex-1 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl transition hover:bg-stone-50 text-[11px] tracking-widest uppercase">BATAL</button>
@@ -215,6 +207,7 @@
         </div>
     </div>
 
+    <!-- MAIN SCRIPT (TERHUBUNG KE GOOGLE APPS SCRIPT) -->
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbztjaLEsdsASxFJwZ7hMEMwXIp9BRSWpA0sjQqPhBqLL1a_di7iCx5H5XlMghrlfYTr/exec';
         
@@ -258,7 +251,7 @@
                     items: JSON.parse(o.itemsInfo || "[]")
                 }));
                 
-                // Extract unique users
+                // Mencegah User tertimpa
                 let uMap = {};
                 ordersDB.forEach(o => { if(!uMap[o.user.email]) uMap[o.user.email] = o.user; });
                 usersDB = Object.values(uMap);
@@ -270,7 +263,7 @@
             })
             .catch(err => {
                 document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
-                alert("Gagal memuat data dari server Google Sheets.");
+                alert("Gagal memuat data dari server Google Sheets. Pastikan link Apps Script benar dan Data sudah kosong dari base64 lama.");
             });
         }
 
@@ -300,7 +293,7 @@
         }
 
         function renderDashboard() {
-            const totalRev = ordersDB.filter(o => o.status !== 'AWAITING VERIFICATION').reduce((sum, o) => sum + o.total, 0);
+            const totalRev = ordersDB.filter(o => o.status !== 'AWAITING VERIFICATION').reduce((sum, o) => sum + parseInt(o.total), 0);
             const shippingOrd = ordersDB.filter(o => o.status === 'IN TRANSIT').length;
             const pendingOrd = ordersDB.filter(o => o.status === 'AWAITING VERIFICATION' || o.status === 'PROCESS (INPUT RESI)').length;
 
@@ -317,14 +310,14 @@
                 latestOrders.forEach(o => {
                     let badgeClass = o.status === "IN TRANSIT" ? "bg-black text-white border-black" : (o.status === "PROCESS (INPUT RESI)" ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-orange-100 text-orange-700 border-orange-200");
                     let resiText = o.resi ? `<span class="font-extrabold text-black bg-cream-100 px-2 py-1 rounded-md border border-stone-200">${o.resi}</span>` : `<span class="text-stone-400 italic text-[10px]">Belum diinput</span>`;
-                    recentBody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 align-middle"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-400 font-bold">${o.id}</p></td><td class="p-4 align-middle"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block ${badgeClass}">${o.status}</span></td><td class="p-4 text-xs align-middle">${resiText}</td><td class="p-4 font-extrabold text-black text-right align-middle">${formatRp(o.total)}</td></tr>`;
+                    recentBody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 align-middle"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-400 font-bold">${o.id}</p></td><td class="p-4 align-middle"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block ${badgeClass}">${o.status}</span></td><td class="p-4 text-xs align-middle">${resiText}</td><td class="p-4 font-extrabold text-black text-right align-middle">${formatRp(parseInt(o.total))}</td></tr>`;
                 });
             }
             initChart();
         }
 
         function exportToExcel() {
-            const data = ordersDB.map(o => ({ "Tanggal Transaksi": o.date, "ID Pesanan": o.id, "Nama Pelanggan": o.user.name, "No. WhatsApp": o.user.phone, "Alamat Lengkap": o.address, "Batch": o.batch, "Status Pembayaran": o.status, "Nomor Resi": o.resi || 'Belum Ada', "Total Pendapatan (Rp)": o.total }));
+            const data = ordersDB.map(o => ({ "Tanggal Transaksi": o.date, "ID Pesanan": o.id, "Nama Pelanggan": o.user.name, "No. WhatsApp": o.user.phone, "Alamat Lengkap": o.address, "Batch": o.batch, "Status Pembayaran": o.status, "Nomor Resi": o.resi || 'Belum Ada', "Total Pendapatan (Rp)": parseInt(o.total) }));
             const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan"); XLSX.writeFile(wb, "Laporan_Keuangan_Portwish.xlsx"); showAdminToast("Laporan Keuangan Berhasil Diunduh!");
         }
 
@@ -341,34 +334,55 @@
                 } else { 
                     resiAction = `<span class="text-xs font-extrabold text-black block mt-1">Resi: ${o.resi}</span>`; 
                 }
-                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black align-top">${o.id}<br><span class="text-[9px] text-stone-400 font-bold">${o.date}</span></td><td class="p-4 align-top"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-500 font-bold">${o.user.phone}</p></td><td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch}</td><td class="p-4 font-extrabold text-black align-top">${formatRp(o.total)}</td><td class="p-4 align-top"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block mb-2 ${badgeClass}">${o.status}</span><div>${resiAction}</div></td><td class="p-4 text-center align-middle"><button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button></td></tr>`;
+                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black align-top">${o.id}<br><span class="text-[9px] text-stone-400 font-bold">${o.date}</span></td><td class="p-4 align-top"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-500 font-bold">${o.user.phone}</p></td><td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch}</td><td class="p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total))}</td><td class="p-4 align-top"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block mb-2 ${badgeClass}">${o.status}</span><div>${resiAction}</div></td><td class="p-4 text-center align-middle"><button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button></td></tr>`;
             });
         }
 
         function filterOrders(val) { renderOrders(val.toLowerCase()); }
 
+        // MENGHINDARI ERROR JARINGAN DENGAN MODE NO-CORS PADA SEMUA POST REQUEST DI ADMIN
         function approveOrder(index) { 
             const btn = document.getElementById(`btnAppv_${index}`);
             if(btn) { btn.innerHTML = "..."; btn.disabled = true; }
-            fetch(scriptURL, { method: 'POST', body: JSON.stringify({action: "updateOrder", orderId: ordersDB[index].id, status: "PROCESS (INPUT RESI)"}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-            .then(res => res.json()).then(data => {
+            
+            fetch(scriptURL, { 
+                method: 'POST', mode: 'no-cors', 
+                body: JSON.stringify({action: "updateOrder", orderId: ordersDB[index].id, status: "PROCESS (INPUT RESI)"}), 
+                headers: {'Content-Type': 'text/plain;charset=utf-8'} 
+            })
+            .then(() => {
                 ordersDB[index].status = "PROCESS (INPUT RESI)"; showAdminToast("Payment Approved!"); renderOrders(); 
-            });
+            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); if(btn){btn.innerHTML = "APPROVE"; btn.disabled = false;} });
         }
 
         function saveResi(index) { 
             const r = document.getElementById(`resiInput_${index}`).value; if(!r) return alert("Silakan input nomor resi!"); 
             const btn = document.getElementById(`btnResi_${index}`); btn.innerHTML = "..."; btn.disabled = true;
-            fetch(scriptURL, { method: 'POST', body: JSON.stringify({action: "updateOrder", orderId: ordersDB[index].id, status: "IN TRANSIT", resi: r}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-            .then(res => res.json()).then(data => {
-                ordersDB[index].resi = r; ordersDB[index].status = "IN TRANSIT"; showAdminToast("Resi diinput!"); renderOrders(); 
-            });
+            
+            fetch(scriptURL, { 
+                method: 'POST', mode: 'no-cors',
+                body: JSON.stringify({action: "updateOrder", orderId: ordersDB[index].id, status: "IN TRANSIT", resi: r}), 
+                headers: {'Content-Type': 'text/plain;charset=utf-8'} 
+            })
+            .then(() => {
+                ordersDB[index].resi = r; ordersDB[index].status = "IN TRANSIT"; showAdminToast("Resi diinput!"); renderOrders(); renderTracking();
+            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "KIRIM"; btn.disabled = false; });
+        }
+
+        // Konversi Link Drive Lama menjadi Link Langsung
+        function getDirectUrl(url) {
+            if (!url) return 'https://placehold.co/400';
+            if (url.includes('drive.google.com/file/d/')) {
+                const id = url.split('/file/d/')[1].split('/')[0];
+                return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+            return url;
         }
 
         function viewProof(index) {
             currentEditingOrderIndex = index;
             const order = ordersDB[index];
-            const imgSrc = order.proofImg || "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?auto=format&fit=crop&w=400&q=80";
+            const imgSrc = getDirectUrl(order.proofImg);
             document.getElementById('proofImage').src = imgSrc;
             const downloadBtn = document.getElementById('downloadProofBtn'); downloadBtn.href = imgSrc; downloadBtn.download = `Bukti_Transfer_${order.id}.jpg`;
             document.getElementById('proofModal').classList.remove('hidden');
@@ -396,10 +410,15 @@
             const v = document.getElementById(`manualTrack_${index}`).value; if(!v) return alert("Ketikan status terlebih dahulu!");
             const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
             const btn = document.getElementById(`btnTrack_${index}`); btn.innerHTML = "..."; btn.disabled = true;
-            fetch(scriptURL, { method: 'POST', body: JSON.stringify({action: "updateOrder", orderId: ordersDB[index].id, latestTracking: v, trackingTime: t}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-            .then(res => res.json()).then(data => {
+            
+            fetch(scriptURL, { 
+                method: 'POST', mode: 'no-cors',
+                body: JSON.stringify({action: "updateOrder", orderId: ordersDB[index].id, latestTracking: v, trackingTime: t}), 
+                headers: {'Content-Type': 'text/plain;charset=utf-8'} 
+            })
+            .then(() => {
                 ordersDB[index].latestTracking = v; ordersDB[index].trackingTime = t; showAdminToast("Status diupdate!"); renderTracking();
-            });
+            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "UPDATE USER STATUS"; btn.disabled = false; });
         }
 
         function openInvoice(orderId) {
@@ -408,7 +427,7 @@
             const tbody = document.getElementById('invItems'); tbody.innerHTML = '';
             let grouped = {}; o.items.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
             for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-4 border-b border-stone-100"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold">${i.country} • ${i.category}</p></td><td class="py-4 text-center font-bold border-b border-stone-100">x${i.qty}</td><td class="py-4 text-right font-extrabold text-black border-b border-stone-100">${formatRp(i.price * i.qty)}</td></tr>`; }
-            document.getElementById('invSubtotal').textContent = formatRp(o.total); document.getElementById('invTotalMain').textContent = formatRp(o.total);
+            document.getElementById('invSubtotal').textContent = formatRp(parseInt(o.total)); document.getElementById('invTotalMain').textContent = formatRp(parseInt(o.total));
             document.getElementById('invoiceModal').classList.remove('hidden');
         }
         function closeInvoiceModal() { document.getElementById('invoiceModal').classList.add('hidden'); }
@@ -426,25 +445,28 @@
             if(val) {
                 document.getElementById('btnAddBatch').innerHTML = "...";
                 const newBatches = [...batchesDB, val];
-                fetch(scriptURL, { method: 'POST', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-                .then(res => res.json()).then(data => { batchesDB = newBatches; document.getElementById('newBatchInput').value = ''; renderBatches(); showAdminToast("Batch ditambahkan!"); document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; });
+                fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+                .then(() => { batchesDB = newBatches; document.getElementById('newBatchInput').value = ''; renderBatches(); showAdminToast("Batch ditambahkan!"); document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; })
+                .catch(e => { document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; showAdminToast("Gangguan jaringan"); });
             }
         }
         function deleteBatch(index) {
             const newBatches = [...batchesDB]; newBatches.splice(index, 1);
             showAdminToast("Menghapus...");
-            fetch(scriptURL, { method: 'POST', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-            .then(res => res.json()).then(data => { batchesDB = newBatches; renderBatches(); showAdminToast("Batch dihapus."); });
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+            .then(() => { batchesDB = newBatches; renderBatches(); showAdminToast("Batch dihapus."); })
+            .catch(e => { showAdminToast("Gangguan jaringan"); });
         }
 
         function renderCatalog() {
             const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
             catalogDB.forEach(p => {
-                grid.innerHTML += `<div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white text-blue-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white text-red-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${p.img}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-3 left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-xs mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-3"><p class="text-[9px] text-stone-400 font-bold uppercase tracking-widest">${p.category}</p><p class="font-extrabold text-sm text-black">${formatRp(p.price)}</p></div></div></div>`;
+                const imgSrc = getDirectUrl(p.img);
+                grid.innerHTML += `<div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white text-blue-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white text-red-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${imgSrc}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-3 left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-xs mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-3"><p class="text-[9px] text-stone-400 font-bold uppercase tracking-widest">${p.category}</p><p class="font-extrabold text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
             });
         }
 
-        // Kompresor Otomatis Gambar (Mencegah Google Sheets Error Limit String)
+        // Kompresor Otomatis Gambar (Kualitas 60%)
         function previewUploadedImage(event) {
             const file = event.target.files[0];
             if(file) {
@@ -457,7 +479,7 @@
                         canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         
-                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.6); // Kompres Kualitas 60%
+                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.6); 
                         document.getElementById('prodImgPreview').src = currentUploadedImageBase64;
                         document.getElementById('prodImgPreview').classList.remove('hidden');
                         document.getElementById('uploadPlaceholder').classList.add('opacity-0');
@@ -471,7 +493,7 @@
         function openProductModal(id = null) {
             if(id) {
                 const p = catalogDB.find(x => x.id === id); document.getElementById('prodModalTitle').textContent = "Edit Product"; document.getElementById('prodId').value = p.id; 
-                currentUploadedImageBase64 = p.img; document.getElementById('prodImgPreview').src = p.img; document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
+                currentUploadedImageBase64 = p.img; document.getElementById('prodImgPreview').src = getDirectUrl(p.img); document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
                 document.getElementById('prodName').value = p.name; document.getElementById('prodPrice').value = p.price; document.getElementById('prodCat').value = p.category; document.getElementById('prodCountry').value = p.country; 
             } else { 
                 document.getElementById('prodModalTitle').textContent = "Add New Product"; document.getElementById('prodId').value = ""; 
@@ -491,18 +513,28 @@
             const id = document.getElementById('prodId').value;
             const newProd = { id: id ? parseInt(id) : Date.now(), name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: currentUploadedImageBase64 };
 
-            fetch(scriptURL, { method: 'POST', body: JSON.stringify({action: "saveProduct", product: newProd}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-            .then(res => res.json()).then(data => {
+            fetch(scriptURL, { 
+                method: 'POST', mode: 'no-cors',
+                body: JSON.stringify({action: "saveProduct", product: newProd}), 
+                headers: {'Content-Type': 'text/plain;charset=utf-8'} 
+            })
+            .then(() => {
+                // Di mode no-cors kita tidak menunggu respons spesifik URL Drive baru, jadi katalog lokal pakai img asal dulu. 
+                // Akan tersinkron sempurna (gambar muncul jadi drive link) saat web direfresh/fetch ulang.
                 if(id) { const i = catalogDB.findIndex(x => x.id === parseInt(id)); catalogDB[i] = newProd; } else { catalogDB.push(newProd); }
-                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); renderCatalog(); showAdminToast("Katalog diperbarui!");
-            });
+                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); renderCatalog(); showAdminToast("Katalog diperbarui! Refresh web untuk memastikan gambar sinkron.");
+            }).catch(e => { btn.innerHTML = "SIMPAN"; btn.disabled = false; showAdminToast("Gangguan Jaringan"); });
         }
 
         function deleteProduct(id) { 
             if(confirm("Yakin ingin menghapus produk ini?")) { 
                 showAdminToast("Menghapus produk...");
-                fetch(scriptURL, { method: 'POST', body: JSON.stringify({action: "deleteProduct", productId: id}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-                .then(res => res.json()).then(data => { catalogDB = catalogDB.filter(x => x.id !== id); renderCatalog(); showAdminToast("Product deleted."); });
+                fetch(scriptURL, { 
+                    method: 'POST', mode: 'no-cors',
+                    body: JSON.stringify({action: "deleteProduct", productId: id}), headers: {'Content-Type': 'text/plain;charset=utf-8'} 
+                })
+                .then(() => { catalogDB = catalogDB.filter(x => x.id !== id); renderCatalog(); showAdminToast("Product deleted."); })
+                .catch(e => { showAdminToast("Gangguan Jaringan"); });
             } 
         }
 
