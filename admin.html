@@ -102,7 +102,7 @@
                 </div>
             </div>
 
-            <!-- TAB 2: ORDERS & RESI -->
+            <!-- TAB 2: ORDERS -->
             <div id="ordersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 flex flex-col sm:flex-row justify-between items-center bg-cream-50/50 gap-4"><h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3><input type="text" placeholder="Cari ID / Nama..." class="input-box sm:w-64 py-2 text-sm font-semibold" oninput="filterOrders(this.value)"></div>
@@ -110,7 +110,7 @@
                 </div>
             </div>
 
-            <!-- TAB 3: TRACKING / LOGISTIK -->
+            <!-- TAB 3: TRACKING -->
             <div id="trackingTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 bg-blue-50/30"><h3 class="font-extrabold text-lg">Update Logistik Manual</h3><p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">IN TRANSIT</span>. Update status agar pembeli bisa melacak via web portwish.</p></div>
@@ -120,13 +120,7 @@
 
             <!-- TAB 4: CATALOG -->
             <div id="catalogTab" class="tab-content">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-extrabold text-xl">Kelola Produk</h3>
-                    <div class="flex space-x-3">
-                        <button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> Kelola Batch</button>
-                        <button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Tambah Produk</button>
-                    </div>
-                </div>
+                <div class="flex justify-between items-center mb-6"><h3 class="font-extrabold text-xl">Kelola Produk</h3><div class="flex space-x-3"><button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> Kelola Batch</button><button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Tambah Produk</button></div></div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="adminCatalogGrid"></div>
             </div>
 
@@ -134,13 +128,13 @@
             <div id="usersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 bg-cream-50/50"><h3 class="font-extrabold text-lg">Database Akun Pelanggan</h3></div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold text-center">Aksi</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
+                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- INVOICE MODAL -->
+    <!-- INVOICE MODAL ADMIN -->
     <div id="invoiceModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print"><h3 class="font-extrabold text-lg text-black">Detail Invoice</h3><div class="flex space-x-2"><button onclick="printInvoice()" class="bg-black text-white text-[10px] font-extrabold px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-stone-800 transition">Print PDF</button><button onclick="closeInvoiceModal()" class="bg-white border border-stone-200 text-stone-600 px-3 py-2 rounded-lg hover:bg-stone-100"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div></div>
@@ -207,7 +201,6 @@
         </div>
     </div>
 
-    <!-- MAIN SCRIPT (TERHUBUNG KE GOOGLE APPS SCRIPT) -->
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbztjaLEsdsASxFJwZ7hMEMwXIp9BRSWpA0sjQqPhBqLL1a_di7iCx5H5XlMghrlfYTr/exec';
         
@@ -238,33 +231,54 @@
             }
         }
 
+        // --- FETCH UTAMA ---
         function fetchDatabase() {
             fetch(scriptURL)
             .then(res => res.json())
             .then(data => {
-                catalogDB = data.catalog || [];
-                batchesDB = data.batches || [];
-                ordersDB = (data.orders || []).map(o => ({
-                    id: o.id, date: o.date, user: { name: o.user.name, phone: o.user.phone, email: o.user.email },
-                    address: o.address, batch: o.batch, total: o.total, status: o.status, resi: o.resi, 
-                    latestTracking: o.latestTracking, trackingTime: o.trackingTime, proofImg: o.proofImg, 
-                    items: JSON.parse(o.itemsInfo || "[]")
-                }));
-                
-                // Mencegah User tertimpa
-                let uMap = {};
-                ordersDB.forEach(o => { if(!uMap[o.user.email]) uMap[o.user.email] = o.user; });
-                usersDB = Object.values(uMap);
-
+                processIncomingData(data);
                 document.getElementById('adminLoginGate').classList.add('opacity-0'); 
                 setTimeout(() => { document.getElementById('adminLoginGate').classList.add('hidden'); showAdminToast("Login Berhasil!"); }, 500); 
-
                 switchTab('dashboard');
             })
             .catch(err => {
                 document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
                 alert("Gagal memuat data dari server Google Sheets. Pastikan link Apps Script benar dan Data sudah kosong dari base64 lama.");
             });
+        }
+
+        // --- SILENT POLLING (FITUR REAL-TIME BAYANGAN) ---
+        setInterval(() => {
+            if(document.getElementById('adminLoginGate').classList.contains('hidden')) {
+                fetch(scriptURL)
+                .then(res => res.json())
+                .then(data => { processIncomingData(data); refreshActiveTab(); })
+                .catch(err => console.log("Silent fetch error"));
+            }
+        }, 15000);
+
+        function processIncomingData(data) {
+            catalogDB = data.catalog || [];
+            batchesDB = data.batches || [];
+            ordersDB = (data.orders || []).map(o => ({
+                id: o.id, date: o.date, user: { name: o.user.name, phone: o.user.phone, email: o.user.email },
+                address: o.address, batch: o.batch, total: o.total, status: o.status, resi: o.resi, 
+                latestTracking: o.latestTracking, trackingTime: o.trackingTime, proofImg: o.proofImg, 
+                items: JSON.parse(o.itemsInfo || "[]")
+            }));
+            
+            let uMap = {};
+            ordersDB.forEach(o => { if(!uMap[o.user.email]) uMap[o.user.email] = o.user; });
+            usersDB = Object.values(uMap);
+        }
+
+        function refreshActiveTab() {
+            const activeTab = document.querySelector('.tab-content.active').id;
+            if(activeTab === 'dashboardTab') renderDashboard();
+            if(activeTab === 'ordersTab') renderOrders(document.querySelector('#ordersTab input').value);
+            if(activeTab === 'trackingTab') renderTracking();
+            if(activeTab === 'catalogTab') renderCatalog();
+            if(activeTab === 'usersTab') renderUsers();
         }
 
         function showAdminToast(msg) {
@@ -280,7 +294,7 @@
             activeBtn.classList.remove('text-stone-500', 'hover:bg-cream-50', 'hover:text-black'); activeBtn.classList.add('bg-black', 'text-white', 'shadow-md');
             const titles = { 'dashboard': 'Dashboard Analytics', 'orders': 'Order Management', 'tracking': 'Logistics Update', 'catalog': 'Manage Catalog', 'users': 'User Database' }; 
             document.getElementById('headerTitle').textContent = titles[tabId];
-            if(tabId === 'dashboard') renderDashboard(); if(tabId === 'orders') renderOrders(); if(tabId === 'tracking') renderTracking(); if(tabId === 'catalog') renderCatalog(); if(tabId === 'users') renderUsers();
+            refreshActiveTab();
         }
 
         let salesChartInstance = null;
@@ -328,9 +342,9 @@
                 let badgeClass = o.status === "IN TRANSIT" ? "bg-black text-white border-black" : (o.status === "PROCESS (INPUT RESI)" ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-orange-100 text-orange-700 border-orange-200");
                 let resiAction = ``;
                 if(o.status === "AWAITING VERIFICATION") { 
-                    resiAction = `<div class="flex space-x-2 w-full max-w-[200px]"><button onclick="viewProof(${index})" class="flex-1 bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:text-black hover:border-black transition whitespace-nowrap">CEK BUKTI</button><button onclick="approveOrder(${index})" class="flex-1 bg-black text-white text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:bg-stone-800 transition whitespace-nowrap" id="btnAppv_${index}">APPROVE</button></div>`; 
+                    resiAction = `<div class="flex space-x-2 w-full max-w-[200px]"><button onclick="viewProof('${o.id}')" class="flex-1 bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:text-black hover:border-black transition whitespace-nowrap">CEK BUKTI</button><button onclick="approveOrder('${o.id}')" class="flex-1 bg-black text-white text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:bg-stone-800 transition whitespace-nowrap" id="btnAppv_${o.id}">APPROVE</button></div>`; 
                 } else if(o.status === "PROCESS (INPUT RESI)") { 
-                    resiAction = `<div class="flex items-center space-x-2 mt-2"><input type="text" id="resiInput_${index}" placeholder="Input Resi..." class="border border-stone-300 rounded-lg px-2 py-1.5 text-xs w-32 outline-none focus:border-black bg-white"><button onclick="saveResi(${index})" id="btnResi_${index}" class="bg-blue-600 text-white text-[10px] font-extrabold px-3 py-2 rounded-lg hover:bg-blue-700 transition">KIRIM</button></div>`; 
+                    resiAction = `<div class="flex items-center space-x-2 mt-2"><input type="text" id="resiInput_${o.id}" placeholder="Input Resi..." class="border border-stone-300 rounded-lg px-2 py-1.5 text-xs w-32 outline-none focus:border-black bg-white"><button onclick="saveResi('${o.id}')" id="btnResi_${o.id}" class="bg-blue-600 text-white text-[10px] font-extrabold px-3 py-2 rounded-lg hover:bg-blue-700 transition">KIRIM</button></div>`; 
                 } else { 
                     resiAction = `<span class="text-xs font-extrabold text-black block mt-1">Resi: ${o.resi}</span>`; 
                 }
@@ -340,46 +354,50 @@
 
         function filterOrders(val) { renderOrders(val.toLowerCase()); }
 
-        // MENGHINDARI ERROR JARINGAN DENGAN MODE NO-CORS PADA SEMUA POST REQUEST DI ADMIN
-        function approveOrder(index) { 
-            const btn = document.getElementById(`btnAppv_${index}`);
+        function approveOrder(orderId) { 
+            const btn = document.getElementById(`btnAppv_${orderId}`);
             if(btn) { btn.innerHTML = "..."; btn.disabled = true; }
             
             fetch(scriptURL, { 
                 method: 'POST', mode: 'no-cors', 
-                body: JSON.stringify({action: "updateOrder", orderId: ordersDB[index].id, status: "PROCESS (INPUT RESI)"}), 
+                body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "PROCESS (INPUT RESI)"}), 
                 headers: {'Content-Type': 'text/plain;charset=utf-8'} 
             })
             .then(() => {
-                ordersDB[index].status = "PROCESS (INPUT RESI)"; showAdminToast("Payment Approved!"); renderOrders(); 
+                const idx = ordersDB.findIndex(x => x.id === orderId);
+                ordersDB[idx].status = "PROCESS (INPUT RESI)"; showAdminToast("Payment Approved!"); refreshActiveTab(); 
             }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); if(btn){btn.innerHTML = "APPROVE"; btn.disabled = false;} });
         }
 
-        function saveResi(index) { 
-            const r = document.getElementById(`resiInput_${index}`).value; if(!r) return alert("Silakan input nomor resi!"); 
-            const btn = document.getElementById(`btnResi_${index}`); btn.innerHTML = "..."; btn.disabled = true;
+        function saveResi(orderId) { 
+            const r = document.getElementById(`resiInput_${orderId}`).value; if(!r) return alert("Silakan input nomor resi!"); 
+            const btn = document.getElementById(`btnResi_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
             
             fetch(scriptURL, { 
                 method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({action: "updateOrder", orderId: ordersDB[index].id, status: "IN TRANSIT", resi: r}), 
+                body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "IN TRANSIT", resi: r}), 
                 headers: {'Content-Type': 'text/plain;charset=utf-8'} 
             })
             .then(() => {
-                ordersDB[index].resi = r; ordersDB[index].status = "IN TRANSIT"; showAdminToast("Resi diinput!"); renderOrders(); renderTracking();
+                const idx = ordersDB.findIndex(x => x.id === orderId);
+                ordersDB[idx].resi = r; ordersDB[idx].status = "IN TRANSIT"; showAdminToast("Resi diinput!"); refreshActiveTab();
             }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "KIRIM"; btn.disabled = false; });
         }
 
-        // Konversi Link Drive Lama menjadi Link Langsung
+        // --- SOLUSI: Konversi Link Drive agar Preview Tidak Rusak ---
         function getDirectUrl(url) {
             if (!url) return 'https://placehold.co/400';
-            if (url.includes('drive.google.com/file/d/')) {
-                const id = url.split('/file/d/')[1].split('/')[0];
-                return `https://drive.google.com/uc?export=view&id=${id}`;
+            if (url.includes('drive.google.com')) {
+                let id = "";
+                if(url.includes('id=')) id = url.split('id=')[1].split('&')[0];
+                else if (url.includes('/file/d/')) id = url.split('/file/d/')[1].split('/')[0];
+                if(id) return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`; // API Rahasia Thumbnail Drive
             }
             return url;
         }
 
-        function viewProof(index) {
+        function viewProof(orderId) {
+            const index = ordersDB.findIndex(x => x.id === orderId);
             currentEditingOrderIndex = index;
             const order = ordersDB[index];
             const imgSrc = getDirectUrl(order.proofImg);
@@ -391,8 +409,8 @@
         function approveFromProof() {
             if(currentEditingOrderIndex !== null) {
                 document.getElementById('btnProofApprove').innerHTML = "MEMPROSES...";
-                approveOrder(currentEditingOrderIndex);
-                setTimeout(closeProofModal, 1000);
+                approveOrder(ordersDB[currentEditingOrderIndex].id);
+                setTimeout(() => { document.getElementById('btnProofApprove').innerHTML = "VERIFIKASI"; closeProofModal(); }, 1000);
             }
         }
 
@@ -401,23 +419,23 @@
             const active = ordersDB.filter(o => o.status === "IN TRANSIT" && o.resi);
             if(active.length === 0) { container.innerHTML = `<div class="text-center py-10"><p class="text-stone-400 font-bold text-sm">Belum ada paket yang sedang dikirim (IN TRANSIT).</p></div>`; return; }
             active.forEach(o => {
-                const i = ordersDB.findIndex(x => x.id === o.id);
-                container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow"><div class="flex-1"><p class="font-extrabold text-lg text-black">${o.id} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-2 border border-stone-200">${o.user.name}</span></p><div class="mt-2 flex items-center space-x-4"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-4">Resi: <span class="text-black font-extrabold">${o.resi}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch}</p></div><div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Web Pengguna:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Waiting for first update...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div></div><div class="w-full md:w-2/5 flex flex-col space-y-2 bg-cream-50 p-4 rounded-2xl border border-stone-100"><input type="text" id="manualTrack_${i}" placeholder="Ketik status terkini..." class="border border-stone-200 rounded-xl px-4 py-3 text-xs font-bold bg-white text-black focus:border-black outline-none transition-colors"><button onclick="updateManualTracking(${i})" id="btnTrack_${i}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md">UPDATE USER STATUS</button></div></div>`;
+                container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow"><div class="flex-1"><p class="font-extrabold text-lg text-black">${o.id} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-2 border border-stone-200">${o.user.name}</span></p><div class="mt-2 flex items-center space-x-4"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-4">Resi: <span class="text-black font-extrabold">${o.resi}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch}</p></div><div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Web Pengguna:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Waiting for first update...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div></div><div class="w-full md:w-2/5 flex flex-col space-y-2 bg-cream-50 p-4 rounded-2xl border border-stone-100"><input type="text" id="manualTrack_${o.id}" placeholder="Ketik status terkini..." class="border border-stone-200 rounded-xl px-4 py-3 text-xs font-bold bg-white text-black focus:border-black outline-none transition-colors"><button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md">UPDATE USER STATUS</button></div></div>`;
             });
         }
 
-        function updateManualTracking(index) {
-            const v = document.getElementById(`manualTrack_${index}`).value; if(!v) return alert("Ketikan status terlebih dahulu!");
+        function updateManualTracking(orderId) {
+            const v = document.getElementById(`manualTrack_${orderId}`).value; if(!v) return alert("Ketikan status terlebih dahulu!");
             const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
-            const btn = document.getElementById(`btnTrack_${index}`); btn.innerHTML = "..."; btn.disabled = true;
+            const btn = document.getElementById(`btnTrack_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
             
             fetch(scriptURL, { 
                 method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({action: "updateOrder", orderId: ordersDB[index].id, latestTracking: v, trackingTime: t}), 
+                body: JSON.stringify({action: "updateOrder", orderId: orderId, latestTracking: v, trackingTime: t}), 
                 headers: {'Content-Type': 'text/plain;charset=utf-8'} 
             })
             .then(() => {
-                ordersDB[index].latestTracking = v; ordersDB[index].trackingTime = t; showAdminToast("Status diupdate!"); renderTracking();
+                const idx = ordersDB.findIndex(x => x.id === orderId);
+                ordersDB[idx].latestTracking = v; ordersDB[idx].trackingTime = t; showAdminToast("Status diupdate!"); renderTracking();
             }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "UPDATE USER STATUS"; btn.disabled = false; });
         }
 
@@ -437,7 +455,7 @@
         function closeBatchModal() { document.getElementById('batchModal').classList.add('hidden'); }
         function renderBatches() {
             const area = document.getElementById('batchListArea'); area.innerHTML = '';
-            if(batchesDB.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada batch.</p>`; return; }
+            if(batchesDB.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada batch tersedia.</p>`; return; }
             batchesDB.forEach((b, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100"><span class="text-xs font-bold text-black">${b}</span><button onclick="deleteBatch(${i})" class="text-stone-400 hover:text-red-500 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
         }
         function addBatch() {
@@ -466,7 +484,6 @@
             });
         }
 
-        // Kompresor Otomatis Gambar (Kualitas 60%)
         function previewUploadedImage(event) {
             const file = event.target.files[0];
             if(file) {
@@ -519,10 +536,8 @@
                 headers: {'Content-Type': 'text/plain;charset=utf-8'} 
             })
             .then(() => {
-                // Di mode no-cors kita tidak menunggu respons spesifik URL Drive baru, jadi katalog lokal pakai img asal dulu. 
-                // Akan tersinkron sempurna (gambar muncul jadi drive link) saat web direfresh/fetch ulang.
                 if(id) { const i = catalogDB.findIndex(x => x.id === parseInt(id)); catalogDB[i] = newProd; } else { catalogDB.push(newProd); }
-                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); renderCatalog(); showAdminToast("Katalog diperbarui! Refresh web untuk memastikan gambar sinkron.");
+                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); renderCatalog(); showAdminToast("Katalog diperbarui! Refresh web jika gambar belum sinkron.");
             }).catch(e => { btn.innerHTML = "SIMPAN"; btn.disabled = false; showAdminToast("Gangguan Jaringan"); });
         }
 
