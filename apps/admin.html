@@ -810,7 +810,28 @@
                 showAdminToast("Password user berhasil direset!");
             } catch(e) { alert("Gagal mereset password."); }
         }
+function exportUsersToExcel() {
+            if (!usersDB || usersDB.length === 0) {
+                showAdminToast("Tidak ada data pelanggan untuk diunduh.");
+                return;
+            }
 
+            // Memformat data agar rapi saat masuk ke Excel
+            const data = usersDB.map(u => ({
+                "Nama Lengkap": u.name || '-',
+                "Email": u.email || '-',
+                "No. WhatsApp": u.phone || '-',
+                "Password": u.pass || '-'
+            }));
+
+            // Proses generate Excel menggunakan SheetJS (XLSX)
+            const ws = XLSX.utils.json_to_sheet(data); 
+            const wb = XLSX.utils.book_new(); 
+            XLSX.utils.book_append_sheet(wb, ws, "Database Pelanggan"); 
+            XLSX.writeFile(wb, "Database_Pelanggan_Portwish.xlsx"); 
+            
+            showAdminToast("Database Pelanggan Berhasil Diunduh!");
+        }
         function renderUsers() {
             try {
                 const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
