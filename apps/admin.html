@@ -17,7 +17,8 @@
         tailwind.config = { theme: { extend: { colors: { cream: { 50: '#FCFAF8', 100: '#F7F4ED', 200: '#EBE5D9' }, black: '#2E2E2E' } } } }
     </script>
     <style>
-        :root { --primary: #2E2E2E; --bg: #FCFAF8; } body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--primary); -webkit-user-select: none; user-select: none; }
+        :root { --primary: #2E2E2E; --bg: #FCFAF8; } 
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--primary); -webkit-user-select: none; user-select: none; }
         .hide-scroll::-webkit-scrollbar { display: none; } .tab-content { display: none; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .input-box { width: 100%; border: 2px solid #e7e5e4; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; outline: none; background: #fff; } .input-box:focus { border-color: var(--primary); }
@@ -60,8 +61,8 @@
             </div>
             <nav class="p-4 space-y-2">
                 <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-black text-white font-bold text-sm transition-all shadow-md"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><span>Dashboard</span></button>
-                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span><span class="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full" id="pendingCount">0</span></button>
-                <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all relative"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span><span class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse" id="activeShipmentDot"></span></button>
+                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span></button>
+                <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all relative"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span></button>
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg><span>Kelola Katalog</span></button>
                 <button onclick="switchTab('users')" id="nav-users" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg><span>Database Akun</span></button>
             </nav>
@@ -141,7 +142,7 @@
             <!-- TAB 5: USERS -->
             <div id="usersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-stone-100 bg-cream-50/50"><h3 class="font-extrabold text-lg">Database Akun Pelanggan</h3></div>
+                    <div class="p-6 border-b border-stone-100 bg-cream-50/50 flex justify-between items-center"><h3 class="font-extrabold text-lg">Database Akun Pelanggan</h3><button onclick="exportUsersToExcel()" class="bg-[#107c41] hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95">UNDUH EXCEL</button></div>
                     <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold text-center">Password</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
@@ -209,7 +210,7 @@
         </div>
     </div>
 
-    <!-- MODAL ATRIBUT UMUM (BATCH, NEGARA, KATEGORI) -->
+    <!-- MODAL ATRIBUT UMUM -->
     <div id="attributeModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-[32px] shadow-2xl p-6 relative border border-stone-100">
             <button onclick="closeAttributeModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
@@ -273,14 +274,15 @@
         </div>
     </div>
 
+    <!-- SCRIPT UTAMA -->
     <script>
         // ANTI-INSPECT ELEMENT & RIGHT CLICK (KEAMANAN WEB)
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
-            if (e.keyCode == 123) return false; // F12
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false; // Ctrl+Shift+I
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) return false; // Ctrl+Shift+J
-            if (e.ctrlKey && e.keyCode == 85) return false; // Ctrl+U
+            if (e.keyCode == 123) return false; 
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false; 
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) return false; 
+            if (e.ctrlKey && e.keyCode == 85) return false; 
         };
 
         const firebaseConfig = {
@@ -294,15 +296,13 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // KONFIGURASI CLOUDINARY
         const cloudName = 'dlgisjmq2';
-        const uploadPreset = 'portwish_foto';
+        const uploadPreset = 'portwish_foto'; 
 
         let catalogDB = []; let batchesDB = []; let countriesDB = ['USA', 'Japan', 'Korea']; let categoriesDB = ['Skincare', 'Fashion', 'Food & Snacks']; 
         let ordersDB = []; let usersDB = []; let vouchersDB = {}; let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
         let currentEditingOrderIndex = null; let currentUploadedImageBase64 = null; 
-        
         let currentAttrType = ''; 
 
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -321,7 +321,7 @@
             refreshActiveTab();
         });
 
-        // LOGIN ADMIN TERKONEKSI FIREBASE DB
+        // LOGIN ADMIN (OTOMATIS NGE-CREATE JIKA BELUM ADA DI DATABASE)
         async function loginAdmin() {
             const email = document.getElementById('adminEmail').value, pass = document.getElementById('adminPass').value;
             const btn = document.getElementById('btnAdminLogin'); btn.innerHTML = `<span class="loader loader-white"></span>`;
@@ -330,7 +330,6 @@
                 const snap = await db.ref('admin_account').once('value');
                 let adminData = snap.val();
                 
-                // Auto-create default admin account jika belum ada di database
                 if(!adminData) {
                     adminData = { email: 'admin@portwish.id', pass: 'admin123' };
                     await db.ref('admin_account').set(adminData);
@@ -349,9 +348,9 @@
         }
         function handleEnter(e) { if (e.key === 'Enter') loginAdmin(); }
         
+        // LOGOUT INSTAN 
         function logoutAdmin() {
-            document.getElementById('adminEmail').value = ''; document.getElementById('adminPass').value = ''; document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
-            document.getElementById('adminLoginGate').classList.remove('hidden'); setTimeout(() => { document.getElementById('adminLoginGate').classList.remove('opacity-0'); }, 10);
+            if(confirm("Yakin ingin keluar dari panel admin?")) { window.location.reload(); }
         }
 
         function refreshActiveTab() {
@@ -384,7 +383,7 @@
             salesChartInstance = new Chart(ctx, { type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], datasets: [{ data: salesMonthly, borderColor: '#107c41', backgroundColor: 'rgba(16, 124, 65, 0.05)', borderWidth: 3, pointBackgroundColor: '#fff', pointBorderColor: '#107c41', pointBorderWidth: 2, pointRadius: 4, fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f5f5f4', drawBorder: false } }, x: { grid: { display: false, drawBorder: false } } } } });
         }
 
-        // PENDETEKSI DATA AMAN AGAR TIDAK BLANK
+        // PENDETEKSI DATA KORUP AGAR TIDAK BLANK
         function renderDashboard() {
             try {
                 let totalRev = 0; let shippingOrd = 0; let pendingOrd = 0; let newSalesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -395,7 +394,6 @@
                     if(o.status === 'IN TRANSIT') { shippingOrd++; }
                     if(o.status === 'AWAITING VERIFICATION' || o.status === 'PROCESS (INPUT RESI)') { pendingOrd++; }
 
-                    // Kalkulasi Kurva (Aman)
                     if(o.status !== 'AWAITING VERIFICATION' && o.date) {
                         const mStr = String(o.date).substring(0,3);
                         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -453,15 +451,14 @@
                     if(o.status === "AWAITING VERIFICATION") { 
                         resiAction = `<div class="flex space-x-2 w-full max-w-[200px]"><button onclick="viewProof('${o.id}')" class="flex-1 bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:text-black hover:border-black transition whitespace-nowrap">CEK BUKTI</button><button onclick="approveOrder('${o.id}')" class="flex-1 bg-black text-white text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:bg-stone-800 transition whitespace-nowrap" id="btnAppv_${o.id}">APPROVE</button></div>`; 
                     } else if(o.status === "PROCESS (INPUT RESI)" || o.status === "IN TRANSIT") { 
-                        // FITUR EDIT RESI TERSEDIA MESKI SUDAH IN TRANSIT
+                        // FITUR EDIT RESI TERSEDIA
                         let btnText = o.status === "IN TRANSIT" ? "EDIT RESI" : "KIRIM";
                         resiAction = `<div class="flex items-center space-x-2 mt-2"><input type="text" id="resiInput_${o.id}" value="${o.resi || ''}" placeholder="Input Resi..." class="border border-stone-300 rounded-lg px-2 py-1.5 text-xs w-32 outline-none focus:border-black bg-white"><button onclick="saveResi('${o.id}')" id="btnResi_${o.id}" class="bg-blue-600 text-white text-[10px] font-extrabold px-3 py-2 rounded-lg hover:bg-blue-700 transition">${btnText}</button></div>`; 
                     } else { 
                         resiAction = `<span class="text-xs font-extrabold text-black block mt-1">Resi: ${o.resi || '-'}</span>`; 
                     }
                     
-                    let custName = 'Unknown';
-                    let custPhone = '-';
+                    let custName = 'Unknown'; let custPhone = '-';
                     if(o.user && o.user.name) custName = o.user.name; else if(o.userEmail) custName = o.userEmail;
                     if(o.user && o.user.phone) custPhone = o.user.phone;
 
@@ -506,24 +503,34 @@
                     let custName = 'Unknown';
                     if(o.user && o.user.name) custName = o.user.name; else if(o.userEmail) custName = o.userEmail;
                     
-                    container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow"><div class="flex-1"><p class="font-extrabold text-lg text-black">${o.id || '-'} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-2 border border-stone-200">${custName}</span></p><div class="mt-2 flex items-center space-x-4"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-4">Resi: <span class="text-black font-extrabold">${o.resi || "Belum Ada"}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch || '-'}</p></div><div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Web Pengguna:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Waiting for first update...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div></div><div class="w-full md:w-2/5 flex flex-col space-y-2 bg-cream-50 p-4 rounded-2xl border border-stone-100"><input type="text" id="manualTrack_${o.id}" placeholder="Ketik status terkini..." class="border border-stone-200 rounded-xl px-4 py-3 text-xs font-bold bg-white text-black focus:border-black outline-none transition-colors"><button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md">UPDATE USER STATUS</button></div></div>`;
+                    container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow"><div class="flex-1"><p class="font-extrabold text-lg text-black">${o.id || '-'} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-2 border border-stone-200">${custName}</span></p><div class="mt-2 flex items-center space-x-4"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-4">Resi: <span class="text-black font-extrabold">${o.resi || "Belum Ada"}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch || '-'}</p></div><div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Terakhir:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Menunggu update pertama...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div></div><div class="w-full md:w-2/5 flex flex-col space-y-2 bg-cream-50 p-4 rounded-2xl border border-stone-100"><input type="text" id="manualTrack_${o.id}" placeholder="Ketik status terkini..." class="border border-stone-200 rounded-xl px-4 py-3 text-xs font-bold bg-white text-black focus:border-black outline-none transition-colors"><button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md">TAMBAHKAN HISTORY</button></div></div>`;
                 });
             } catch(e) { console.error("Tracking Render Error:", e); }
         }
 
-        function updateManualTracking(orderId) {
+        // UPDATE TRACKING DENGAN HISTORY ARRAY (LIVE)
+        async function updateManualTracking(orderId) {
             const v = document.getElementById(`manualTrack_${orderId}`).value; if(!v) return alert("Ketikan status terlebih dahulu!");
             const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
             const btn = document.getElementById(`btnTrack_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
-            db.ref('orders/' + orderId).update({ latestTracking: v, trackingTime: t }).then(() => { showAdminToast("Status diupdate!"); });
+
+            const order = ordersDB.find(o => o.id === orderId);
+            let history = order.trackingHistory ? [...order.trackingHistory] : [];
+            if(history.length === 0 && order.latestTracking) { history.push({ status: order.latestTracking, time: order.trackingTime }); }
+            
+            history.unshift({ status: v, time: t }); // Masukkan ke urutan paling atas
+            await db.ref('orders/' + orderId).update({ latestTracking: v, trackingTime: t, trackingHistory: history });
+            
+            document.getElementById(`manualTrack_${orderId}`).value = '';
+            showAdminToast("Status berhasil ditambahkan!");
+            btn.innerHTML = "TAMBAHKAN HISTORY"; btn.disabled = false;
         }
 
         function openInvoice(orderId) {
             const o = ordersDB.find(x => x.id === orderId);
             document.getElementById('invId').textContent = o.id || '-'; document.getElementById('invDate').textContent = `Date: ${o.date || '-'}`; 
             
-            let custName = 'Unknown';
-            let custEmail = 'Unknown';
+            let custName = 'Unknown'; let custEmail = 'Unknown';
             if(o.user && o.user.name) custName = o.user.name; else if(o.userEmail) custName = o.userEmail;
             if(o.user && o.user.email) custEmail = o.user.email; else if(o.userEmail) custEmail = o.userEmail;
 
@@ -540,7 +547,7 @@
                 itemsParsed.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
                 for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-4 border-b border-stone-100"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold">${i.country} • ${i.category}</p></td><td class="py-4 text-center font-bold border-b border-stone-100">x${i.qty}</td><td class="py-4 text-right font-extrabold text-black border-b border-stone-100">${formatRp(i.price * i.qty)}</td></tr>`; }
             }
-            
+
             if(o.discount && o.discount > 0) {
                 document.getElementById('invDiscountBox').style.display = 'flex';
                 document.getElementById('invDiscount').textContent = `- ${formatRp(parseInt(o.discount))}`;
@@ -553,7 +560,6 @@
         function closeInvoiceModal() { document.getElementById('invoiceModal').classList.add('hidden'); }
         function printInvoice() { window.print(); }
 
-        // --- MANAJEMEN VOUCHER ---
         function openVoucherModal() { renderVouchers(); document.getElementById('voucherModal').classList.remove('hidden'); }
         function closeVoucherModal() { document.getElementById('voucherModal').classList.add('hidden'); }
         function renderVouchers() {
@@ -567,26 +573,15 @@
             });
         }
         function addVoucher() {
-            const code = document.getElementById('vCode').value.trim().toUpperCase();
-            const limit = document.getElementById('vLimit').value;
-            const type = document.getElementById('vType').value;
-            const value = document.getElementById('vValue').value;
-
+            const code = document.getElementById('vCode').value.trim().toUpperCase(); const limit = document.getElementById('vLimit').value; const type = document.getElementById('vType').value; const value = document.getElementById('vValue').value;
             if(!code || !limit || !value) return alert("Lengkapi form voucher!");
-            
             document.getElementById('btnAddVoucher').innerHTML = "...";
             db.ref('vouchers/' + code).set({ type: type, value: value, limit: parseInt(limit) }).then(() => {
-                document.getElementById('vCode').value = ''; document.getElementById('vLimit').value = ''; document.getElementById('vValue').value = '';
-                showAdminToast("Voucher berhasil dibuat!"); document.getElementById('btnAddVoucher').innerHTML = "+ SIMPAN VOUCHER BARU";
+                document.getElementById('vCode').value = ''; document.getElementById('vLimit').value = ''; document.getElementById('vValue').value = ''; showAdminToast("Voucher berhasil dibuat!"); document.getElementById('btnAddVoucher').innerHTML = "+ SIMPAN VOUCHER BARU";
             });
         }
-        function deleteVoucher(code) {
-            if(confirm(`Hapus voucher ${code}?`)) {
-                db.ref('vouchers/' + code).remove().then(() => showAdminToast("Voucher dihapus."));
-            }
-        }
+        function deleteVoucher(code) { if(confirm(`Hapus voucher ${code}?`)) { db.ref('vouchers/' + code).remove().then(() => showAdminToast("Voucher dihapus.")); } }
 
-        // --- MANAJEMEN ATRIBUT (BATCH, KATEGORI, NEGARA) ---
         function openBatchModal() { currentAttrType = 'batches'; document.getElementById('attrModalTitle').textContent = "Daftar Batch"; document.getElementById('attrModalDesc').textContent = "Batch akan muncul di Dropdown Checkout User."; document.getElementById('newAttrInput').placeholder = "Misal: Batch USA #02"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
         function openCountryModal() { currentAttrType = 'countries'; document.getElementById('attrModalTitle').textContent = "Daftar Negara"; document.getElementById('attrModalDesc').textContent = "Negara untuk filter dan data produk."; document.getElementById('newAttrInput').placeholder = "Misal: Singapore"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
         function openCategoryModal() { currentAttrType = 'categories'; document.getElementById('attrModalTitle').textContent = "Daftar Kategori"; document.getElementById('attrModalDesc').textContent = "Kategori untuk filter dan data produk."; document.getElementById('newAttrInput').placeholder = "Misal: Sepatu"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
@@ -595,130 +590,28 @@
         function renderAttrList() {
             const area = document.getElementById('attrListArea'); area.innerHTML = '';
             let list = [];
-            if(currentAttrType === 'batches') list = batchesDB;
-            if(currentAttrType === 'countries') list = countriesDB;
-            if(currentAttrType === 'categories') list = categoriesDB;
-
+            if(currentAttrType === 'batches') list = batchesDB; if(currentAttrType === 'countries') list = countriesDB; if(currentAttrType === 'categories') list = categoriesDB;
             if(list.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada data.</p>`; return; }
-            list.forEach((item, i) => { 
-                area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100"><span class="text-xs font-bold text-black">${item}</span><button onclick="deleteAttr(${i})" class="text-stone-400 hover:text-red-500 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; 
-            });
+            list.forEach((item, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100"><span class="text-xs font-bold text-black">${item}</span><button onclick="deleteAttr(${i})" class="text-stone-400 hover:text-red-500 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
         }
-
         function addAttr() {
             const val = document.getElementById('newAttrInput').value.trim();
             if(val) {
-                document.getElementById('btnAddAttr').innerHTML = "...";
-                let list = [];
-                if(currentAttrType === 'batches') list = [...batchesDB, val];
-                if(currentAttrType === 'countries') list = [...countriesDB, val];
-                if(currentAttrType === 'categories') list = [...categoriesDB, val];
-
+                document.getElementById('btnAddAttr').innerHTML = "..."; let list = [];
+                if(currentAttrType === 'batches') list = [...batchesDB, val]; if(currentAttrType === 'countries') list = [...countriesDB, val]; if(currentAttrType === 'categories') list = [...categoriesDB, val];
                 db.ref(currentAttrType).set(list).then(() => { document.getElementById('newAttrInput').value = ''; showAdminToast("Data ditambahkan!"); document.getElementById('btnAddAttr').innerHTML = "TAMBAH"; });
             }
         }
         function deleteAttr(index) {
             let list = [];
-            if(currentAttrType === 'batches') { list = [...batchesDB]; list.splice(index, 1); }
-            if(currentAttrType === 'countries') { list = [...countriesDB]; list.splice(index, 1); }
-            if(currentAttrType === 'categories') { list = [...categoriesDB]; list.splice(index, 1); }
-            showAdminToast("Menghapus...");
-            db.ref(currentAttrType).set(list).then(() => { showAdminToast("Data dihapus."); });
+            if(currentAttrType === 'batches') { list = [...batchesDB]; list.splice(index, 1); } if(currentAttrType === 'countries') { list = [...countriesDB]; list.splice(index, 1); } if(currentAttrType === 'categories') { list = [...categoriesDB]; list.splice(index, 1); }
+            showAdminToast("Menghapus..."); db.ref(currentAttrType).set(list).then(() => { showAdminToast("Data dihapus."); });
         }
 
-        // --- CATALOG ---
-        function renderCatalog() {
-            const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
-            catalogDB.forEach(p => {
-                grid.innerHTML += `<div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white text-blue-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white text-red-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${p.img}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-3 left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-xs mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-3"><p class="text-[9px] text-stone-400 font-bold uppercase tracking-widest">${p.category}</p><p class="font-extrabold text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
-            });
-        }
-
-        function previewUploadedImage(event) {
-            const file = event.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width, height = img.height;
-                        const MAX_WIDTH = 800; // Kompres Max 800px (Katalog)
-                        if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
-                        canvas.width = width; canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        
-                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.8); 
-                        document.getElementById('prodImgPreview').src = currentUploadedImageBase64;
-                        document.getElementById('prodImgPreview').classList.remove('hidden');
-                        document.getElementById('uploadPlaceholder').classList.add('opacity-0');
-                    }
-                    img.src = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function openProductModal(id = null) {
-            const selCat = document.getElementById('prodCat'); selCat.innerHTML = ''; categoriesDB.forEach(c => selCat.innerHTML += `<option value="${c}">${c}</option>`);
-            const selCou = document.getElementById('prodCountry'); selCou.innerHTML = ''; countriesDB.forEach(c => selCou.innerHTML += `<option value="${c}">${c}</option>`);
-
-            if(id) {
-                const p = catalogDB.find(x => x.id === id); document.getElementById('prodModalTitle').textContent = "Edit Product"; document.getElementById('prodId').value = p.id; 
-                currentUploadedImageBase64 = p.img; document.getElementById('prodImgPreview').src = p.img; document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
-                document.getElementById('prodName').value = p.name; document.getElementById('prodPrice').value = p.price; document.getElementById('prodCat').value = p.category; document.getElementById('prodCountry').value = p.country; 
-            } else { 
-                document.getElementById('prodModalTitle').textContent = "Add New Product"; document.getElementById('prodId').value = ""; 
-                currentUploadedImageBase64 = null; document.getElementById('prodImgFile').value = ''; document.getElementById('prodImgPreview').classList.add('hidden'); document.getElementById('uploadPlaceholder').classList.remove('opacity-0');
-                document.getElementById('prodName').value = ""; document.getElementById('prodPrice').value = "";
-            }
-            document.getElementById('productModal').classList.remove('hidden');
-        }
-
-        function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
-        
-        async function uploadToCloudinary(base64Image) {
-            const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-            const formData = new FormData();
-            formData.append('file', base64Image);
-            formData.append('upload_preset', uploadPreset);
-            const response = await fetch(url, { method: 'POST', body: formData });
-            if(!response.ok) throw new Error("Upload ke Cloudinary Gagal");
-            const data = await response.json();
-            return data.secure_url;
-        }
-
-        async function saveProduct() {
-            const name = document.getElementById('prodName').value, price = document.getElementById('prodPrice').value;
-            if(!name || !price || !currentUploadedImageBase64) return alert("Mohon lengkapi Nama Produk, Harga, dan Upload Foto!");
-            const btn = document.getElementById('btnSaveProduct'); btn.innerHTML = "MENYIMPAN..."; btn.disabled = true;
-
-            try {
-                const id = document.getElementById('prodId').value;
-                const newProdId = id ? parseInt(id) : Date.now();
-                let finalImageUrl = currentUploadedImageBase64;
-
-                if (currentUploadedImageBase64.startsWith('data:image')) {
-                    finalImageUrl = await uploadToCloudinary(currentUploadedImageBase64);
-                } 
-
-                const newProd = { id: newProdId, name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: finalImageUrl };
-                await db.ref('catalog/' + newProdId).set(newProd);
-
-                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); showAdminToast("Katalog diperbarui!");
-            } catch (error) {
-                console.error(error);
-                btn.innerHTML = "SIMPAN"; btn.disabled = false;
-                alert("GAGAL UPLOAD FOTO!\n\nPastikan Cloud Name dan Upload Preset Anda sudah benar.");
-            }
-        }
-
-        function deleteProduct(id) { 
-            if(confirm("Yakin ingin menghapus produk ini?")) { 
-                showAdminToast("Menghapus produk...");
-                db.ref('catalog/' + id).remove().then(() => { showAdminToast("Product deleted."); });
-            } 
+        // --- EXPORT DATABASE PELANGGAN KE EXCEL ---
+        function exportUsersToExcel() {
+            const data = usersDB.map(u => ({ "Nama Lengkap": u.name || '-', "Email Pelanggan": u.email || '-', "No. WhatsApp": u.phone || '-', "Password": u.pass || '-' }));
+            const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Database Pelanggan"); XLSX.writeFile(wb, "Database_Pelanggan_Portwish.xlsx"); showAdminToast("Excel Berhasil Diunduh!");
         }
 
         function renderUsers() {
@@ -727,7 +620,7 @@
                 if(!usersDB || usersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400">Belum ada pelanggan terdaftar.</td></tr>`; return; }
                 usersDB.forEach((u, i) => { 
                     if(u && u.email) {
-                        tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black">${u.name || '-'}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.email || '-'}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.phone || '-'}</td><td class="p-4 text-stone-600 font-bold text-xs text-center">${u.pass || '123'}</td></tr>`; 
+                        tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black">${u.name || '-'}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.email || '-'}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.phone || '-'}</td><td class="p-4 text-stone-600 font-bold text-xs text-center">${u.pass || '-'}</td></tr>`; 
                     }
                 });
             } catch(e) { console.error("Users Render Error:", e); }
