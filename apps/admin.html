@@ -60,8 +60,8 @@
             </div>
             <nav class="p-4 space-y-2">
                 <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-black text-white font-bold text-sm transition-all shadow-md"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><span>Dashboard</span></button>
-                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span><span class="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full" id="pendingCount">0</span></button>
-                <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all relative"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span><span class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse" id="activeShipmentDot"></span></button>
+                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span></button>
+                <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span></button>
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg><span>Kelola Katalog</span></button>
                 <button onclick="switchTab('users')" id="nav-users" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg><span>Database Akun</span></button>
             </nav>
@@ -85,6 +85,7 @@
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Paket Dalam Perjalanan</p><h3 class="text-3xl font-extrabold" id="statOrders">0</h3></div></div>
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Verifikasi/Resi</p><h3 class="text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
                 </div>
+                
                 <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                         <div><h3 class="font-extrabold text-lg">Kurva Penjualan 2026</h3><p class="text-xs text-stone-500 font-medium">Statistik pendapatan per bulan</p></div>
@@ -97,10 +98,16 @@
                         <div><h3 class="font-extrabold text-lg">Transaksi Terkini</h3><p class="text-xs text-stone-500 font-medium">Pantau nama pemesan dan nomor resi terbaru</p></div>
                         <button onclick="switchTab('orders')" class="text-[10px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest transition-colors flex items-center">Lihat Semua <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                     </div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi Pengiriman</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead><tbody id="recentOrdersBody" class="text-sm"></tbody></table></div>
+                    <div class="overflow-x-auto hide-scroll">
+                        <table class="w-full text-left border-collapse whitespace-nowrap">
+                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi Pengiriman</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead>
+                            <tbody id="recentOrdersBody" class="text-sm"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
+            <!-- TAB 2: ORDERS -->
             <div id="ordersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 flex flex-col sm:flex-row justify-between items-center bg-cream-50/50 gap-4"><h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3><input type="text" placeholder="Cari ID / Nama..." class="input-box sm:w-64 py-2 text-sm font-semibold" oninput="filterOrders(this.value)"></div>
@@ -108,6 +115,7 @@
                 </div>
             </div>
 
+            <!-- TAB 3: TRACKING -->
             <div id="trackingTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 bg-blue-50/30"><h3 class="font-extrabold text-lg">Update Logistik Manual</h3><p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">IN TRANSIT</span>. Update status agar pembeli bisa melacak via web portwish.</p></div>
@@ -115,14 +123,21 @@
                 </div>
             </div>
 
+            <!-- TAB 4: CATALOG -->
             <div id="catalogTab" class="tab-content">
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <h3 class="font-extrabold text-xl">Kelola Produk</h3>
-                    <div class="flex space-x-3"><button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> Kelola Batch</button><button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Tambah Produk</button></div>
+                    <div class="flex space-x-2 flex-wrap gap-y-2">
+                        <button onclick="openCategoryModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Kategori</button>
+                        <button onclick="openCountryModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Negara</button>
+                        <button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Batch</button>
+                        <button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Produk</button>
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="adminCatalogGrid"></div>
             </div>
 
+            <!-- TAB 5: USERS -->
             <div id="usersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 bg-cream-50/50"><h3 class="font-extrabold text-lg">Database Akun Pelanggan</h3></div>
@@ -194,16 +209,16 @@
         </div>
     </div>
 
-    <!-- MODAL KELOLA BATCH -->
-    <div id="batchModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <!-- MODAL ATRIBUT UMUM (BATCH, NEGARA, KATEGORI) -->
+    <div id="attributeModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-[32px] shadow-2xl p-6 relative border border-stone-100">
-            <button onclick="closeBatchModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            <h3 class="font-extrabold text-lg mb-1">Daftar Batch</h3><p class="text-[10px] text-stone-500 font-medium mb-4">Batch ini akan muncul di Dropdown Checkout User.</p>
+            <button onclick="closeAttributeModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <h3 class="font-extrabold text-lg mb-1" id="attrModalTitle">Daftar Atribut</h3><p class="text-[10px] text-stone-500 font-medium mb-4" id="attrModalDesc">Kelola atribut toko.</p>
             <div class="flex space-x-2 mb-4">
-                <input type="text" id="newBatchInput" placeholder="Misal: Batch USA #02" class="input-box py-2.5 text-xs">
-                <button onclick="addBatch()" id="btnAddBatch" class="bg-black text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95">TAMBAH</button>
+                <input type="text" id="newAttrInput" placeholder="Ketik nama baru..." class="input-box py-2.5 text-xs">
+                <button onclick="addAttr()" id="btnAddAttr" class="bg-black text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95">TAMBAH</button>
             </div>
-            <div id="batchListArea" class="space-y-2 max-h-60 overflow-y-auto hide-scroll pb-2"></div>
+            <div id="attrListArea" class="space-y-2 max-h-60 overflow-y-auto hide-scroll pb-2"></div>
         </div>
     </div>
 
@@ -224,9 +239,9 @@
                 <div class="input-float"><input type="text" id="prodName" placeholder=" " required><label>Nama Produk</label></div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="input-float"><input type="number" id="prodPrice" placeholder=" " required><label>Harga (Rp)</label></div>
-                    <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black"><option value="Skincare">Skincare</option><option value="Fashion">Fashion</option><option value="Food">Food & Snacks</option></select></div>
+                    <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black"></select></div>
                 </div>
-                <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full"><option value="USA">USA</option><option value="JAPAN">Japan</option><option value="KOREA">Korea</option></select></div>
+                <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full"></select></div>
             </div>
             <div class="flex space-x-3 mt-8">
                 <button onclick="closeProductModal()" class="flex-1 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl transition hover:bg-stone-50 text-[11px] tracking-widest uppercase">BATAL</button>
@@ -237,6 +252,7 @@
 
     <!-- SCRIPT FIREBASE ADMIN -->
     <script>
+        // MASUKKAN CONFIG FIREBASE AKANG DI BAWAH SINI
         const firebaseConfig = {
           apiKey: "AIzaSyDHHp8I0lsuyyo8nMfFmRR5ILHH5COvwvc",
           authDomain: "portwish-b2fe3.firebaseapp.com",
@@ -244,44 +260,33 @@
           projectId: "portwish-b2fe3",
           storageBucket: "portwish-b2fe3.firebasestorage.app",
           messagingSenderId: "19359316980",
-          appId: "1:19359316980:web:d8e0450b2029fa10e057a1",
-          measurementId: "G-GQ8BLTWK36"
+          appId: "1:19359316980:web:d8e0450b2029fa10e057a1"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const storage = firebase.storage();
 
-        let catalogDB = []; let batchesDB = []; let ordersDB = []; let usersDB = [];
-        let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
+        let catalogDB = []; let batchesDB = []; let countriesDB = ['USA', 'Japan', 'Korea']; let categoriesDB = ['Skincare', 'Fashion', 'Food & Snacks']; 
+        let ordersDB = []; let usersDB = []; let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
-        let currentEditingOrderIndex = null;
-        let currentUploadedImageBase64 = null; 
+        let currentEditingOrderIndex = null; let currentUploadedImageBase64 = null; 
+        
+        // Atribut Management State
+        let currentAttrType = ''; // 'batches', 'countries', 'categories'
 
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         // --- MENGHUBUNGKAN KE FIREBASE SECARA REAL-TIME ---
-        db.ref('catalog').on('value', snap => {
-            const data = snap.val();
-            catalogDB = data ? Object.values(data) : [];
-            if(document.getElementById('catalogTab').classList.contains('active')) renderCatalog();
-        });
-
-        db.ref('batches').on('value', snap => {
-            const data = snap.val();
-            batchesDB = data ? Object.values(data) : [];
-            if(document.getElementById('batchModal').classList.contains('hidden') === false) renderBatches();
-        });
-
+        db.ref('catalog').on('value', snap => { catalogDB = snap.val() ? Object.values(snap.val()) : []; if(document.getElementById('catalogTab').classList.contains('active')) renderCatalog(); });
+        db.ref('batches').on('value', snap => { batchesDB = snap.val() ? Object.values(snap.val()) : []; if(!document.getElementById('attributeModal').classList.contains('hidden') && currentAttrType==='batches') renderAttrList(); });
+        db.ref('countries').on('value', snap => { if(snap.val()) countriesDB = Object.values(snap.val()); if(!document.getElementById('attributeModal').classList.contains('hidden') && currentAttrType==='countries') renderAttrList(); });
+        db.ref('categories').on('value', snap => { if(snap.val()) categoriesDB = Object.values(snap.val()); if(!document.getElementById('attributeModal').classList.contains('hidden') && currentAttrType==='categories') renderAttrList(); });
+        db.ref('users').on('value', snap => { usersDB = snap.val() ? Object.values(snap.val()) : []; if(document.getElementById('usersTab').classList.contains('active')) renderUsers(); });
+        
         db.ref('orders').on('value', snap => {
             const data = snap.val();
             ordersDB = data ? Object.values(data).sort((a,b) => b.timestamp - a.timestamp) : [];
             refreshActiveTab();
-        });
-        
-        db.ref('users').on('value', snap => {
-            const data = snap.val();
-            usersDB = data ? Object.values(data) : [];
-            if(document.getElementById('usersTab').classList.contains('active')) renderUsers();
         });
 
         function loginAdmin() {
@@ -289,25 +294,19 @@
             if(email === 'admin@portwish.id' && pass === 'admin123') {
                 document.getElementById('loginErrorMsg').classList.add('hidden');
                 document.getElementById('btnAdminLogin').innerHTML = `<span class="loader loader-white"></span>`;
-                setTimeout(() => { 
-                    document.getElementById('adminLoginGate').classList.add('opacity-0'); 
-                    setTimeout(() => { document.getElementById('adminLoginGate').classList.add('hidden'); showAdminToast("Login Berhasil!"); switchTab('dashboard'); }, 500); 
-                }, 800);
-            } else { 
-                document.getElementById('loginErrorMsg').classList.remove('hidden'); document.getElementById('adminPass').value = ''; 
-            }
+                setTimeout(() => { document.getElementById('adminLoginGate').classList.add('opacity-0'); setTimeout(() => { document.getElementById('adminLoginGate').classList.add('hidden'); showAdminToast("Login Berhasil!"); switchTab('dashboard'); }, 500); }, 800);
+            } else { document.getElementById('loginErrorMsg').classList.remove('hidden'); document.getElementById('adminPass').value = ''; }
         }
         function handleEnter(e) { if (e.key === 'Enter') loginAdmin(); }
         function logoutAdmin() {
             if(confirm("Yakin ingin keluar dari panel admin?")) {
-                document.getElementById('adminEmail').value = ''; document.getElementById('adminPass').value = '';
-                document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
+                document.getElementById('adminEmail').value = ''; document.getElementById('adminPass').value = ''; document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
                 document.getElementById('adminLoginGate').classList.remove('hidden'); setTimeout(() => { document.getElementById('adminLoginGate').classList.remove('opacity-0'); }, 10);
             }
         }
 
         function refreshActiveTab() {
-            const activeTab = document.querySelector('.tab-content.active').id;
+            const activeTab = document.querySelector('.tab-content.active') ? document.querySelector('.tab-content.active').id : 'dashboardTab';
             if(activeTab === 'dashboardTab') renderDashboard();
             if(activeTab === 'ordersTab') renderOrders(document.querySelector('#ordersTab input').value);
             if(activeTab === 'trackingTab') renderTracking();
@@ -332,10 +331,7 @@
         let salesChartInstance = null;
         function initChart() {
             const ctx = document.getElementById('salesChart').getContext('2d'); if(salesChartInstance) salesChartInstance.destroy();
-            salesChartInstance = new Chart(ctx, { 
-                type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], datasets: [{ data: salesMonthly, borderColor: '#107c41', backgroundColor: 'rgba(16, 124, 65, 0.05)', borderWidth: 3, pointBackgroundColor: '#fff', pointBorderColor: '#107c41', pointBorderWidth: 2, pointRadius: 4, fill: true, tension: 0.4 }] }, 
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f5f5f4', drawBorder: false } }, x: { grid: { display: false, drawBorder: false } } } } 
-            });
+            salesChartInstance = new Chart(ctx, { type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], datasets: [{ data: salesMonthly, borderColor: '#107c41', backgroundColor: 'rgba(16, 124, 65, 0.05)', borderWidth: 3, pointBackgroundColor: '#fff', pointBorderColor: '#107c41', pointBorderWidth: 2, pointRadius: 4, fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f5f5f4', drawBorder: false } }, x: { grid: { display: false, drawBorder: false } } } } });
         }
 
         function renderDashboard() {
@@ -387,8 +383,7 @@
         function filterOrders(val) { renderOrders(val.toLowerCase()); }
 
         function approveOrder(orderId) { 
-            const btn = document.getElementById(`btnAppv_${orderId}`);
-            if(btn) { btn.innerHTML = "..."; btn.disabled = true; }
+            const btn = document.getElementById(`btnAppv_${orderId}`); if(btn) { btn.innerHTML = "..."; btn.disabled = true; }
             db.ref('orders/' + orderId).update({ status: "PROCESS (INPUT RESI)" }).then(() => { showAdminToast("Payment Approved!"); });
         }
 
@@ -399,18 +394,15 @@
         }
 
         function viewProof(orderId) {
-            const index = ordersDB.findIndex(x => x.id === orderId);
-            currentEditingOrderIndex = index;
-            const order = ordersDB[index];
-            document.getElementById('proofImage').src = order.proofImg;
+            const index = ordersDB.findIndex(x => x.id === orderId); currentEditingOrderIndex = index;
+            const order = ordersDB[index]; document.getElementById('proofImage').src = order.proofImg;
             const downloadBtn = document.getElementById('downloadProofBtn'); downloadBtn.href = order.proofImg; downloadBtn.download = `Bukti_Transfer_${order.id}.jpg`;
             document.getElementById('proofModal').classList.remove('hidden');
         }
         function closeProofModal() { document.getElementById('proofModal').classList.add('hidden'); currentEditingOrderIndex = null; }
         function approveFromProof() {
             if(currentEditingOrderIndex !== null) {
-                document.getElementById('btnProofApprove').innerHTML = "MEMPROSES...";
-                approveOrder(ordersDB[currentEditingOrderIndex].id);
+                document.getElementById('btnProofApprove').innerHTML = "MEMPROSES..."; approveOrder(ordersDB[currentEditingOrderIndex].id);
                 setTimeout(() => { document.getElementById('btnProofApprove').innerHTML = "VERIFIKASI"; closeProofModal(); }, 1000);
             }
         }
@@ -437,9 +429,8 @@
             document.getElementById('invName').textContent = o.user.name; document.getElementById('invEmail').textContent = o.user.email; 
             document.getElementById('invAddress').textContent = o.address; document.getElementById('invBatch').textContent = o.batch;
             document.getElementById('invResiShow').textContent = o.resi || "PENDING";
-            
             const tbody = document.getElementById('invItems'); tbody.innerHTML = '';
-            let grouped = {}; o.items.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
+            let grouped = {}; JSON.parse(o.itemsInfo || "[]").forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
             for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-4 border-b border-stone-100"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold">${i.country} • ${i.category}</p></td><td class="py-4 text-center font-bold border-b border-stone-100">x${i.qty}</td><td class="py-4 text-right font-extrabold text-black border-b border-stone-100">${formatRp(i.price * i.qty)}</td></tr>`; }
             document.getElementById('invSubtotal').textContent = formatRp(parseInt(o.total)); document.getElementById('invTotalMain').textContent = formatRp(parseInt(o.total));
             document.getElementById('invoiceModal').classList.remove('hidden');
@@ -447,27 +438,47 @@
         function closeInvoiceModal() { document.getElementById('invoiceModal').classList.add('hidden'); }
         function printInvoice() { window.print(); }
 
-        function openBatchModal() { renderBatches(); document.getElementById('batchModal').classList.remove('hidden'); }
-        function closeBatchModal() { document.getElementById('batchModal').classList.add('hidden'); }
-        function renderBatches() {
-            const area = document.getElementById('batchListArea'); area.innerHTML = '';
-            if(batchesDB.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada batch tersedia.</p>`; return; }
-            batchesDB.forEach((b, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100"><span class="text-xs font-bold text-black">${b}</span><button onclick="deleteBatch(${i})" class="text-stone-400 hover:text-red-500 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
-        }
-        function addBatch() {
-            const val = document.getElementById('newBatchInput').value.trim();
-            if(val) {
-                document.getElementById('btnAddBatch').innerHTML = "...";
-                const newBatches = [...batchesDB, val];
-                db.ref('batches').set(newBatches).then(() => { document.getElementById('newBatchInput').value = ''; showAdminToast("Batch ditambahkan!"); document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; });
-            }
-        }
-        function deleteBatch(index) {
-            const newBatches = [...batchesDB]; newBatches.splice(index, 1);
-            showAdminToast("Menghapus...");
-            db.ref('batches').set(newBatches).then(() => { showAdminToast("Batch dihapus."); });
+        // --- MANAJEMEN ATRIBUT (BATCH, KATEGORI, NEGARA) ---
+        function openBatchModal() { currentAttrType = 'batches'; document.getElementById('attrModalTitle').textContent = "Daftar Batch"; document.getElementById('attrModalDesc').textContent = "Batch akan muncul di Dropdown Checkout User."; document.getElementById('newAttrInput').placeholder = "Misal: Batch USA #02"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
+        function openCountryModal() { currentAttrType = 'countries'; document.getElementById('attrModalTitle').textContent = "Daftar Negara"; document.getElementById('attrModalDesc').textContent = "Negara untuk filter dan data produk."; document.getElementById('newAttrInput').placeholder = "Misal: Singapore"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
+        function openCategoryModal() { currentAttrType = 'categories'; document.getElementById('attrModalTitle').textContent = "Daftar Kategori"; document.getElementById('attrModalDesc').textContent = "Kategori untuk filter dan data produk."; document.getElementById('newAttrInput').placeholder = "Misal: Sepatu"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
+        function closeAttributeModal() { document.getElementById('attributeModal').classList.add('hidden'); }
+
+        function renderAttrList() {
+            const area = document.getElementById('attrListArea'); area.innerHTML = '';
+            let list = [];
+            if(currentAttrType === 'batches') list = batchesDB;
+            if(currentAttrType === 'countries') list = countriesDB;
+            if(currentAttrType === 'categories') list = categoriesDB;
+
+            if(list.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada data.</p>`; return; }
+            list.forEach((item, i) => { 
+                area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100"><span class="text-xs font-bold text-black">${item}</span><button onclick="deleteAttr(${i})" class="text-stone-400 hover:text-red-500 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; 
+            });
         }
 
+        function addAttr() {
+            const val = document.getElementById('newAttrInput').value.trim();
+            if(val) {
+                document.getElementById('btnAddAttr').innerHTML = "...";
+                let list = [];
+                if(currentAttrType === 'batches') list = [...batchesDB, val];
+                if(currentAttrType === 'countries') list = [...countriesDB, val];
+                if(currentAttrType === 'categories') list = [...categoriesDB, val];
+
+                db.ref(currentAttrType).set(list).then(() => { document.getElementById('newAttrInput').value = ''; showAdminToast("Data ditambahkan!"); document.getElementById('btnAddAttr').innerHTML = "TAMBAH"; });
+            }
+        }
+        function deleteAttr(index) {
+            let list = [];
+            if(currentAttrType === 'batches') { list = [...batchesDB]; list.splice(index, 1); }
+            if(currentAttrType === 'countries') { list = [...countriesDB]; list.splice(index, 1); }
+            if(currentAttrType === 'categories') { list = [...categoriesDB]; list.splice(index, 1); }
+            showAdminToast("Menghapus...");
+            db.ref(currentAttrType).set(list).then(() => { showAdminToast("Data dihapus."); });
+        }
+
+        // --- CATALOG ---
         function renderCatalog() {
             const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
             catalogDB.forEach(p => {
@@ -486,11 +497,8 @@
                         const MAX_WIDTH = 400; const scaleSize = MAX_WIDTH / img.width;
                         canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        
                         currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.6); 
-                        document.getElementById('prodImgPreview').src = currentUploadedImageBase64;
-                        document.getElementById('prodImgPreview').classList.remove('hidden');
-                        document.getElementById('uploadPlaceholder').classList.add('opacity-0');
+                        document.getElementById('prodImgPreview').src = currentUploadedImageBase64; document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
                     }
                     img.src = e.target.result;
                 }
@@ -499,6 +507,9 @@
         }
 
         function openProductModal(id = null) {
+            const selCat = document.getElementById('prodCat'); selCat.innerHTML = ''; categoriesDB.forEach(c => selCat.innerHTML += `<option value="${c}">${c}</option>`);
+            const selCou = document.getElementById('prodCountry'); selCou.innerHTML = ''; countriesDB.forEach(c => selCou.innerHTML += `<option value="${c}">${c}</option>`);
+
             if(id) {
                 const p = catalogDB.find(x => x.id === id); document.getElementById('prodModalTitle').textContent = "Edit Product"; document.getElementById('prodId').value = p.id; 
                 currentUploadedImageBase64 = p.img; document.getElementById('prodImgPreview').src = p.img; document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
@@ -523,11 +534,16 @@
 
             if (currentUploadedImageBase64.startsWith('data:image')) {
                 const storageRef = storage.ref('catalog/prod_' + newProdId + '.jpg');
-                storageRef.putString(currentUploadedImageBase64, 'data_url').then(snapshot => {
+                storageRef.putString(currentUploadedImageBase64, 'data_url')
+                .then(snapshot => {
                     snapshot.ref.getDownloadURL().then(url => {
                         const newProd = { id: newProdId, name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: url };
                         db.ref('catalog/' + newProdId).set(newProd).then(() => { btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); showAdminToast("Katalog diperbarui!"); });
                     });
+                })
+                .catch(error => {
+                    alert("GAGAL UPLOAD FOTO!\n\nPenyebab: Aturan/Rules Firebase Storage Anda masih terkunci.\n\nSilakan buka Firebase > Storage > Rules, lalu ubah 'allow read, write: if false;' menjadi 'allow read, write: if true;' lalu Publish.");
+                    btn.innerHTML = "SIMPAN"; btn.disabled = false;
                 });
             } else {
                 const newProd = { id: newProdId, name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: currentUploadedImageBase64 };
@@ -536,10 +552,7 @@
         }
 
         function deleteProduct(id) { 
-            if(confirm("Yakin ingin menghapus produk ini?")) { 
-                showAdminToast("Menghapus produk...");
-                db.ref('catalog/' + id).remove().then(() => { showAdminToast("Product deleted."); });
-            } 
+            if(confirm("Yakin ingin menghapus produk ini?")) { showAdminToast("Menghapus produk..."); db.ref('catalog/' + id).remove().then(() => { showAdminToast("Product deleted."); }); } 
         }
 
         function renderUsers() {
@@ -547,7 +560,6 @@
             if(usersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400">Belum ada pelanggan terdaftar.</td></tr>`; return; }
             usersDB.forEach((u, i) => { tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black">${u.name}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.email}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.phone}</td><td class="p-4 text-stone-600 font-bold text-xs text-center">${u.pass || '123'}</td></tr>`; });
         }
-
     </script>
 </body>
 </html>
