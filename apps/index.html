@@ -100,7 +100,7 @@
             <button onclick="switchTab('shop')" class="text-xs font-bold text-stone-500 mb-6 flex items-center hover:text-black transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg> BACK TO SHOP</button>
             <div class="flex justify-between items-end mb-6 border-b border-stone-200 pb-4">
                 <div><h2 class="text-3xl font-extrabold tracking-tight text-black">Hello, <span id="dashUserName">User</span></h2><p class="text-xs text-stone-500 mt-1">Keep track of your desired items.</p></div>
-                <button onclick="logout()" class="text-[9px] font-bold text-red-500 bg-red-50 px-3 py-1.5 rounded-full uppercase tracking-widest active:scale-95 transition">LOGOUT</button>
+                <button onclick="logout()" class="text-[9px] font-bold text-red-500 bg-red-50 px-4 py-2 rounded-full uppercase tracking-widest active:scale-95 transition">LOGOUT</button>
             </div>
             <div id="orderList" class="space-y-5">
                 <div id="emptyOrder" class="text-center py-20 hidden"><p class="text-stone-400 text-sm font-medium">No order history yet.</p></div>
@@ -108,7 +108,7 @@
         </div>
     </section>
 
-    <!-- AUTH MODAL -->
+    <!-- AUTH MODAL DENGAN RESET PASSWORD -->
     <div id="authModal" class="fixed inset-0 z-[90] hidden flex items-center justify-center px-4">
         <div onclick="closeAuthModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="authOverlay"></div>
         <div class="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300 relative z-10 border border-stone-100" id="authBox">
@@ -120,31 +120,34 @@
                 <button onclick="switchAuthMode('login')" id="btnAuthLog" class="flex-1 text-stone-400 text-[10px] font-extrabold tracking-widest py-3 rounded-xl">LOGIN</button>
             </div>
 
+            <!-- Register -->
             <div id="formRegister" class="space-y-4">
                 <div class="input-float"><input type="text" id="regName" placeholder=" " required autocomplete="off"><label>Full Name</label></div>
                 <div class="input-float"><input type="email" id="regEmail" placeholder=" " required autocomplete="off"><label>Active Email</label></div>
                 <div class="input-float"><input type="tel" id="regPhone" placeholder=" " required autocomplete="off"><label>WhatsApp Number</label></div>
                 <div class="input-float"><input type="password" id="regPass" placeholder=" " required autocomplete="off"><label>Create Password</label></div>
-                <button onclick="processRegister()" id="btnRegSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2">REGISTER NOW</button>
+                <button onclick="processRegister()" id="btnRegSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2 transition active:scale-95">REGISTER NOW</button>
             </div>
 
+            <!-- Login -->
             <div id="formLogin" class="space-y-4 hidden">
                 <div class="input-float"><input type="email" id="logEmail" placeholder=" " required autocomplete="off"><label>Registered Email</label></div>
                 <div class="input-float"><input type="password" id="logPass" placeholder=" " required autocomplete="off"><label>Password</label></div>
-                <button onclick="processLogin()" id="btnLogSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2">LOGIN NOW</button>
-                <p class="text-[10px] text-stone-400 mt-4 text-center cursor-pointer hover:text-black font-extrabold uppercase tracking-widest transition" onclick="switchAuthMode('reset')">Forgot Password?</p>
+                <button onclick="processLogin()" id="btnLogSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2 transition active:scale-95">LOGIN NOW</button>
+                
+                <!-- TOMBOL RESET PASSWORD YANG JELAS -->
+                <button onclick="switchAuthMode('reset')" class="w-full mt-4 bg-stone-100 text-stone-600 py-3.5 rounded-xl font-extrabold text-[10px] hover:bg-stone-200 transition uppercase tracking-widest">FORGOT PASSWORD? RESET HERE</button>
             </div>
 
-            <!-- FITUR BARU RESET PASSWORD -->
+            <!-- Fitur Reset Password -->
             <div id="formReset" class="space-y-4 hidden">
-                <p class="text-[10px] font-bold text-stone-500 uppercase tracking-widest text-center mb-4">Verify Account Data</p>
+                <p class="text-[10px] font-extrabold text-stone-500 uppercase tracking-widest text-center mb-4 bg-stone-50 py-2 rounded-lg">Verify Account Data</p>
                 <div class="input-float"><input type="email" id="resEmail" placeholder=" " required autocomplete="off"><label>Registered Email</label></div>
                 <div class="input-float"><input type="tel" id="resPhone" placeholder=" " required autocomplete="off"><label>Registered WhatsApp</label></div>
                 <div class="input-float"><input type="password" id="resPass" placeholder=" " required autocomplete="off"><label>New Password</label></div>
-                <button onclick="processReset()" id="btnResSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2">RESET PASSWORD</button>
-                <p class="text-[10px] text-stone-400 mt-4 text-center cursor-pointer hover:text-black font-extrabold uppercase tracking-widest transition" onclick="switchAuthMode('login')">BACK TO LOGIN</p>
+                <button onclick="processReset()" id="btnResSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2 transition active:scale-95">RESET PASSWORD</button>
+                <p class="text-[10px] text-stone-400 mt-5 text-center cursor-pointer hover:text-black font-extrabold uppercase tracking-widest transition" onclick="switchAuthMode('login')">BACK TO LOGIN</p>
             </div>
-
         </div>
     </div>
 
@@ -224,12 +227,12 @@
                 </div>
             </div>
             <div class="sticky bottom-0 bg-white/95 backdrop-blur-md border-t border-stone-200 p-6 z-10 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-                <button onclick="processOrder()" id="finalSubmitBtn" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-xl flex items-center justify-center"><span class="relative z-10">CONFIRM ORDER</span></button>
+                <button onclick="processOrder()" id="finalSubmitBtn" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-xl flex items-center justify-center transition active:scale-95"><span class="relative z-10">CONFIRM ORDER</span></button>
             </div>
         </div>
     </div>
 
-    <!-- TRACKING MODAL DENGAN HISTORY KEBAWAH -->
+    <!-- TRACKING MODAL DENGAN HISTORY KEBAWAH LION PARCEL -->
     <div id="trackingModal" class="fixed inset-0 z-[80] invisible pointer-events-none flex items-center justify-center px-4">
         <div onclick="closeTrackingModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="trackingOverlay"></div>
         <div class="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300 relative z-10 border border-stone-100" id="trackingBox">
@@ -240,6 +243,7 @@
                 </div>
                 <h3 class="text-xl font-extrabold text-black tracking-tight">Status Pengiriman</h3>
             </div>
+            
             <div class="bg-cream-50 border border-stone-200 rounded-2xl p-4 flex justify-between items-center mb-5"><div class="overflow-hidden"><p class="text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-1">Nomor Resi</p><p id="trackResi" class="font-extrabold text-lg text-black truncate tracking-wider">-</p></div><button onclick="copyResi()" id="copyBtn" class="bg-white border border-stone-200 text-black hover:bg-stone-50 text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition-all active:scale-95 shadow-sm uppercase tracking-widest">SALIN</button></div>
             
             <div class="mb-6 bg-cream-50/50 border border-stone-100 rounded-2xl p-5 shadow-sm">
@@ -247,10 +251,10 @@
                 <div id="trackingHistoryList" class="relative">
                     <!-- History Injected Here -->
                 </div>
-                <p class="text-[8px] text-stone-400 text-center mt-4 border-t border-stone-100 pt-3 italic">*Jika status belum update, silakan <span class="font-bold text-stone-500 underline" onclick="window.location.reload()">refresh halaman</span>.</p>
+                <p class="text-[8px] text-stone-400 text-center mt-4 border-t border-stone-100 pt-3 italic">*Jika status tidak berubah, silakan <span class="font-bold text-stone-500 underline cursor-pointer" onclick="window.location.reload()">Refresh Halaman</span>.</p>
             </div>
 
-            <button onclick="openUniversalTracker()" class="w-full bg-stone-100 hover:bg-stone-200 text-black py-4 rounded-2xl font-extrabold text-xs transition-all active:scale-95 flex items-center justify-center uppercase tracking-widest border border-stone-200">CEK WEB LION PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg></button>
+            <button onclick="openUniversalTracker()" class="w-full bg-stone-100 hover:bg-stone-200 text-black py-4 rounded-2xl font-extrabold text-xs transition-all active:scale-95 flex items-center justify-center uppercase tracking-widest border border-stone-200 shadow-sm">CEK WEB LION PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg></button>
         </div>
     </div>
     
@@ -315,9 +319,7 @@
           apiKey: "AIzaSyDHHp8I0lsuyyo8nMfFmRR5ILHH5COvwvc",
           authDomain: "portwish-b2fe3.firebaseapp.com",
           databaseURL: "https://portwish-b2fe3-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "portwish-b2fe3",
-          messagingSenderId: "19359316980",
-          appId: "1:19359316980:web:d8e0450b2029fa10e057a1"
+          projectId: "portwish-b2fe3"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -333,7 +335,7 @@
         let currentUser = JSON.parse(localStorage.getItem('pw_currentUser')) || null; 
         let authIntent = null; let orders = []; let currentCheckoutBase64 = null;
         let appliedVoucher = null;
-        let currentTrackingOrderId = null; // Deteksi agar Modal Tracking Live
+        let currentTrackingOrderId = null; 
 
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
 
@@ -349,11 +351,12 @@
         });
         db.ref('countries').on('value', snap => { if(snap.val()) countriesDB = Object.values(snap.val()); renderFilters(); });
         db.ref('categories').on('value', snap => { if(snap.val()) categoriesDB = Object.values(snap.val()); renderFilters(); });
+        
+        // LISTENER UNTUK ORDERS (LIVE TRACKING UPDATE)
         db.ref('orders').on('value', snap => {
             const data = snap.val(); orders = data ? Object.values(data).sort((a,b) => b.timestamp - a.timestamp) : [];
             if(currentUser) { 
                 renderOrders(); document.getElementById('loginIndicator').classList.remove('hidden'); 
-                // LIVE UPDATE TRACKING MODAL
                 if(currentTrackingOrderId) openTrackingModal(currentTrackingOrderId);
             }
         });
@@ -456,7 +459,7 @@
 
         function completeAuthSuccess() { closeAuthModal(); document.getElementById('loginIndicator').classList.remove('hidden'); if(authIntent === 'checkout') { setTimeout(openCheckoutModal, 300); } else if(authIntent === 'dashboard') { setTimeout(() => { switchTab('dashboard'); renderOrders(); }, 300); } }
 
-        // LOGOUT INSTAN DAN BERSIH (HARD RELOAD)
+        // LOGOUT INSTAN (HARD RELOAD)
         function logout() { 
             currentUser = null; 
             localStorage.removeItem('pw_currentUser'); 
@@ -663,51 +666,53 @@
         }
 
         function renderOrders() {
-            const list = document.getElementById('orderList'), emptyState = document.getElementById('emptyOrder');
-            document.getElementById('dashUserName').textContent = currentUser.name.split(' ')[0];
-            const userOrders = orders.filter(o => o.userEmail === currentUser.email);
+            try {
+                const list = document.getElementById('orderList'), emptyState = document.getElementById('emptyOrder');
+                document.getElementById('dashUserName').textContent = currentUser.name.split(' ')[0];
+                const userOrders = orders.filter(o => o.userEmail === currentUser.email);
 
-            if(userOrders.length === 0) { emptyState.classList.remove('hidden'); emptyState.classList.add('block'); } else { emptyState.classList.remove('block'); emptyState.classList.add('hidden'); }
-            
-            list.innerHTML = '';
-            userOrders.forEach(o => {
-                let statusColor = "bg-cream-100 text-stone-600 border-stone-200";
-                if(o.status === "IN TRANSIT") statusColor = "bg-black text-white border-black";
-                if(o.status === "COMPLETED") statusColor = "bg-green-100 text-green-700 border-green-200";
+                if(userOrders.length === 0) { emptyState.classList.remove('hidden'); emptyState.classList.add('block'); } else { emptyState.classList.remove('block'); emptyState.classList.add('hidden'); }
+                
+                list.innerHTML = '';
+                userOrders.forEach(o => {
+                    let statusColor = "bg-cream-100 text-stone-600 border-stone-200";
+                    if(o.status === "IN TRANSIT") statusColor = "bg-black text-white border-black";
+                    if(o.status === "COMPLETED") statusColor = "bg-green-100 text-green-700 border-green-200";
 
-                let trackingButton = `<span class="text-[10px] text-stone-400 font-bold uppercase tracking-widest cursor-not-allowed flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> VERIFICATION PROCESS</span>`;
-                if(o.status !== 'AWAITING VERIFICATION') trackingButton = `<button onclick="openTrackingModal('${o.id}')" class="text-[10px] text-black font-extrabold uppercase tracking-widest hover:text-stone-500 flex items-center transition-colors">TRACK PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>`;
+                    let trackingButton = `<span class="text-[10px] text-stone-400 font-bold uppercase tracking-widest cursor-not-allowed flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> VERIFICATION PROCESS</span>`;
+                    if(o.status !== 'AWAITING VERIFICATION') trackingButton = `<button onclick="openTrackingModal('${o.id}')" class="text-[10px] text-black font-extrabold uppercase tracking-widest hover:text-stone-500 flex items-center transition-colors">TRACK PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>`;
 
-                let invoiceBtn = '';
-                if(o.status !== 'AWAITING VERIFICATION') invoiceBtn = `<button onclick="openUserInvoice('${o.id}')" class="absolute top-6 right-6 text-stone-400 hover:text-black bg-cream-50 p-2 rounded-lg border border-stone-100 z-20 shadow-sm transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg></button>`;
+                    let invoiceBtn = '';
+                    if(o.status !== 'AWAITING VERIFICATION') invoiceBtn = `<button onclick="openUserInvoice('${o.id}')" class="absolute top-6 right-6 text-stone-400 hover:text-black bg-cream-50 p-2 rounded-lg border border-stone-100 z-20 shadow-sm transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg></button>`;
 
-                let itemsParsed = [];
-                try { itemsParsed = JSON.parse(o.itemsInfo || "[]"); } catch(e) {}
-                if (itemsParsed.length === 0 && o.items) itemsParsed = o.items; 
+                    let itemsParsed = [];
+                    try { itemsParsed = JSON.parse(o.itemsInfo || "[]"); } catch(e) {}
+                    if (itemsParsed.length === 0 && o.items) itemsParsed = o.items; 
 
-                let itemsHTML = '';
-                if (itemsParsed && itemsParsed.length > 0) {
-                    itemsHTML = `
-                        <div class="flex -space-x-3 mb-5 relative z-10 pl-2">
-                            ${itemsParsed.slice(0, 3).map(i => `<img src="${i.img}" onerror="this.onerror=null;this.src='https://placehold.co/400';" class="h-10 w-10 rounded-full border-2 border-white object-cover shadow-sm bg-cream-50">`).join('')}
-                            ${itemsParsed.length > 3 ? `<div class="h-10 w-10 rounded-full bg-cream-50 border-2 border-white flex items-center justify-center text-[10px] font-bold z-10 text-black">+${itemsParsed.length-3}</div>` : ''}
+                    let itemsHTML = '';
+                    if (itemsParsed && itemsParsed.length > 0) {
+                        itemsHTML = `
+                            <div class="flex -space-x-3 mb-5 relative z-10 pl-2">
+                                ${itemsParsed.slice(0, 3).map(i => `<img src="${i.img}" onerror="this.onerror=null;this.src='https://placehold.co/400';" class="h-10 w-10 rounded-full border-2 border-white object-cover shadow-sm bg-cream-50">`).join('')}
+                                ${itemsParsed.length > 3 ? `<div class="h-10 w-10 rounded-full bg-cream-50 border-2 border-white flex items-center justify-center text-[10px] font-bold z-10 text-black">+${itemsParsed.length-3}</div>` : ''}
+                            </div>`;
+                    }
+
+                    list.innerHTML += `
+                        <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group">
+                            ${invoiceBtn}
+                            <div class="flex justify-between items-start mb-5 relative z-10 pr-10">
+                                <div><p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest">${o.id || '-'} • ${o.date || '-'}</p><p class="font-extrabold text-sm mt-1.5 text-black">${itemsParsed ? itemsParsed.length : 0} Item • ${o.batch || '-'}</p></div>
+                                <span class="text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest border ${statusColor}">${o.status || '-'}</span>
+                            </div>
+                            ${itemsHTML}
+                            <div class="pt-4 border-t border-stone-100 flex justify-between items-center relative z-10">
+                                ${trackingButton}
+                                <span class="text-sm font-extrabold text-black">${formatRp(parseInt(o.total || 0))}</span>
+                            </div>
                         </div>`;
-                }
-
-                list.innerHTML += `
-                    <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group">
-                        ${invoiceBtn}
-                        <div class="flex justify-between items-start mb-5 relative z-10 pr-10">
-                            <div><p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest">${o.id} • ${o.date}</p><p class="font-extrabold text-sm mt-1.5 text-black">${itemsParsed ? itemsParsed.length : 0} Item • ${o.batch || '-'}</p></div>
-                            <span class="text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest border ${statusColor}">${o.status}</span>
-                        </div>
-                        ${itemsHTML}
-                        <div class="pt-4 border-t border-stone-100 flex justify-between items-center relative z-10">
-                            ${trackingButton}
-                            <span class="text-sm font-extrabold text-black">${formatRp(parseInt(o.total || 0))}</span>
-                        </div>
-                    </div>`;
-            });
+                });
+            } catch(e) { console.error("Render Orders Error:", e); }
         }
 
         function openUserInvoice(orderId) {
@@ -745,11 +750,10 @@
             if(order) {
                 document.getElementById('trackResi').textContent = order.resi || "Sedang Diinput Admin"; 
                 
-                // HISTORY TRACKING RENDER (Ke Bawah)
+                // HISTORY TRACKING RENDER (Live Update & Susun ke Bawah)
                 let historyHTML = '';
-                let historyArray = order.trackingHistory || [];
+                let historyArray = order.trackingHistory ? [...order.trackingHistory] : [];
                 
-                // Jaga-jaga kalau orderan lama (belum ada array history)
                 if(historyArray.length === 0 && order.latestTracking) {
                     historyArray = [{ status: order.latestTracking, time: order.trackingTime }];
                 }
