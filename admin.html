@@ -78,6 +78,7 @@
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Paket Dalam Perjalanan</p><h3 class="text-3xl font-extrabold" id="statOrders">0</h3></div></div>
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Verifikasi/Resi</p><h3 class="text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
                 </div>
+                
                 <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                         <div><h3 class="font-extrabold text-lg">Kurva Penjualan 2026</h3><p class="text-xs text-stone-500 font-medium">Statistik pendapatan per bulan</p></div>
@@ -196,7 +197,7 @@
         const scriptURL = 'https://script.google.com/macros/s/AKfycbztjaLEsdsASxFJwZ7hMEMwXIp9BRSWpA0sjQqPhBqLL1a_di7iCx5H5XlMghrlfYTr/exec';
         
         let catalogDB = []; let batchesDB = []; let ordersDB = []; 
-        let usersDB = JSON.parse(localStorage.getItem('pw_users')) || [{ name: "Dadan Furman", email: "user@portwish.id", phone: "081234", pass: "123" }];
+        let usersDB = JSON.parse(localStorage.getItem('pw_users')) || [];
         
         let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
@@ -244,7 +245,7 @@
                 processIncomingData(data); 
                 refreshActiveTab(); 
             }).catch(err => console.log("Silent fetch error"));
-        }, 15000);
+        }, 8000);
 
         function processIncomingData(data) {
             catalogDB = data.catalog || [];
@@ -354,8 +355,8 @@
             .then(() => {
                 const idx = ordersDB.findIndex(x => x.id === orderId);
                 ordersDB[idx].status = "PROCESS (INPUT RESI)"; showAdminToast("Payment Approved!"); refreshActiveTab(); 
-                setTimeout(() => pauseSync = false, 10000);
-            }).catch(e => { showAdminToast("Gangguan jaringan"); if(btn){btn.innerHTML = "APPROVE"; btn.disabled = false;} pauseSync = false; });
+                setTimeout(() => pauseSync = false, 3000);
+            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); if(btn){btn.innerHTML = "APPROVE"; btn.disabled = false;} pauseSync = false; });
         }
 
         function saveResi(orderId) { 
@@ -366,8 +367,8 @@
             .then(() => {
                 const idx = ordersDB.findIndex(x => x.id === orderId);
                 ordersDB[idx].resi = r; ordersDB[idx].status = "IN TRANSIT"; showAdminToast("Resi diinput!"); refreshActiveTab();
-                setTimeout(() => pauseSync = false, 10000);
-            }).catch(e => { showAdminToast("Gangguan jaringan"); btn.innerHTML = "KIRIM"; btn.disabled = false; pauseSync = false; });
+                setTimeout(() => pauseSync = false, 3000);
+            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "KIRIM"; btn.disabled = false; pauseSync = false; });
         }
 
         function getDirectUrl(url) {
@@ -418,7 +419,7 @@
             .then(() => {
                 const idx = ordersDB.findIndex(x => x.id === orderId);
                 ordersDB[idx].latestTracking = v; ordersDB[idx].trackingTime = t; showAdminToast("Status diupdate!"); renderTracking();
-                setTimeout(() => pauseSync = false, 10000);
+                setTimeout(() => pauseSync = false, 3000);
             }).catch(e => { showAdminToast("Gangguan jaringan"); btn.innerHTML = "UPDATE USER STATUS"; btn.disabled = false; pauseSync = false; });
         }
 
@@ -438,7 +439,7 @@
         function closeBatchModal() { document.getElementById('batchModal').classList.add('hidden'); }
         function renderBatches() {
             const area = document.getElementById('batchListArea'); area.innerHTML = '';
-            if(batchesDB.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada batch.</p>`; return; }
+            if(batchesDB.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada batch tersedia.</p>`; return; }
             batchesDB.forEach((b, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100"><span class="text-xs font-bold text-black">${b}</span><button onclick="deleteBatch(${i})" class="text-stone-400 hover:text-red-500 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
         }
         function addBatch() {
@@ -448,7 +449,7 @@
                 const newBatches = [...batchesDB, val];
                 pauseSync = true;
                 fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-                .then(() => { batchesDB = newBatches; document.getElementById('newBatchInput').value = ''; renderBatches(); showAdminToast("Batch ditambahkan!"); document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; setTimeout(() => pauseSync = false, 10000); })
+                .then(() => { batchesDB = newBatches; document.getElementById('newBatchInput').value = ''; renderBatches(); showAdminToast("Batch ditambahkan!"); document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; setTimeout(() => pauseSync = false, 3000); })
                 .catch(e => { document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; showAdminToast("Gangguan jaringan"); pauseSync = false; });
             }
         }
@@ -457,7 +458,7 @@
             showAdminToast("Menghapus...");
             pauseSync = true;
             fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-            .then(() => { batchesDB = newBatches; renderBatches(); showAdminToast("Batch dihapus."); setTimeout(() => pauseSync = false, 10000); })
+            .then(() => { batchesDB = newBatches; renderBatches(); showAdminToast("Batch dihapus."); setTimeout(() => pauseSync = false, 3000); })
             .catch(e => { showAdminToast("Gangguan jaringan"); pauseSync = false; });
         }
 
@@ -520,7 +521,7 @@
             .then(() => {
                 if(id) { const i = catalogDB.findIndex(x => x.id === parseInt(id)); catalogDB[i] = newProd; } else { catalogDB.push(newProd); }
                 btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); renderCatalog(); showAdminToast("Katalog diperbarui!");
-                setTimeout(() => pauseSync = false, 10000);
+                setTimeout(() => pauseSync = false, 3000);
             }).catch(e => { btn.innerHTML = "SIMPAN"; btn.disabled = false; showAdminToast("Gangguan Jaringan"); pauseSync = false; });
         }
 
@@ -529,7 +530,7 @@
                 showAdminToast("Menghapus produk...");
                 pauseSync = true;
                 fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "deleteProduct", productId: id}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-                .then(() => { catalogDB = catalogDB.filter(x => x.id !== id); renderCatalog(); showAdminToast("Product deleted."); setTimeout(() => pauseSync = false, 10000); })
+                .then(() => { catalogDB = catalogDB.filter(x => x.id !== id); renderCatalog(); showAdminToast("Product deleted."); setTimeout(() => pauseSync = false, 3000); })
                 .catch(e => { showAdminToast("Gangguan Jaringan"); pauseSync = false; });
             } 
         }
