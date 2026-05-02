@@ -72,14 +72,12 @@
         </header>
 
         <div class="p-8">
-            <!-- TAB 1: DASHBOARD -->
             <div id="dashboardTab" class="tab-content active space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-cream-100 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Total Pendapatan</p><h3 class="text-3xl font-extrabold" id="statRevenue">Rp 0</h3></div></div>
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Paket Dalam Perjalanan</p><h3 class="text-3xl font-extrabold" id="statOrders">0</h3></div></div>
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Verifikasi/Resi</p><h3 class="text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
                 </div>
-                
                 <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                         <div><h3 class="font-extrabold text-lg">Kurva Penjualan 2026</h3><p class="text-xs text-stone-500 font-medium">Statistik pendapatan per bulan</p></div>
@@ -87,22 +85,15 @@
                     </div>
                     <div class="w-full h-72"><canvas id="salesChart"></canvas></div>
                 </div>
-
                 <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
                     <div class="flex justify-between items-center mb-6">
                         <div><h3 class="font-extrabold text-lg">Transaksi Terkini</h3><p class="text-xs text-stone-500 font-medium">Pantau nama pemesan dan nomor resi terbaru</p></div>
                         <button onclick="switchTab('orders')" class="text-[10px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest transition-colors flex items-center">Lihat Semua <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                     </div>
-                    <div class="overflow-x-auto hide-scroll">
-                        <table class="w-full text-left border-collapse whitespace-nowrap">
-                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi Pengiriman</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead>
-                            <tbody id="recentOrdersBody" class="text-sm"></tbody>
-                        </table>
-                    </div>
+                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi Pengiriman</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead><tbody id="recentOrdersBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
 
-            <!-- TAB 2: ORDERS -->
             <div id="ordersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 flex flex-col sm:flex-row justify-between items-center bg-cream-50/50 gap-4"><h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3><input type="text" placeholder="Cari ID / Nama..." class="input-box sm:w-64 py-2 text-sm font-semibold" oninput="filterOrders(this.value)"></div>
@@ -110,7 +101,6 @@
                 </div>
             </div>
 
-            <!-- TAB 3: TRACKING -->
             <div id="trackingTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 bg-blue-50/30"><h3 class="font-extrabold text-lg">Update Logistik Manual</h3><p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">IN TRANSIT</span>. Update status agar pembeli bisa melacak via web portwish.</p></div>
@@ -118,17 +108,18 @@
                 </div>
             </div>
 
-            <!-- TAB 4: CATALOG -->
             <div id="catalogTab" class="tab-content">
-                <div class="flex justify-between items-center mb-6"><h3 class="font-extrabold text-xl">Kelola Produk</h3><div class="flex space-x-3"><button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> Kelola Batch</button><button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Tambah Produk</button></div></div>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-xl">Kelola Produk</h3>
+                    <div class="flex space-x-3"><button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> Kelola Batch</button><button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Tambah Produk</button></div>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="adminCatalogGrid"></div>
             </div>
 
-            <!-- TAB 5: USERS -->
             <div id="usersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 bg-cream-50/50"><h3 class="font-extrabold text-lg">Database Akun Pelanggan</h3></div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
+                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold">Password</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
         </div>
@@ -204,11 +195,14 @@
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbztjaLEsdsASxFJwZ7hMEMwXIp9BRSWpA0sjQqPhBqLL1a_di7iCx5H5XlMghrlfYTr/exec';
         
-        let catalogDB = []; let batchesDB = []; let ordersDB = []; let usersDB = [];
+        let catalogDB = []; let batchesDB = []; let ordersDB = []; 
+        let usersDB = JSON.parse(localStorage.getItem('pw_users')) || [{ name: "Dadan Furman", email: "user@portwish.id", phone: "081234", pass: "123" }];
+        
         let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
         let currentEditingOrderIndex = null;
         let currentUploadedImageBase64 = null; 
+        let pauseSync = false;
 
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -231,30 +225,25 @@
             }
         }
 
-        // --- FETCH UTAMA ---
         function fetchDatabase() {
-            fetch(scriptURL)
-            .then(res => res.json())
-            .then(data => {
+            fetch(scriptURL).then(res => res.json()).then(data => {
                 processIncomingData(data);
                 document.getElementById('adminLoginGate').classList.add('opacity-0'); 
                 setTimeout(() => { document.getElementById('adminLoginGate').classList.add('hidden'); showAdminToast("Login Berhasil!"); }, 500); 
                 switchTab('dashboard');
-            })
-            .catch(err => {
+            }).catch(err => {
                 document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
-                alert("Gagal memuat data dari server Google Sheets. Pastikan link Apps Script benar dan Data sudah kosong dari base64 lama.");
+                alert("Gagal memuat data dari server Google Sheets.");
             });
         }
 
-        // --- SILENT POLLING (FITUR REAL-TIME BAYANGAN) ---
+        // --- SILENT POLLING ---
         setInterval(() => {
-            if(document.getElementById('adminLoginGate').classList.contains('hidden')) {
-                fetch(scriptURL)
-                .then(res => res.json())
-                .then(data => { processIncomingData(data); refreshActiveTab(); })
-                .catch(err => console.log("Silent fetch error"));
-            }
+            if(!document.getElementById('adminLoginGate').classList.contains('hidden') || pauseSync) return;
+            fetch(scriptURL).then(res => res.json()).then(data => { 
+                processIncomingData(data); 
+                refreshActiveTab(); 
+            }).catch(err => console.log("Silent fetch error"));
         }, 15000);
 
         function processIncomingData(data) {
@@ -267,9 +256,12 @@
                 items: JSON.parse(o.itemsInfo || "[]")
             }));
             
-            let uMap = {};
-            ordersDB.forEach(o => { if(!uMap[o.user.email]) uMap[o.user.email] = o.user; });
-            usersDB = Object.values(uMap);
+            ordersDB.forEach(o => {
+                if(!usersDB.find(u => u.email === o.user.email)) {
+                    usersDB.push({ name: o.user.name, email: o.user.email, phone: o.user.phone, pass: "123" });
+                    localStorage.setItem('pw_users', JSON.stringify(usersDB));
+                }
+            });
         }
 
         function refreshActiveTab() {
@@ -357,41 +349,34 @@
         function approveOrder(orderId) { 
             const btn = document.getElementById(`btnAppv_${orderId}`);
             if(btn) { btn.innerHTML = "..."; btn.disabled = true; }
-            
-            fetch(scriptURL, { 
-                method: 'POST', mode: 'no-cors', 
-                body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "PROCESS (INPUT RESI)"}), 
-                headers: {'Content-Type': 'text/plain;charset=utf-8'} 
-            })
+            pauseSync = true;
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "PROCESS (INPUT RESI)"}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
             .then(() => {
                 const idx = ordersDB.findIndex(x => x.id === orderId);
                 ordersDB[idx].status = "PROCESS (INPUT RESI)"; showAdminToast("Payment Approved!"); refreshActiveTab(); 
-            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); if(btn){btn.innerHTML = "APPROVE"; btn.disabled = false;} });
+                setTimeout(() => pauseSync = false, 10000);
+            }).catch(e => { showAdminToast("Gangguan jaringan"); if(btn){btn.innerHTML = "APPROVE"; btn.disabled = false;} pauseSync = false; });
         }
 
         function saveResi(orderId) { 
             const r = document.getElementById(`resiInput_${orderId}`).value; if(!r) return alert("Silakan input nomor resi!"); 
             const btn = document.getElementById(`btnResi_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
-            
-            fetch(scriptURL, { 
-                method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "IN TRANSIT", resi: r}), 
-                headers: {'Content-Type': 'text/plain;charset=utf-8'} 
-            })
+            pauseSync = true;
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "IN TRANSIT", resi: r}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
             .then(() => {
                 const idx = ordersDB.findIndex(x => x.id === orderId);
                 ordersDB[idx].resi = r; ordersDB[idx].status = "IN TRANSIT"; showAdminToast("Resi diinput!"); refreshActiveTab();
-            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "KIRIM"; btn.disabled = false; });
+                setTimeout(() => pauseSync = false, 10000);
+            }).catch(e => { showAdminToast("Gangguan jaringan"); btn.innerHTML = "KIRIM"; btn.disabled = false; pauseSync = false; });
         }
 
-        // --- SOLUSI: Konversi Link Drive agar Preview Tidak Rusak ---
         function getDirectUrl(url) {
             if (!url) return 'https://placehold.co/400';
             if (url.includes('drive.google.com')) {
                 let id = "";
                 if(url.includes('id=')) id = url.split('id=')[1].split('&')[0];
                 else if (url.includes('/file/d/')) id = url.split('/file/d/')[1].split('/')[0];
-                if(id) return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`; // API Rahasia Thumbnail Drive
+                if(id) return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
             }
             return url;
         }
@@ -428,15 +413,13 @@
             const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
             const btn = document.getElementById(`btnTrack_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
             
-            fetch(scriptURL, { 
-                method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({action: "updateOrder", orderId: orderId, latestTracking: v, trackingTime: t}), 
-                headers: {'Content-Type': 'text/plain;charset=utf-8'} 
-            })
+            pauseSync = true;
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, latestTracking: v, trackingTime: t}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
             .then(() => {
                 const idx = ordersDB.findIndex(x => x.id === orderId);
                 ordersDB[idx].latestTracking = v; ordersDB[idx].trackingTime = t; showAdminToast("Status diupdate!"); renderTracking();
-            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "UPDATE USER STATUS"; btn.disabled = false; });
+                setTimeout(() => pauseSync = false, 10000);
+            }).catch(e => { showAdminToast("Gangguan jaringan"); btn.innerHTML = "UPDATE USER STATUS"; btn.disabled = false; pauseSync = false; });
         }
 
         function openInvoice(orderId) {
@@ -455,7 +438,7 @@
         function closeBatchModal() { document.getElementById('batchModal').classList.add('hidden'); }
         function renderBatches() {
             const area = document.getElementById('batchListArea'); area.innerHTML = '';
-            if(batchesDB.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada batch tersedia.</p>`; return; }
+            if(batchesDB.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada batch.</p>`; return; }
             batchesDB.forEach((b, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100"><span class="text-xs font-bold text-black">${b}</span><button onclick="deleteBatch(${i})" class="text-stone-400 hover:text-red-500 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
         }
         function addBatch() {
@@ -463,17 +446,19 @@
             if(val) {
                 document.getElementById('btnAddBatch').innerHTML = "...";
                 const newBatches = [...batchesDB, val];
+                pauseSync = true;
                 fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-                .then(() => { batchesDB = newBatches; document.getElementById('newBatchInput').value = ''; renderBatches(); showAdminToast("Batch ditambahkan!"); document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; })
-                .catch(e => { document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; showAdminToast("Gangguan jaringan"); });
+                .then(() => { batchesDB = newBatches; document.getElementById('newBatchInput').value = ''; renderBatches(); showAdminToast("Batch ditambahkan!"); document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; setTimeout(() => pauseSync = false, 10000); })
+                .catch(e => { document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; showAdminToast("Gangguan jaringan"); pauseSync = false; });
             }
         }
         function deleteBatch(index) {
             const newBatches = [...batchesDB]; newBatches.splice(index, 1);
             showAdminToast("Menghapus...");
+            pauseSync = true;
             fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-            .then(() => { batchesDB = newBatches; renderBatches(); showAdminToast("Batch dihapus."); })
-            .catch(e => { showAdminToast("Gangguan jaringan"); });
+            .then(() => { batchesDB = newBatches; renderBatches(); showAdminToast("Batch dihapus."); setTimeout(() => pauseSync = false, 10000); })
+            .catch(e => { showAdminToast("Gangguan jaringan"); pauseSync = false; });
         }
 
         function renderCatalog() {
@@ -530,33 +515,29 @@
             const id = document.getElementById('prodId').value;
             const newProd = { id: id ? parseInt(id) : Date.now(), name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: currentUploadedImageBase64 };
 
-            fetch(scriptURL, { 
-                method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({action: "saveProduct", product: newProd}), 
-                headers: {'Content-Type': 'text/plain;charset=utf-8'} 
-            })
+            pauseSync = true;
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveProduct", product: newProd}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
             .then(() => {
                 if(id) { const i = catalogDB.findIndex(x => x.id === parseInt(id)); catalogDB[i] = newProd; } else { catalogDB.push(newProd); }
-                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); renderCatalog(); showAdminToast("Katalog diperbarui! Refresh web jika gambar belum sinkron.");
-            }).catch(e => { btn.innerHTML = "SIMPAN"; btn.disabled = false; showAdminToast("Gangguan Jaringan"); });
+                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); renderCatalog(); showAdminToast("Katalog diperbarui!");
+                setTimeout(() => pauseSync = false, 10000);
+            }).catch(e => { btn.innerHTML = "SIMPAN"; btn.disabled = false; showAdminToast("Gangguan Jaringan"); pauseSync = false; });
         }
 
         function deleteProduct(id) { 
             if(confirm("Yakin ingin menghapus produk ini?")) { 
                 showAdminToast("Menghapus produk...");
-                fetch(scriptURL, { 
-                    method: 'POST', mode: 'no-cors',
-                    body: JSON.stringify({action: "deleteProduct", productId: id}), headers: {'Content-Type': 'text/plain;charset=utf-8'} 
-                })
-                .then(() => { catalogDB = catalogDB.filter(x => x.id !== id); renderCatalog(); showAdminToast("Product deleted."); })
-                .catch(e => { showAdminToast("Gangguan Jaringan"); });
+                pauseSync = true;
+                fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "deleteProduct", productId: id}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+                .then(() => { catalogDB = catalogDB.filter(x => x.id !== id); renderCatalog(); showAdminToast("Product deleted."); setTimeout(() => pauseSync = false, 10000); })
+                .catch(e => { showAdminToast("Gangguan Jaringan"); pauseSync = false; });
             } 
         }
 
         function renderUsers() {
             const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
             if(usersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400">Belum ada pelanggan terdaftar.</td></tr>`; return; }
-            usersDB.forEach((u, i) => { tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black">${u.name}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.email}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.phone}</td><td class="p-4 text-center text-[9px] text-stone-400 uppercase font-bold tracking-widest">Auto-Synced</td></tr>`; });
+            usersDB.forEach((u, i) => { tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black">${u.name}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.email}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.phone}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.pass || '123'}</td></tr>`; });
         }
 
     </script>
