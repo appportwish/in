@@ -60,8 +60,8 @@
             </div>
             <nav class="p-4 space-y-2">
                 <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-black text-white font-bold text-sm transition-all shadow-md"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><span>Dashboard</span></button>
-                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span></button>
-                <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span></button>
+                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span><span class="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full" id="pendingCount">0</span></button>
+                <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all relative"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span><span class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse" id="activeShipmentDot"></span></button>
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg><span>Kelola Katalog</span></button>
                 <button onclick="switchTab('users')" id="nav-users" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg><span>Database Akun</span></button>
             </nav>
@@ -177,9 +177,8 @@
                         <p class="text-sm text-stone-600 max-w-xs mt-1 font-medium" id="invAddress">Alamat</p>
                     </div>
                     <div class="text-right">
-                        <p class="text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Batch:</p>
-                        <span class="bg-cream-100 text-black font-extrabold px-3 py-1 rounded-full text-xs border border-stone-200 inline-block mb-2" id="invBatch">BATCH NAME</span>
-                        <br>
+                        <p class="text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Batch / Status:</p>
+                        <span class="bg-cream-100 text-black font-extrabold px-3 py-1 rounded-full text-xs border border-stone-200 inline-block mb-2" id="invBatch">BATCH NAME</span><br>
                         <span class="bg-green-100 text-green-700 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest border border-green-200">PAID</span>
                         <div class="mt-2">
                             <p class="text-[9px] text-stone-400 font-extrabold uppercase tracking-widest mb-0.5">Tracking No:</p>
@@ -252,7 +251,6 @@
 
     <!-- SCRIPT FIREBASE ADMIN -->
     <script>
-        // MASUKKAN CONFIG FIREBASE AKANG DI BAWAH SINI
         const firebaseConfig = {
           apiKey: "AIzaSyDHHp8I0lsuyyo8nMfFmRR5ILHH5COvwvc",
           authDomain: "portwish-b2fe3.firebaseapp.com",
@@ -271,8 +269,7 @@
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
         let currentEditingOrderIndex = null; let currentUploadedImageBase64 = null; 
         
-        // Atribut Management State
-        let currentAttrType = ''; // 'batches', 'countries', 'categories'
+        let currentAttrType = ''; 
 
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -478,7 +475,7 @@
             db.ref(currentAttrType).set(list).then(() => { showAdminToast("Data dihapus."); });
         }
 
-        // --- CATALOG ---
+        // --- CATALOG DENGAN KOMPRESI (Max lebar 800px) ---
         function renderCatalog() {
             const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
             catalogDB.forEach(p => {
@@ -493,12 +490,18 @@
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
-                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
-                        const MAX_WIDTH = 400; const scaleSize = MAX_WIDTH / img.width;
-                        canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.6); 
-                        document.getElementById('prodImgPreview').src = currentUploadedImageBase64; document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
+                        const canvas = document.createElement('canvas');
+                        let width = img.width, height = img.height;
+                        const MAX_WIDTH = 800; // Kompresi max 800px biar enteng di server
+                        if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
+                        canvas.width = width; canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7); // Kompres kualitas 70%
+                        document.getElementById('prodImgPreview').src = currentUploadedImageBase64;
+                        document.getElementById('prodImgPreview').classList.remove('hidden');
+                        document.getElementById('uploadPlaceholder').classList.add('opacity-0');
                     }
                     img.src = e.target.result;
                 }
@@ -542,7 +545,7 @@
                     });
                 })
                 .catch(error => {
-                    alert("GAGAL UPLOAD FOTO!\n\nPenyebab: Aturan/Rules Firebase Storage Anda masih terkunci.\n\nSilakan buka Firebase > Storage > Rules, lalu ubah 'allow read, write: if false;' menjadi 'allow read, write: if true;' lalu Publish.");
+                    alert("GAGAL UPLOAD FOTO!\n\nPenyebab: Aturan/Rules Firebase Storage Anda masih terkunci.\n\nSilakan buka Firebase > Build > Storage > Rules, lalu ubah jadi 'allow read, write: if true;' lalu Publish.");
                     btn.innerHTML = "SIMPAN"; btn.disabled = false;
                 });
             } else {
@@ -552,7 +555,10 @@
         }
 
         function deleteProduct(id) { 
-            if(confirm("Yakin ingin menghapus produk ini?")) { showAdminToast("Menghapus produk..."); db.ref('catalog/' + id).remove().then(() => { showAdminToast("Product deleted."); }); } 
+            if(confirm("Yakin ingin menghapus produk ini?")) { 
+                showAdminToast("Menghapus produk...");
+                db.ref('catalog/' + id).remove().then(() => { showAdminToast("Product deleted."); });
+            } 
         }
 
         function renderUsers() {
