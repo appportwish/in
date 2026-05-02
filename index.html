@@ -37,8 +37,8 @@
         <div class="max-w-md mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex flex-col cursor-pointer" onclick="switchTab('shop')"><img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-7 md:h-8 w-auto object-contain"></div>
             <div class="flex items-center space-x-5">
-                <button onclick="tryDashboard()" class="text-stone-500 hover:text-black transition-colors relative"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span id="loginIndicator" class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 border border-white rounded-full hidden"></span></button>
-                <button onclick="toggleCart()" class="relative text-stone-500 hover:text-black transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg><span id="cartCount" class="absolute -top-2 -right-2 bg-black text-white text-[10px] font-bold h-4.5 w-4.5 min-w-[18px] px-1 rounded-full flex items-center justify-center opacity-0 transition-opacity shadow-md">0</span></button>
+                <button onclick="tryDashboard()" class="text-stone-500 hover:text-black transition-colors relative" title="Account / Order History"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span id="loginIndicator" class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 border border-white rounded-full hidden"></span></button>
+                <button onclick="toggleCart()" class="relative text-stone-500 hover:text-black transition-colors" title="Cart"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg><span id="cartCount" class="absolute -top-2 -right-2 bg-black text-white text-[10px] font-bold h-4.5 w-4.5 min-w-[18px] px-1 rounded-full flex items-center justify-center opacity-0 transition-opacity shadow-md">0</span></button>
             </div>
         </div>
     </nav>
@@ -216,19 +216,22 @@
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbztjaLEsdsASxFJwZ7hMEMwXIp9BRSWpA0sjQqPhBqLL1a_di7iCx5H5XlMghrlfYTr/exec';
 
-        let products = [];
-        let activeCountry = 'ALL', activeCategory = 'ALL', searchQuery = '', cart = [];
-        
-        // Mempertahankan User Demo Default agar Login Berfungsi
+        let products = []; let activeCountry = 'ALL', activeCategory = 'ALL', searchQuery = '', cart = [];
         let usersDB = [{ name: "Dadan Furman", email: "user@portwish.id", phone: "081234", pass: "123" }];
-        let currentUser = null; 
-        let authIntent = null; 
-        let orders = [];
-        let currentCheckoutBase64 = null;
-
+        let currentUser = null; let authIntent = null; let orders = []; let currentCheckoutBase64 = null;
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
 
-        // Initial Fetch dari Google Sheets
+        function getDirectUrl(url) {
+            if (!url) return 'https://placehold.co/400';
+            if (url.includes('drive.google.com')) {
+                let id = "";
+                if(url.includes('id=')) id = url.split('id=')[1].split('&')[0];
+                else if (url.includes('/file/d/')) id = url.split('/file/d/')[1].split('/')[0];
+                if(id) return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
+            }
+            return url;
+        }
+
         function fetchDatabase() {
             const toast = document.getElementById('liveToast');
             toast.classList.remove('translate-y-[-150%]', 'opacity-0'); toast.classList.add('translate-y-0', 'opacity-100');
@@ -236,33 +239,46 @@
             fetch(scriptURL)
             .then(res => res.json())
             .then(data => {
-                products = data.catalog || [];
-                
-                const batchSelect = document.getElementById('batchSelect');
-                batchSelect.innerHTML = '<option value="">-- Select Batch --</option>';
-                (data.batches || []).forEach(b => { batchSelect.innerHTML += `<option value="${b}">${b}</option>`; });
-
-                orders = (data.orders || []).map(o => ({
-                    id: o.id, date: o.date, userEmail: o.user.email, address: o.address, batch: o.batch, 
-                    total: o.total, status: o.status, resi: o.resi, latestTracking: o.latestTracking, trackingTime: o.trackingTime,
-                    items: JSON.parse(o.itemsInfo || "[]")
-                }));
-
-                // Mencegah User Default Terhapus
-                orders.forEach(o => {
-                    if(!usersDB.find(u => u.email === o.userEmail)) {
-                        usersDB.push({ name: o.user.name, email: o.userEmail, phone: o.user.phone, pass: "123" });
-                    }
-                });
-
+                processIncomingData(data);
                 renderProducts();
                 if(currentUser) renderOrders();
-
                 setTimeout(() => { toast.classList.remove('translate-y-0', 'opacity-100'); toast.classList.add('translate-y-[-150%]', 'opacity-0'); }, 1000);
             })
             .catch(err => {
                 document.getElementById('toastMsg').textContent = "Offline Mode: Gagal memuat data dari server.";
                 setTimeout(() => { toast.classList.remove('translate-y-0', 'opacity-100'); toast.classList.add('translate-y-[-150%]', 'opacity-0'); }, 3000);
+            });
+        }
+
+        // --- SILENT POLLING ---
+        setInterval(() => {
+            fetch(scriptURL)
+            .then(res => res.json())
+            .then(data => {
+                processIncomingData(data);
+                if(document.getElementById('shopTab').classList.contains('active')) renderProducts();
+                if(currentUser && document.getElementById('dashboardTab').classList.contains('active')) renderOrders();
+            }).catch(err => console.log("Silent fetch error"));
+        }, 15000);
+
+        function processIncomingData(data) {
+            products = data.catalog || [];
+            const batchSelect = document.getElementById('batchSelect');
+            if(batchSelect) {
+                const currentVal = batchSelect.value;
+                batchSelect.innerHTML = '<option value="">-- Select Batch --</option>';
+                (data.batches || []).forEach(b => { batchSelect.innerHTML += `<option value="${b}">${b}</option>`; });
+                batchSelect.value = currentVal;
+            }
+            orders = (data.orders || []).map(o => ({
+                id: o.id, date: o.date, userEmail: o.user.email, address: o.address, batch: o.batch, 
+                total: o.total, status: o.status, resi: o.resi, latestTracking: o.latestTracking, trackingTime: o.trackingTime,
+                items: JSON.parse(o.itemsInfo || "[]")
+            }));
+            orders.forEach(o => {
+                if(!usersDB.find(u => u.email === o.userEmail)) {
+                    usersDB.push({ name: o.user.name, email: o.userEmail, phone: o.user.phone, pass: "123" });
+                }
             });
         }
 
@@ -337,10 +353,11 @@
             else {
                 emptyState.style.display = 'none';
                 filtered.forEach(p => {
+                    const imgSrc = getDirectUrl(p.img);
                     container.innerHTML += `
                         <div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col justify-between relative group hover:shadow-lg transition-shadow duration-300 h-full">
-                            <div><div class="relative pb-[100%] bg-cream-50 overflow-hidden border-b border-stone-50"><img src="${p.img}" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eeeeee/999999';" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"><span class="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm text-black border border-stone-100">${p.country}</span></div><div class="p-4 pb-2"><h3 class="text-xs font-bold text-black line-clamp-2 leading-relaxed mb-1">${p.name}</h3><p class="text-[9px] text-stone-400 font-bold tracking-widest uppercase">${p.category}</p></div></div>
-                            <div class="p-4 pt-1 mt-auto"><p class="text-sm font-extrabold text-black mb-3">${formatRp(p.price)}</p><button onclick="addToCart(${p.id})" class="w-full bg-cream-50 border border-stone-100 hover:bg-black hover:text-white transition-all duration-300 text-black text-[10px] font-bold py-3 rounded-xl active:scale-95 flex items-center justify-center">+ ADD TO CART</button></div>
+                            <div><div class="relative pb-[100%] bg-cream-50 overflow-hidden border-b border-stone-50"><img src="${imgSrc}" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eeeeee/999999';" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"><span class="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm text-black border border-stone-100">${p.country}</span></div><div class="p-4 pb-2"><h3 class="text-xs font-bold text-black line-clamp-2 leading-relaxed mb-1">${p.name}</h3><p class="text-[9px] text-stone-400 font-bold tracking-widest uppercase">${p.category}</p></div></div>
+                            <div class="p-4 pt-1 mt-auto"><p class="text-sm font-extrabold text-black mb-3">${formatRp(parseInt(p.price))}</p><button onclick="addToCart(${p.id})" class="w-full bg-cream-50 border border-stone-100 hover:bg-black hover:text-white transition-all duration-300 text-black text-[10px] font-bold py-3 rounded-xl active:scale-95 flex items-center justify-center">+ ADD TO CART</button></div>
                         </div>`;
                 });
             }
@@ -367,9 +384,10 @@
             let total = 0; list.innerHTML = '';
             cart.forEach((item) => {
                 total += parseInt(item.price);
+                const imgSrc = getDirectUrl(item.img);
                 list.innerHTML += `
                     <div class="flex justify-between items-center border-stone-100 bg-white border p-3 rounded-2xl shadow-sm relative overflow-hidden group transition-all">
-                        <div class="flex items-center space-x-3 w-full pr-8"><div class="bg-cream-50 rounded-xl w-14 h-14 flex-shrink-0 relative border border-stone-100"><img src="${item.img}" onerror="this.onerror=null;this.src='https://placehold.co/400x400';" class="w-full h-full object-cover rounded-xl"></div><div class="flex-1 min-w-0"><p class="text-xs font-bold text-black truncate">${item.name}</p><p class="text-[9px] font-extrabold text-stone-500 uppercase tracking-widest mt-0.5">${item.country}</p><p class="text-xs font-extrabold mt-1 text-black">${formatRp(item.price)}</p></div></div>
+                        <div class="flex items-center space-x-3 w-full pr-8"><div class="bg-cream-50 rounded-xl w-14 h-14 flex-shrink-0 relative border border-stone-100"><img src="${imgSrc}" onerror="this.onerror=null;this.src='https://placehold.co/400x400';" class="w-full h-full object-cover rounded-xl"></div><div class="flex-1 min-w-0"><p class="text-xs font-bold text-black truncate">${item.name}</p><p class="text-[9px] font-extrabold text-stone-500 uppercase tracking-widest mt-0.5">${item.country}</p><p class="text-xs font-extrabold mt-1 text-black">${formatRp(item.price)}</p></div></div>
                         <button onclick="removeFromCart(${item.cartId})" class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-300 hover:text-black hover:bg-cream-100 p-2 rounded-full transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg></button>
                     </div>`;
             });
@@ -399,7 +417,6 @@
                         const MAX_WIDTH = 400; const scaleSize = MAX_WIDTH / img.width;
                         canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        
                         currentCheckoutBase64 = canvas.toDataURL('image/jpeg', 0.6);
                         document.getElementById('previewImg').src = currentCheckoutBase64; 
                         document.getElementById('previewImg').classList.remove('hidden'); 
@@ -411,7 +428,6 @@
             }
         }
 
-        // SOLUSI: Menggunakan mode 'no-cors' agar tidak Error Jaringan saat POST ke Google Apps Script
         function processOrder() {
             const name = document.getElementById('cusName').value;
             const address = document.getElementById('cusAddress').value;
@@ -433,13 +449,9 @@
             };
 
             fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors', // MEM-BYPASS ERROR JARINGAN (CORS)
-                body: JSON.stringify(payload),
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                method: 'POST', mode: 'no-cors', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
             })
             .then(() => {
-                // Di mode no-cors, kita anggap sukses asalkan tidak terlempar ke catch (Network Error Murni)
                 orders.unshift({ id: newOrderId, userEmail: currentUser.email, address: address, date: orderDate, batch: batchName, items: [...cart], total: orderTotal, status: 'AWAITING VERIFICATION', resi: null }); 
                 cart = []; document.getElementById('batchSelect').value = ""; updateCartUI();
                 document.getElementById('receiptFile').value = ''; currentCheckoutBase64 = null;
@@ -449,8 +461,7 @@
                 showErrorToast("Order berhasil! Pesanan dikirim ke sistem Admin.");
             })
             .catch(error => {
-                btn.innerHTML = ogText; btn.disabled = false; 
-                showErrorToast("Error koneksi jaringan murni. Pastikan internet stabil.");
+                btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Error koneksi jaringan murni. Pastikan internet stabil.");
             });
         }
 
@@ -482,12 +493,12 @@
                             <span class="text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest border ${statusColor}">${o.status}</span>
                         </div>
                         <div class="flex -space-x-3 mb-5 relative z-10 pl-2">
-                            ${o.items.slice(0, 3).map(i => `<img src="${i.img}" onerror="this.onerror=null;this.src='https://placehold.co/400';" class="h-10 w-10 rounded-full border-2 border-white object-cover shadow-sm bg-cream-50">`).join('')}
+                            ${o.items.slice(0, 3).map(i => `<img src="${getDirectUrl(i.img)}" onerror="this.onerror=null;this.src='https://placehold.co/400';" class="h-10 w-10 rounded-full border-2 border-white object-cover shadow-sm bg-cream-50">`).join('')}
                             ${o.items.length > 3 ? `<div class="h-10 w-10 rounded-full bg-cream-50 border-2 border-white flex items-center justify-center text-[10px] font-bold z-10 text-black">+${o.items.length-3}</div>` : ''}
                         </div>
                         <div class="pt-4 border-t border-stone-100 flex justify-between items-center relative z-10">
                             ${trackingButton}
-                            <span class="text-sm font-extrabold text-black">${formatRp(o.total)}</span>
+                            <span class="text-sm font-extrabold text-black">${formatRp(parseInt(o.total))}</span>
                         </div>
                     </div>`;
             });
@@ -502,7 +513,7 @@
             const tbody = document.getElementById('uInvItems'); tbody.innerHTML = '';
             let grouped = {}; o.items.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
             for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-3"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold">${i.country} • ${i.category}</p></td><td class="py-3 text-center font-bold">x${i.qty}</td><td class="py-3 text-right font-extrabold text-black">${formatRp(i.price * i.qty)}</td></tr>`; }
-            document.getElementById('uInvTotal').textContent = formatRp(o.total);
+            document.getElementById('uInvTotal').textContent = formatRp(parseInt(o.total));
             document.getElementById('userInvoiceModal').classList.remove('hidden');
         }
         function closeUserInvoice() { document.getElementById('userInvoiceModal').classList.add('hidden'); }
@@ -519,7 +530,6 @@
         function copyResi() { const resi = document.getElementById('trackResi').textContent; navigator.clipboard.writeText(resi).then(() => { const btn = document.getElementById('copyBtn'); btn.textContent = 'COPIED!'; btn.classList.add('bg-black', 'text-white', 'border-black'); setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('bg-black', 'text-white', 'border-black'); }, 2000); }); }
         function openUniversalTracker() { window.open('https://cekresi.com', '_blank'); }
 
-        // Start App
         fetchDatabase();
     </script>
 </body>
