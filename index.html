@@ -192,25 +192,76 @@
         </div>
     </div>
 
-    <!-- TRACKING & INVOICE MODALS -->
+    <!-- TRACKING MODAL -->
     <div id="trackingModal" class="fixed inset-0 z-[80] invisible pointer-events-none flex items-center justify-center px-4">
         <div onclick="closeTrackingModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="trackingOverlay"></div>
         <div class="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300 relative z-10 border border-stone-100" id="trackingBox">
             <button onclick="closeTrackingModal()" class="absolute top-4 right-4 bg-cream-50 text-stone-500 p-2 rounded-full border border-stone-100"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            <div class="text-center mb-5 mt-2"><div class="w-14 h-14 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-md"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg></div><h3 class="text-xl font-extrabold text-black tracking-tight">Status Pengiriman</h3></div>
-            <div class="bg-cream-50 border border-stone-200 rounded-2xl p-4 flex justify-between items-center mb-5"><div class="overflow-hidden"><p class="text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-1">Nomor Resi</p><p id="trackResi" class="font-extrabold text-lg text-black truncate tracking-wider">-</p></div></div>
+            <div class="text-center mb-5 mt-2"><div class="w-14 h-14 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-md"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg></div><h3 class="text-xl font-extrabold text-black tracking-tight">Status Pengiriman</h3><p class="text-xs text-stone-500 mt-1 font-medium">Kurir: <span id="trackKurir" class="font-extrabold text-black">Lion Parcel</span></p></div>
+            <div class="bg-cream-50 border border-stone-200 rounded-2xl p-4 flex justify-between items-center mb-5"><div class="overflow-hidden"><p class="text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-1">Nomor Resi</p><p id="trackResi" class="font-extrabold text-lg text-black truncate tracking-wider">-</p></div><button onclick="copyResi()" id="copyBtn" class="bg-white border border-stone-200 text-black hover:bg-stone-50 text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition-all active:scale-95 shadow-sm uppercase tracking-widest">SALIN</button></div>
             <div class="mb-6 bg-white border border-stone-100 rounded-2xl p-4 shadow-sm relative overflow-hidden"><div class="absolute left-0 top-0 bottom-0 w-1 bg-green-500"></div><p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-3">Update Terakhir</p><div class="flex items-start space-x-3"><div class="flex flex-col items-center"><div class="w-3 h-3 bg-green-500 rounded-full mt-1 animate-pulse"></div></div><div><p class="text-xs font-extrabold text-black" id="trackLatestStatus">Paket diproses.</p><p class="text-[9px] font-bold text-stone-400 mt-1" id="trackLatestTime">-</p></div></div></div>
+            <button onclick="openUniversalTracker()" class="w-full bg-stone-100 hover:bg-stone-200 text-black py-4 rounded-2xl font-extrabold text-xs transition-all active:scale-95 flex items-center justify-center uppercase tracking-widest border border-stone-200">CEK WEB KURIR RESMI <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg></button>
         </div>
     </div>
     
+    <!-- INVOICE MODAL (DIPERBAIKI DOM NYA) -->
     <div id="userInvoiceModal" class="fixed inset-0 z-[120] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-lg rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print"><h3 class="font-extrabold text-lg text-black">Official Receipt</h3><div class="flex space-x-2"><button onclick="closeUserInvoice()" class="bg-white border border-stone-200 text-stone-600 px-3 py-2 rounded-lg hover:bg-stone-100"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div></div>
-            <div class="p-8 overflow-y-auto flex-1 text-black bg-white">
-                <div class="flex justify-between items-start mb-8 border-b border-stone-200 pb-6"><div><img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-8 mb-3"><p class="text-[9px] text-stone-500 font-extrabold uppercase tracking-widest">Premium Personal Shopper</p></div><div class="text-right"><h1 class="text-3xl font-extrabold tracking-tighter mb-1">INVOICE</h1><p class="font-extrabold text-black" id="uInvId">INV-000000</p><p class="text-[10px] font-bold mt-1 text-stone-400" id="uInvDate">Date: -</p></div></div>
-                <div class="flex justify-between mb-8 bg-cream-50 p-4 rounded-2xl border border-stone-100"><div><p class="text-[9px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Billed To:</p><h4 class="font-extrabold text-sm" id="uInvName">Name</h4><p class="text-[10px] font-bold text-stone-500 mt-1" id="uInvEmail">email</p></div><div class="text-right"><p class="text-[9px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Status:</p><span class="bg-green-100 text-green-700 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase border border-green-200">PAID</span></div></div>
-                <table class="w-full text-left border-collapse mb-8"><thead><tr class="border-b-2 border-black text-[9px] uppercase tracking-widest text-stone-500"><th class="py-2 font-extrabold w-2/3">Item Description</th><th class="py-2 font-extrabold text-center">Qty</th><th class="py-2 font-extrabold text-right">Price</th></tr></thead><tbody id="uInvItems" class="text-xs font-bold border-b border-stone-200"></tbody></table>
-                <div class="flex justify-end"><div class="w-2/3 md:w-1/2"><div class="flex justify-between py-3 border-t-2 border-black mt-1 text-base"><span class="font-extrabold text-black">TOTAL PAID</span><span class="font-extrabold text-black" id="uInvTotal">Rp 0</span></div></div></div>
+            <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print">
+                <h3 class="font-extrabold text-lg text-black">Official Receipt</h3>
+                <div class="flex space-x-2">
+                    <button onclick="window.print()" class="bg-black text-white text-[10px] font-extrabold px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-stone-800 transition">DOWNLOAD PDF</button>
+                    <button onclick="closeUserInvoice()" class="bg-white border border-stone-200 text-stone-600 px-3 py-2 rounded-lg hover:bg-stone-100 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                </div>
+            </div>
+            <div class="p-8 overflow-y-auto flex-1 text-black bg-white" id="userInvoicePrintArea">
+                <div class="flex justify-between items-start mb-8 border-b border-stone-200 pb-6">
+                    <div>
+                        <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-8 mb-3">
+                        <p class="text-[9px] text-stone-500 font-extrabold uppercase tracking-widest">Premium Personal Shopper</p>
+                    </div>
+                    <div class="text-right">
+                        <h1 class="text-3xl font-extrabold tracking-tighter mb-1">INVOICE</h1>
+                        <p class="font-extrabold text-black" id="uInvId">INV-000000</p>
+                        <p class="text-[10px] font-bold mt-1 text-stone-400" id="uInvDate">Date: -</p>
+                    </div>
+                </div>
+                <!-- BOX IDENTITAS & RESI DIKEMBALIKAN UTUH -->
+                <div class="flex justify-between mb-8 bg-cream-50 p-4 rounded-2xl border border-stone-100">
+                    <div>
+                        <p class="text-[9px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Billed To:</p>
+                        <h4 class="font-extrabold text-sm" id="uInvName">Name</h4>
+                        <p class="text-[10px] font-bold text-stone-500 mt-1" id="uInvEmail">email</p>
+                        <p class="text-[10px] font-bold text-stone-500 mt-1" id="uInvAddress">Address</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[9px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Status:</p>
+                        <span class="bg-green-100 text-green-700 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest border border-green-200">PAID</span>
+                        <div class="mt-2" id="uInvResiBox">
+                            <p class="text-[9px] text-stone-400 font-extrabold uppercase tracking-widest mb-0.5">Tracking No:</p>
+                            <p class="font-extrabold text-sm text-black" id="uInvResi">PENDING</p>
+                        </div>
+                    </div>
+                </div>
+                <table class="w-full text-left border-collapse mb-8">
+                    <thead>
+                        <tr class="border-b-2 border-black text-[9px] uppercase tracking-widest text-stone-500">
+                            <th class="py-2 font-extrabold w-2/3">Item Description</th>
+                            <th class="py-2 font-extrabold text-center">Qty</th>
+                            <th class="py-2 font-extrabold text-right">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="uInvItems" class="text-xs font-bold border-b border-stone-200"></tbody>
+                </table>
+                <div class="flex justify-end">
+                    <div class="w-2/3 md:w-1/2">
+                        <div class="flex justify-between py-2 text-stone-500 font-bold text-xs"><span>Service & Shipping</span><span>Included</span></div>
+                        <div class="flex justify-between py-3 border-t-2 border-black mt-1 text-base">
+                            <span class="font-extrabold text-black">TOTAL PAID</span>
+                            <span class="font-extrabold text-black" id="uInvTotal">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -222,7 +273,7 @@
         let usersDB = JSON.parse(localStorage.getItem('pw_users')) || [];
         let currentUser = JSON.parse(localStorage.getItem('pw_currentUser')) || null; 
         let authIntent = null; let orders = []; let currentCheckoutBase64 = null;
-        let isSyncing = false;
+        let pauseSync = false; 
 
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
 
@@ -231,37 +282,44 @@
             localStorage.setItem('pw_currentUser', JSON.stringify(currentUser));
         }
 
+        // --- KONVERSI LINK GOOGLE DRIVE LEBIH KUAT ---
         function getDirectUrl(url) {
             if (!url) return 'https://placehold.co/400';
             if (url.includes('drive.google.com')) {
                 let id = "";
                 if(url.includes('id=')) id = url.split('id=')[1].split('&')[0];
                 else if (url.includes('/file/d/')) id = url.split('/file/d/')[1].split('/')[0];
-                if(id) return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
+                if(id) return `https://lh3.googleusercontent.com/d/${id}=w800`;
             }
             return url;
         }
 
+        // --- MENCEGAH CACHE BROWSER (AGAR LIVE NYATA) ---
         function fetchDatabase() {
             const toast = document.getElementById('liveToast');
             toast.classList.remove('translate-y-[-150%]', 'opacity-0'); toast.classList.add('translate-y-0', 'opacity-100');
             
-            fetch(scriptURL).then(res => res.json()).then(data => {
+            fetch(scriptURL + "?t=" + new Date().getTime())
+            .then(res => res.json())
+            .then(data => {
                 processIncomingData(data);
                 renderProducts();
                 if(currentUser) { renderOrders(); document.getElementById('loginIndicator').classList.remove('hidden'); }
                 setTimeout(() => { toast.classList.remove('translate-y-0', 'opacity-100'); toast.classList.add('translate-y-[-150%]', 'opacity-0'); }, 1000);
-            }).catch(err => {
+            })
+            .catch(err => {
                 document.getElementById('toastMsg').textContent = "Offline Mode: Memuat data lokal.";
-                if(currentUser) renderOrders(); // Fallback to local if exist
+                if(currentUser) renderOrders(); 
                 setTimeout(() => { toast.classList.remove('translate-y-0', 'opacity-100'); toast.classList.add('translate-y-[-150%]', 'opacity-0'); }, 3000);
             });
         }
 
-        // Live Syncing (Tidak lemot karena cek flag isSyncing)
+        // --- SILENT POLLING YANG DIPERBARUI ---
         setInterval(() => {
-            if(isSyncing) return;
-            fetch(scriptURL).then(res => res.json()).then(data => {
+            if(pauseSync) return;
+            fetch(scriptURL + "?t=" + new Date().getTime())
+            .then(res => res.json())
+            .then(data => {
                 processIncomingData(data);
                 if(document.getElementById('shopTab').classList.contains('active')) renderProducts();
                 if(currentUser && document.getElementById('dashboardTab').classList.contains('active')) renderOrders();
@@ -459,7 +517,7 @@
                 proofImageBase64: currentCheckoutBase64, items: cart
             };
 
-            isSyncing = true; 
+            pauseSync = true; 
             fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
             .then(() => {
                 orders.unshift({ id: newOrderId, userEmail: currentUser.email, address: address, date: orderDate, batch: batchName, items: [...cart], total: orderTotal, status: 'AWAITING VERIFICATION', resi: null }); 
@@ -469,10 +527,10 @@
                 btn.innerHTML = ogText; btn.disabled = false; 
                 closeCheckoutModal(); switchTab('dashboard'); renderOrders();
                 showErrorToast("Order berhasil! Pesanan dikirim ke sistem Admin.");
-                setTimeout(() => { isSyncing = false; }, 8000); 
+                setTimeout(() => pauseSync = false, 5000); 
             })
             .catch(error => {
-                btn.innerHTML = ogText; btn.disabled = false; isSyncing = false;
+                btn.innerHTML = ogText; btn.disabled = false; pauseSync = false;
                 showErrorToast("Error koneksi jaringan murni. Pastikan internet stabil.");
             });
         }
@@ -491,7 +549,6 @@
                 if(o.status === "COMPLETED") statusColor = "bg-green-100 text-green-700 border-green-200";
 
                 let trackingButton = `<span class="text-[10px] text-stone-400 font-bold uppercase tracking-widest cursor-not-allowed flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> VERIFICATION PROCESS</span>`;
-                
                 if(o.resi) trackingButton = `<button onclick="openTrackingModal('${o.id}')" class="text-[10px] text-black font-extrabold uppercase tracking-widest hover:text-stone-500 flex items-center transition-colors">TRACK PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>`;
 
                 let invoiceBtn = '';
@@ -521,6 +578,7 @@
             if(!o) return;
             document.getElementById('uInvId').textContent = o.id; document.getElementById('uInvDate').textContent = `Date: ${o.date}`;
             document.getElementById('uInvName').textContent = currentUser.name; document.getElementById('uInvEmail').textContent = currentUser.email;
+            document.getElementById('uInvAddress').textContent = o.address; 
             document.getElementById('uInvResi').textContent = o.resi || "PENDING";
             const tbody = document.getElementById('uInvItems'); tbody.innerHTML = '';
             let grouped = {}; o.items.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
