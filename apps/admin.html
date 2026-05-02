@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portwish Admin - System Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,19 +19,22 @@
     <style>
         :root { --primary: #2E2E2E; --bg: #FCFAF8; } 
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--primary); -webkit-user-select: none; user-select: none; }
-        .hide-scroll::-webkit-scrollbar { display: none; } .tab-content { display: none; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .input-box { width: 100%; border: 2px solid #e7e5e4; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; outline: none; background: #fff; } .input-box:focus { border-color: var(--primary); }
+        .hide-scroll::-webkit-scrollbar { display: none; } 
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .input-box { width: 100%; border: 2px solid #e7e5e4; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; outline: none; background: #fff; } .input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(46,46,46,0.1); }
         .input-float { position: relative; margin-top: 8px; } .input-float input, .input-float select { border: none; border-bottom: 2px solid #e7e5e4; border-radius: 0; padding: 20px 0 8px 0; background: transparent; transition: all 0.3s ease; outline: none; width: 100%; font-weight: 600; color: var(--primary); } .input-float input:focus, .input-float select:focus { border-bottom-color: var(--primary); } .input-float label { position: absolute; top: 16px; left: 0; color: #a8a29e; font-size: 14px; transition: all 0.3s ease; pointer-events: none; } .input-float input:focus ~ label, .input-float input:not(:placeholder-shown) ~ label, .input-float select:focus ~ label, .input-float select:not([value=""]) ~ label { top: 0px; font-size: 10px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         .loader { border: 3px solid #e7e5e4; border-top: 3px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; } .loader-white { border-top-color: #fff; border-color: rgba(255,255,255,0.3); } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @media print { body * { visibility: hidden; } #invoiceModal, #invoiceModal * { visibility: visible; } #invoiceModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white; padding: 20px; } .no-print { display: none !important; } }
+        @media print { body * { visibility: hidden; } #invoiceModal, #invoiceModal * { visibility: visible; } #invoiceModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white; padding: 0; } .no-print { display: none !important; } }
         input, textarea { -webkit-user-select: text; user-select: text; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden selection:bg-black selection:text-white">
 
-    <div id="adminLoginGate" class="fixed inset-0 z-[999] bg-cream-50 flex items-center justify-center px-4 transition-opacity duration-500">
-        <div class="bg-white w-full max-w-sm rounded-[32px] p-8 shadow-2xl border border-stone-200 text-center relative overflow-hidden">
+    <!-- LOGIN GATE -->
+    <div id="adminLoginGate" class="fixed inset-0 z-[999] bg-cream-50 flex items-center justify-center px-4 sm:px-0 transition-opacity duration-500">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-6 sm:p-8 shadow-2xl border border-stone-200 text-center relative overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-stone-100 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl"></div>
             <div class="relative z-10">
                 <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" alt="Portwish" class="h-10 mx-auto mb-6">
@@ -47,6 +50,7 @@
         </div>
     </div>
 
+    <!-- TOAST NOTIFICATION -->
     <div id="adminToast" class="fixed top-10 left-1/2 transform -translate-x-1/2 z-[1000] transition-all duration-500 translate-y-[-150%] opacity-0 pointer-events-none w-max max-w-[90vw]">
         <div class="bg-black/95 backdrop-blur-md text-white text-[11px] font-bold px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 border border-stone-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
@@ -54,12 +58,23 @@
         </div>
     </div>
 
-    <aside class="w-64 bg-white border-r border-stone-200 flex flex-col justify-between hidden md:flex z-20">
+    <!-- MOBILE SIDEBAR OVERLAY -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden md:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside id="sidebar" class="w-72 sm:w-64 bg-white border-r border-stone-200 flex flex-col justify-between fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-50 shadow-2xl md:shadow-none">
         <div>
-            <div class="h-20 flex items-center px-8 border-b border-stone-100">
-                <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-7"><span class="ml-2 text-[9px] font-extrabold bg-cream-100 text-black px-2 py-0.5 rounded uppercase tracking-widest border border-stone-200">ADMIN</span>
+            <div class="h-20 flex items-center justify-between md:justify-start px-6 md:px-8 border-b border-stone-100">
+                <div class="flex items-center">
+                    <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-7">
+                    <span class="ml-2 text-[9px] font-extrabold bg-cream-100 text-black px-2 py-0.5 rounded uppercase tracking-widest border border-stone-200">ADMIN</span>
+                </div>
+                <!-- Close Button Mobile -->
+                <button onclick="toggleSidebar()" class="md:hidden text-stone-400 hover:text-black">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
-            <nav class="p-4 space-y-2">
+            <nav class="p-4 space-y-2 overflow-y-auto hide-scroll" style="max-height: calc(100vh - 160px);">
                 <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-black text-white font-bold text-sm transition-all shadow-md"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><span>Dashboard</span></button>
                 <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span><span class="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full" id="pendingCount" style="display:none;">0</span></button>
                 <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all relative"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span><span class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse" id="activeShipmentDot"></span></button>
@@ -67,83 +82,113 @@
                 <button onclick="switchTab('users')" id="nav-users" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg><span>Database Akun</span></button>
             </nav>
         </div>
-        <div class="p-4 border-t border-stone-100">
+        <div class="p-4 border-t border-stone-100 bg-white">
             <button onclick="logoutAdmin()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg><span>Keluar Admin</span></button>
         </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto bg-cream-50 relative">
-        <header class="h-20 bg-white/90 backdrop-blur-md border-b border-stone-200 sticky top-0 z-10 flex items-center justify-between px-8 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-            <h2 class="text-xl font-extrabold tracking-tight" id="headerTitle">Dashboard Analytics</h2>
-            <div class="flex items-center space-x-4"><span class="text-xs font-bold text-stone-400 uppercase tracking-widest hidden sm:block" id="currentDate"></span><div class="h-10 w-10 bg-black rounded-full border-2 border-stone-200 flex items-center justify-center text-white font-bold shadow-sm">A</div></div>
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden bg-cream-50 relative">
+        <header class="h-20 bg-white/90 backdrop-blur-md border-b border-stone-200 flex-none z-10 flex items-center justify-between px-4 sm:px-8 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleSidebar()" class="md:hidden text-stone-600 hover:text-black p-1">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                </button>
+                <h2 class="text-lg sm:text-xl font-extrabold tracking-tight" id="headerTitle">Dashboard Analytics</h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-xs font-bold text-stone-400 uppercase tracking-widest hidden lg:block" id="currentDate"></span>
+                <div class="h-9 w-9 sm:h-10 sm:w-10 bg-black rounded-full border-2 border-stone-200 flex items-center justify-center text-white font-bold shadow-sm text-sm">A</div>
+            </div>
         </header>
 
-        <div class="p-8">
+        <div class="p-4 sm:p-8 overflow-y-auto hide-scroll flex-1">
             <!-- TAB 1: DASHBOARD -->
-            <div id="dashboardTab" class="tab-content active space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-cream-100 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Total Pendapatan</p><h3 class="text-3xl font-extrabold" id="statRevenue">Rp 0</h3></div></div>
-                    <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Paket Dalam Perjalanan</p><h3 class="text-3xl font-extrabold" id="statOrders">0</h3></div></div>
-                    <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Verifikasi/Resi</p><h3 class="text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
+            <div id="dashboardTab" class="tab-content active space-y-4 sm:space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-cream-100 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Total Pendapatan</p><h3 class="text-2xl sm:text-3xl font-extrabold truncate" id="statRevenue">Rp 0</h3></div></div>
+                    <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Paket Dalam Perjalanan</p><h3 class="text-2xl sm:text-3xl font-extrabold" id="statOrders">0</h3></div></div>
+                    <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Verifikasi</p><h3 class="text-2xl sm:text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
                 </div>
                 
-                <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
+                <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                        <div><h3 class="font-extrabold text-lg">Kurva Penjualan 2026</h3><p class="text-xs text-stone-500 font-medium">Statistik pendapatan per bulan</p></div>
-                        <button onclick="exportToExcel()" class="bg-[#107c41] hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-3 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1.5 16h-1.8l-1.6-3.8-1.7 3.8H8.6l2.6-5.4-2.4-5.2h1.8l1.4 3.6 1.5-3.6h1.7l-2.4 5.2 2.7 5.4zM13 9V3.5L18.5 9H13z"/></svg> UNDUH LAPORAN KEUANGAN</button>
+                        <div><h3 class="font-extrabold text-base sm:text-lg">Kurva Penjualan 2026</h3><p class="text-xs text-stone-500 font-medium">Statistik pendapatan per bulan</p></div>
+                        <button onclick="exportToExcel()" class="w-full sm:w-auto justify-center bg-[#107c41] hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-3 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1.5 16h-1.8l-1.6-3.8-1.7 3.8H8.6l2.6-5.4-2.4-5.2h1.8l1.4 3.6 1.5-3.6h1.7l-2.4 5.2 2.7 5.4zM13 9V3.5L18.5 9H13z"/></svg> UNDUH LAPORAN</button>
                     </div>
-                    <div class="w-full h-72"><canvas id="salesChart"></canvas></div>
+                    <div class="w-full h-60 sm:h-72"><canvas id="salesChart"></canvas></div>
                 </div>
-                <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
-                    <div class="flex justify-between items-center mb-6">
-                        <div><h3 class="font-extrabold text-lg">Transaksi Terkini</h3><p class="text-xs text-stone-500 font-medium">Pantau nama pemesan dan nomor resi terbaru</p></div>
-                        <button onclick="switchTab('orders')" class="text-[10px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest transition-colors flex items-center">Lihat Semua <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+
+                <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4 sm:mb-6">
+                        <div><h3 class="font-extrabold text-base sm:text-lg">Transaksi Terkini</h3><p class="text-xs text-stone-500 font-medium">Pantau nama pemesan dan nomor resi terbaru</p></div>
+                        <button onclick="switchTab('orders')" class="hidden sm:flex text-[10px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest transition-colors items-center">Lihat Semua <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                     </div>
-                    <div class="overflow-x-auto hide-scroll">
-                        <table class="w-full text-left border-collapse whitespace-nowrap">
-                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi Pengiriman</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead>
+                    <div class="overflow-x-auto hide-scroll -mx-5 px-5 sm:mx-0 sm:px-0">
+                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[600px]">
+                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead>
                             <tbody id="recentOrdersBody" class="text-sm"></tbody>
                         </table>
                     </div>
+                    <button onclick="switchTab('orders')" class="w-full mt-4 sm:hidden bg-stone-50 text-stone-600 text-xs font-bold py-3 rounded-xl border border-stone-200">Lihat Semua Transaksi</button>
                 </div>
             </div>
 
             <!-- TAB 2: ORDERS -->
             <div id="ordersTab" class="tab-content">
-                <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-stone-100 flex flex-col sm:flex-row justify-between items-center bg-cream-50/50 gap-4"><h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3><input type="text" placeholder="Cari ID / Nama..." class="input-box sm:w-64 py-2 text-sm font-semibold" oninput="filterOrders(this.value)"></div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Order ID</th><th class="p-4 font-extrabold">Pelanggan</th><th class="p-4 font-extrabold">Batch</th><th class="p-4 font-extrabold">Total</th><th class="p-4 font-extrabold">Status & Aksi</th><th class="p-4 font-extrabold text-center">Invoice</th></tr></thead><tbody id="orderTableBody" class="text-sm"></tbody></table></div>
+                <div class="bg-white rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
+                    <div class="p-5 sm:p-6 border-b border-stone-100 flex flex-col lg:flex-row justify-between items-start lg:items-center bg-cream-50/50 gap-4">
+                        <h3 class="font-extrabold text-base sm:text-lg">Daftar Semua Transaksi</h3>
+                        <input type="text" placeholder="Cari ID / Nama..." class="input-box w-full lg:w-72 py-2 text-sm font-semibold" oninput="filterOrders(this.value)">
+                    </div>
+                    <div class="overflow-x-auto hide-scroll">
+                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[800px]">
+                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Order ID</th><th class="p-4 font-extrabold">Pelanggan</th><th class="p-4 font-extrabold">Batch</th><th class="p-4 font-extrabold">Total</th><th class="p-4 font-extrabold">Status & Aksi</th><th class="p-4 font-extrabold text-center">Invoice</th></tr></thead>
+                            <tbody id="orderTableBody" class="text-sm"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- TAB 3: TRACKING -->
             <div id="trackingTab" class="tab-content">
-                <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-stone-100 bg-blue-50/30"><h3 class="font-extrabold text-lg">Update Logistik Manual</h3><p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">IN TRANSIT</span>. Update status agar pembeli bisa melacak via web portwish.</p></div>
-                    <div class="p-6 space-y-4" id="trackingListArea"></div>
+                <div class="bg-white rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
+                    <div class="p-5 sm:p-6 border-b border-stone-100 bg-blue-50/30">
+                        <h3 class="font-extrabold text-base sm:text-lg">Update Logistik Manual</h3>
+                        <p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">IN TRANSIT</span>. Update status agar pembeli bisa melacak via web.</p>
+                    </div>
+                    <div class="p-4 sm:p-6 space-y-4" id="trackingListArea"></div>
                 </div>
             </div>
 
             <!-- TAB 4: CATALOG -->
             <div id="catalogTab" class="tab-content">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                    <h3 class="font-extrabold text-xl">Kelola Produk</h3>
-                    <div class="flex space-x-2 flex-wrap gap-y-2">
-                        <button onclick="openVoucherModal()" class="bg-pink-50 border border-pink-200 text-pink-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:bg-pink-100 transition-colors flex items-center">Voucher</button>
-                        <button onclick="openCategoryModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Kategori</button>
-                        <button onclick="openCountryModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Negara</button>
-                        <button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Batch</button>
-                        <button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Produk</button>
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
+                    <h3 class="font-extrabold text-lg sm:text-xl">Kelola Produk</h3>
+                    <div class="flex flex-wrap gap-2 w-full lg:w-auto">
+                        <button onclick="openVoucherModal()" class="flex-1 sm:flex-none justify-center bg-pink-50 border border-pink-200 text-pink-600 text-[11px] font-extrabold px-3 sm:px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:bg-pink-100 transition-colors flex items-center">Voucher</button>
+                        <button onclick="openCategoryModal()" class="flex-1 sm:flex-none justify-center bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-3 sm:px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Kategori</button>
+                        <button onclick="openCountryModal()" class="flex-1 sm:flex-none justify-center bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-3 sm:px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Negara</button>
+                        <button onclick="openBatchModal()" class="flex-1 sm:flex-none justify-center bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-3 sm:px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Batch</button>
+                        <button onclick="openProductModal()" class="w-full sm:w-auto justify-center bg-black text-white text-[11px] font-extrabold px-4 py-3 sm:py-2.5 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors mt-2 sm:mt-0">+ Produk Baru</button>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="adminCatalogGrid"></div>
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6" id="adminCatalogGrid"></div>
             </div>
 
             <!-- TAB 5: USERS -->
             <div id="usersTab" class="tab-content">
-                <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-stone-100 bg-cream-50/50 flex justify-between items-center"><h3 class="font-extrabold text-lg">Database Akun Pelanggan</h3><button onclick="exportUsersToExcel()" class="bg-[#107c41] hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95">UNDUH EXCEL</button></div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold text-center">Password</th><th class="p-4 font-extrabold text-center rounded-tr-xl">Aksi</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
+                <div class="bg-white rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
+                    <div class="p-5 sm:p-6 border-b border-stone-100 bg-cream-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h3 class="font-extrabold text-base sm:text-lg">Database Akun Pelanggan</h3>
+                        <button onclick="exportUsersToExcel()" class="w-full sm:w-auto justify-center bg-[#107c41] hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-3 sm:py-2.5 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95">UNDUH EXCEL</button>
+                    </div>
+                    <div class="overflow-x-auto hide-scroll">
+                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[700px]">
+                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold text-center">Password</th><th class="p-4 font-extrabold text-center rounded-tr-xl">Aksi</th></tr></thead>
+                            <tbody id="userTableBody" class="text-sm"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -151,106 +196,121 @@
 
     <!-- INVOICE MODAL ADMIN -->
     <div id="invoiceModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print">
-                <h3 class="font-extrabold text-lg text-black">Detail Invoice</h3>
+        <div class="bg-white w-full max-w-2xl rounded-[24px] sm:rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print flex-shrink-0">
+                <h3 class="font-extrabold text-base sm:text-lg text-black">Detail Invoice</h3>
                 <div class="flex space-x-2">
-                    <button onclick="printInvoice()" class="bg-black text-white text-[10px] font-extrabold px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-stone-800 transition">Print PDF</button>
+                    <button onclick="printInvoice()" class="bg-black text-white text-[10px] font-extrabold px-3 sm:px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-stone-800 transition">Print</button>
                     <button onclick="closeInvoiceModal()" class="bg-white border border-stone-200 text-stone-600 px-3 py-2 rounded-lg hover:bg-stone-100"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
                 </div>
             </div>
-            <div class="p-8 overflow-y-auto flex-1 text-black bg-white" id="invoicePrintArea">
-                <div class="flex justify-between items-start mb-10 border-b border-stone-200 pb-8">
+            <div class="p-5 sm:p-8 overflow-y-auto hide-scroll flex-1 text-black bg-white" id="invoicePrintArea">
+                <div class="flex flex-col sm:flex-row justify-between items-start mb-8 border-b border-stone-200 pb-6 gap-4">
                     <div>
-                        <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-8 mb-4">
-                        <p class="text-[10px] text-stone-500 font-bold uppercase tracking-widest">Premium Personal Shopper</p>
+                        <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-6 sm:h-8 mb-2 sm:mb-4">
+                        <p class="text-[9px] sm:text-[10px] text-stone-500 font-bold uppercase tracking-widest">Premium Personal Shopper</p>
                     </div>
-                    <div class="text-right">
-                        <h1 class="text-4xl font-extrabold tracking-tighter mb-1">INVOICE</h1>
-                        <p class="font-bold text-stone-500" id="invId">INV-000000</p>
-                        <p class="text-xs font-semibold mt-1 text-stone-400" id="invDate">Date: -</p>
+                    <div class="text-left sm:text-right">
+                        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tighter mb-1">INVOICE</h1>
+                        <p class="font-bold text-stone-500 text-sm" id="invId">INV-000000</p>
+                        <p class="text-[11px] sm:text-xs font-semibold mt-1 text-stone-400" id="invDate">Date: -</p>
                     </div>
                 </div>
-                <div class="flex justify-between mb-6">
+                <div class="flex flex-col sm:flex-row justify-between mb-6 gap-6">
                     <div>
                         <p class="text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Billed To:</p>
-                        <h4 class="font-extrabold text-lg" id="invName">Nama Pelanggan</h4>
-                        <p class="text-sm text-stone-600 mt-1 font-medium" id="invEmail">email@domain.com</p>
-                        <p class="text-sm text-stone-600 max-w-xs mt-1 font-medium" id="invAddress">Alamat</p>
+                        <h4 class="font-extrabold text-base sm:text-lg" id="invName">Nama Pelanggan</h4>
+                        <p class="text-xs sm:text-sm text-stone-600 mt-1 font-medium" id="invEmail">email@domain.com</p>
+                        <p class="text-xs sm:text-sm text-stone-600 w-full sm:max-w-xs mt-1 font-medium" id="invAddress">Alamat</p>
                     </div>
-                    <div class="text-right">
+                    <div class="text-left sm:text-right border-t sm:border-t-0 pt-4 sm:pt-0 border-stone-100">
                         <p class="text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Batch / Status:</p>
-                        <span class="bg-cream-100 text-black font-extrabold px-3 py-1 rounded-full text-xs border border-stone-200 inline-block mb-2" id="invBatch">BATCH NAME</span><br>
+                        <span class="bg-cream-100 text-black font-extrabold px-3 py-1 rounded-full text-[11px] sm:text-xs border border-stone-200 inline-block mb-2" id="invBatch">BATCH NAME</span><br>
                         <span class="bg-green-100 text-green-700 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest border border-green-200">PAID</span>
-                        <div class="mt-2">
+                        <div class="mt-3 sm:mt-2">
                             <p class="text-[9px] text-stone-400 font-extrabold uppercase tracking-widest mb-0.5">Tracking No:</p>
                             <p class="font-extrabold text-sm text-black" id="invResiShow">PENDING</p>
                         </div>
                     </div>
                 </div>
-                <table class="w-full text-left border-collapse mb-8">
-                    <thead><tr class="border-b-2 border-black text-[10px] uppercase tracking-widest text-stone-500"><th class="py-3 font-extrabold w-2/3">Deskripsi Produk</th><th class="py-3 font-extrabold text-center">Qty</th><th class="py-3 font-extrabold text-right">Harga</th></tr></thead>
-                    <tbody id="invItems" class="text-sm font-semibold border-b border-stone-200"></tbody>
-                </table>
-                <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-1.5 text-stone-500 font-bold"><span>Subtotal</span><span id="invSubtotal">Rp 0</span></div><div class="flex justify-between py-1.5 text-green-600 font-bold" id="invDiscountBox" style="display: none;"><span>Discount</span><span id="invDiscount">- Rp 0</span></div><div class="flex justify-between py-3 border-t-2 border-black mt-2 text-lg"><span class="font-extrabold text-black">TOTAL</span><span class="font-extrabold text-black" id="invTotalMain">Rp 0</span></div></div></div>
+                <div class="overflow-x-auto hide-scroll">
+                    <table class="w-full text-left border-collapse mb-8 min-w-[400px]">
+                        <thead><tr class="border-b-2 border-black text-[10px] uppercase tracking-widest text-stone-500"><th class="py-3 font-extrabold w-2/3">Deskripsi Produk</th><th class="py-3 font-extrabold text-center">Qty</th><th class="py-3 font-extrabold text-right">Harga</th></tr></thead>
+                        <tbody id="invItems" class="text-xs sm:text-sm font-semibold border-b border-stone-200"></tbody>
+                    </table>
+                </div>
+                <div class="flex justify-end">
+                    <div class="w-full sm:w-1/2">
+                        <div class="flex justify-between py-1.5 text-stone-500 font-bold text-sm"><span>Subtotal</span><span id="invSubtotal">Rp 0</span></div>
+                        <div class="flex justify-between py-1.5 text-green-600 font-bold text-sm" id="invDiscountBox" style="display: none;"><span>Discount</span><span id="invDiscount">- Rp 0</span></div>
+                        <div class="flex justify-between py-3 border-t-2 border-black mt-2 text-base sm:text-lg"><span class="font-extrabold text-black">TOTAL</span><span class="font-extrabold text-black" id="invTotalMain">Rp 0</span></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- MODAL CEK BUKTI BAYAR -->
     <div id="proofModal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-[32px] p-6 max-w-sm w-full text-center relative border border-stone-100 shadow-2xl">
+        <div class="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 max-w-sm w-full text-center relative border border-stone-100 shadow-2xl max-h-[90vh] overflow-y-auto hide-scroll">
             <button onclick="closeProofModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black transition-colors border border-stone-200"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            <h3 class="font-extrabold text-lg mb-4 text-black">Bukti Pembayaran</h3>
-            <div class="bg-cream-50 p-2 rounded-[24px] border border-stone-200 mb-4"><img id="proofImage" src="https://placehold.co/400" alt="Bukti Transfer" class="w-full rounded-[16px] object-cover max-h-[50vh]"></div>
-            <div class="flex space-x-3">
-                <button onclick="forceDownloadProof()" id="downloadProofBtn" class="w-1/3 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl shadow-sm hover:bg-stone-50 transition text-[11px] uppercase tracking-widest flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> UNDUH</button>
-                <button onclick="approveFromProof()" id="btnProofApprove" class="w-2/3 bg-black text-white font-extrabold py-3.5 rounded-2xl shadow-xl hover:bg-stone-800 transition text-[11px] uppercase tracking-widest">VERIFIKASI</button>
+            <h3 class="font-extrabold text-lg mb-4 text-black text-left sm:text-center mt-2 sm:mt-0">Bukti Pembayaran</h3>
+            <div class="bg-cream-50 p-2 rounded-[20px] sm:rounded-[24px] border border-stone-200 mb-4"><img id="proofImage" src="https://placehold.co/400" alt="Bukti Transfer" class="w-full rounded-[16px] object-contain max-h-[50vh]"></div>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                <button onclick="forceDownloadProof()" id="downloadProofBtn" class="w-full sm:w-1/3 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl shadow-sm hover:bg-stone-50 transition text-[11px] uppercase tracking-widest flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> UNDUH</button>
+                <button onclick="approveFromProof()" id="btnProofApprove" class="w-full sm:w-2/3 bg-black text-white font-extrabold py-3.5 rounded-2xl shadow-xl hover:bg-stone-800 transition text-[11px] uppercase tracking-widest">VERIFIKASI</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL ATRIBUT UMUM -->
     <div id="attributeModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[32px] shadow-2xl p-6 relative border border-stone-100">
-            <button onclick="closeAttributeModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            <h3 class="font-extrabold text-lg mb-1" id="attrModalTitle">Daftar Atribut</h3><p class="text-[10px] text-stone-500 font-medium mb-4" id="attrModalDesc">Kelola atribut toko.</p>
-            <div class="flex space-x-2 mb-4">
-                <input type="text" id="newAttrInput" placeholder="Ketik nama baru..." class="input-box py-2.5 text-xs">
-                <button onclick="addAttr()" id="btnAddAttr" class="bg-black text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95">TAMBAH</button>
+        <div class="bg-white w-full max-w-sm rounded-[24px] sm:rounded-[32px] shadow-2xl p-5 sm:p-6 relative border border-stone-100 max-h-[90vh] flex flex-col">
+            <button onclick="closeAttributeModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <div class="flex-shrink-0 pr-8">
+                <h3 class="font-extrabold text-lg mb-1" id="attrModalTitle">Daftar Atribut</h3><p class="text-[10px] text-stone-500 font-medium mb-4" id="attrModalDesc">Kelola atribut toko.</p>
+                <div class="flex space-x-2 mb-4">
+                    <input type="text" id="newAttrInput" placeholder="Ketik nama baru..." class="input-box py-2.5 text-xs">
+                    <button onclick="addAttr()" id="btnAddAttr" class="bg-black text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95">TAMBAH</button>
+                </div>
             </div>
-            <div id="attrListArea" class="space-y-2 max-h-60 overflow-y-auto hide-scroll pb-2"></div>
+            <div id="attrListArea" class="space-y-2 overflow-y-auto hide-scroll flex-1 pb-2"></div>
         </div>
     </div>
 
     <!-- MODAL VOUCHER -->
     <div id="voucherModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-[32px] shadow-2xl p-8 relative border border-stone-100">
-            <button onclick="closeVoucherModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            <h3 class="font-extrabold text-xl mb-1 text-pink-600">Kelola Voucher Diskon</h3><p class="text-[10px] text-stone-500 font-medium mb-6">Buat kode promo untuk pembeli.</p>
-            
-            <div class="bg-pink-50 p-4 rounded-2xl mb-6 border border-pink-100 space-y-3">
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-[10px] font-bold text-stone-500 uppercase">Kode Voucher</label><input type="text" id="vCode" placeholder="Misal: HEMAT10" class="input-box py-2 text-xs uppercase mt-1"></div>
-                    <div><label class="text-[10px] font-bold text-stone-500 uppercase">Batas Pemakaian</label><input type="number" id="vLimit" placeholder="Misal: 50" class="input-box py-2 text-xs mt-1"></div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-[10px] font-bold text-stone-500 uppercase">Tipe Diskon</label><select id="vType" class="input-box py-2 text-xs mt-1"><option value="nominal">Nominal (Rp)</option><option value="percent">Persen (%)</option></select></div>
-                    <div><label class="text-[10px] font-bold text-stone-500 uppercase">Nilai Diskon</label><input type="number" id="vValue" placeholder="Misal: 10000 / 10" class="input-box py-2 text-xs mt-1"></div>
-                </div>
-                <button onclick="addVoucher()" id="btnAddVoucher" class="w-full bg-pink-600 text-white font-extrabold py-3 rounded-xl hover:bg-pink-700 transition text-xs mt-2">+ SIMPAN VOUCHER BARU</button>
+        <div class="bg-white w-full max-w-lg rounded-[24px] sm:rounded-[32px] shadow-2xl p-5 sm:p-8 relative border border-stone-100 max-h-[90vh] flex flex-col">
+            <button onclick="closeVoucherModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <div class="flex-shrink-0 pr-8">
+                <h3 class="font-extrabold text-lg sm:text-xl mb-1 text-pink-600">Kelola Voucher Diskon</h3><p class="text-[10px] text-stone-500 font-medium mb-4 sm:mb-6">Buat kode promo untuk pembeli.</p>
             </div>
             
-            <p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-3">Voucher Aktif</p>
-            <div id="voucherListArea" class="space-y-2 max-h-48 overflow-y-auto hide-scroll pb-2"></div>
+            <div class="overflow-y-auto hide-scroll flex-1 pr-1">
+                <div class="bg-pink-50 p-4 rounded-2xl mb-6 border border-pink-100 space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label class="text-[10px] font-bold text-stone-500 uppercase">Kode Voucher</label><input type="text" id="vCode" placeholder="Misal: HEMAT10" class="input-box py-2 text-xs uppercase mt-1"></div>
+                        <div><label class="text-[10px] font-bold text-stone-500 uppercase">Batas Pemakaian</label><input type="number" id="vLimit" placeholder="Misal: 50" class="input-box py-2 text-xs mt-1"></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div><label class="text-[10px] font-bold text-stone-500 uppercase">Tipe Diskon</label><select id="vType" class="input-box py-2 text-xs mt-1"><option value="nominal">Nominal (Rp)</option><option value="percent">Persen (%)</option></select></div>
+                        <div><label class="text-[10px] font-bold text-stone-500 uppercase">Nilai Diskon</label><input type="number" id="vValue" placeholder="Misal: 10000 / 10" class="input-box py-2 text-xs mt-1"></div>
+                    </div>
+                    <button onclick="addVoucher()" id="btnAddVoucher" class="w-full bg-pink-600 text-white font-extrabold py-3 rounded-xl hover:bg-pink-700 transition text-xs mt-2">+ SIMPAN VOUCHER</button>
+                </div>
+                
+                <p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-3">Voucher Aktif</p>
+                <div id="voucherListArea" class="space-y-2 pb-2"></div>
+            </div>
         </div>
     </div>
 
     <!-- MODAL FORM PRODUK -->
     <div id="productModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[32px] shadow-2xl p-8 relative border border-stone-100 max-h-[90vh] overflow-y-auto hide-scroll">
-            <h3 class="font-extrabold text-xl mb-6" id="prodModalTitle">Tambah Produk</h3>
-            <div class="space-y-4">
+        <div class="bg-white w-full max-w-md rounded-[24px] sm:rounded-[32px] shadow-2xl p-5 sm:p-8 relative border border-stone-100 max-h-[90vh] flex flex-col">
+            <h3 class="font-extrabold text-lg sm:text-xl mb-4 sm:mb-6 flex-shrink-0" id="prodModalTitle">Tambah Produk</h3>
+            
+            <div class="overflow-y-auto hide-scroll flex-1 pr-1 space-y-4">
                 <input type="hidden" id="prodId">
                 <div>
                     <label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-2 tracking-widest">Foto Produk</label>
@@ -261,13 +321,14 @@
                     </label>
                 </div>
                 <div class="input-float"><input type="text" id="prodName" placeholder=" " required><label>Nama Produk</label></div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="input-float"><input type="number" id="prodPrice" placeholder=" " required><label>Harga (Rp)</label></div>
-                    <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black"></select></div>
+                    <div class="relative sm:mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black py-3 sm:py-2.5 text-sm"></select></div>
                 </div>
-                <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full"></select></div>
+                <div class="relative"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full py-3 sm:py-2.5 text-sm"></select></div>
             </div>
-            <div class="flex space-x-3 mt-8">
+            
+            <div class="flex space-x-3 mt-6 pt-2 border-t border-stone-100 flex-shrink-0">
                 <button onclick="closeProductModal()" class="flex-1 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl transition hover:bg-stone-50 text-[11px] tracking-widest uppercase">BATAL</button>
                 <button onclick="saveProduct()" id="btnSaveProduct" class="flex-1 bg-black text-white font-extrabold py-3.5 rounded-2xl shadow-lg hover:bg-stone-800 transition text-[11px] tracking-widest uppercase">SIMPAN</button>
             </div>
@@ -276,6 +337,21 @@
 
     <!-- SCRIPT UTAMA ADMIN -->
     <script>
+        // UX TAMBAHAN: Hamburger Menu Mobile Navigation
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+        
+        // Auto-close sidebar on mobile when nav button is clicked
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(window.innerWidth < 768) { toggleSidebar(); }
+            });
+        });
+
         // ANTI-INSPECT ELEMENT & RIGHT CLICK (KEAMANAN WEB)
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
@@ -320,7 +396,7 @@
             refreshActiveTab();
         });
 
-        // LOGIN ADMIN (OTOMATIS NGE-CREATE JIKA BELUM ADA DI DATABASE)
+        // LOGIN ADMIN
         async function loginAdmin() {
             const email = document.getElementById('adminEmail').value, pass = document.getElementById('adminPass').value;
             const btn = document.getElementById('btnAdminLogin'); btn.innerHTML = `<span class="loader loader-white"></span>`;
@@ -347,7 +423,7 @@
         }
         function handleEnter(e) { if (e.key === 'Enter') loginAdmin(); }
         
-        // LOGOUT INSTAN (HARD RELOAD)
+        // LOGOUT INSTAN
         function logoutAdmin() {
             if(confirm("Yakin ingin keluar dari panel admin?")) { window.location.reload(); }
         }
@@ -383,7 +459,6 @@
             salesChartInstance = new Chart(ctx, { type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], datasets: [{ data: salesMonthly, borderColor: '#107c41', backgroundColor: 'rgba(16, 124, 65, 0.05)', borderWidth: 3, pointBackgroundColor: '#fff', pointBorderColor: '#107c41', pointBorderWidth: 2, pointRadius: 4, fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f5f5f4', drawBorder: false } }, x: { grid: { display: false, drawBorder: false } } } } });
         }
 
-        // PENDETEKSI DATA KORUP AGAR TIDAK BLANK (DISEMPURNAKAN)
         function renderDashboard() {
             try {
                 let totalRev = 0; let shippingOrd = 0; let pendingOrd = 0; let newSalesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -452,20 +527,19 @@
                     let resiAction = ``;
                     
                     if(o.status === "AWAITING VERIFICATION") { 
-                        resiAction = `<div class="flex space-x-2 w-full max-w-[200px]"><button onclick="viewProof('${o.id}')" class="flex-1 bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:text-black hover:border-black transition whitespace-nowrap">CEK BUKTI</button><button onclick="approveOrder('${o.id}')" class="flex-1 bg-black text-white text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:bg-stone-800 transition whitespace-nowrap" id="btnAppv_${o.id}">APPROVE</button></div>`; 
+                        resiAction = `<div class="flex space-x-2 w-full max-w-[200px] mt-2"><button onclick="viewProof('${o.id}')" class="flex-1 bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-2.5 sm:py-2 rounded-lg shadow-sm hover:text-black hover:border-black transition whitespace-nowrap">CEK BUKTI</button><button onclick="approveOrder('${o.id}')" class="flex-1 bg-black text-white text-[9px] font-extrabold px-2 py-2.5 sm:py-2 rounded-lg shadow-sm hover:bg-stone-800 transition whitespace-nowrap" id="btnAppv_${o.id}">APPROVE</button></div>`; 
                     } else if(o.status === "PROCESS (INPUT RESI)" || o.status === "IN TRANSIT") { 
-                        // FITUR EDIT RESI TERSEDIA
                         let btnText = o.status === "IN TRANSIT" ? "EDIT RESI" : "KIRIM";
-                        resiAction = `<div class="flex items-center space-x-2 mt-2"><input type="text" id="resiInput_${o.id}" value="${o.resi || ''}" placeholder="Input Resi..." class="border border-stone-300 rounded-lg px-2 py-1.5 text-xs w-32 outline-none focus:border-black bg-white"><button onclick="saveResi('${o.id}')" id="btnResi_${o.id}" class="bg-blue-600 text-white text-[10px] font-extrabold px-3 py-2 rounded-lg hover:bg-blue-700 transition">${btnText}</button></div>`; 
+                        resiAction = `<div class="flex items-center space-x-2 mt-2"><input type="text" id="resiInput_${o.id}" value="${o.resi || ''}" placeholder="Input Resi..." class="border border-stone-300 rounded-lg px-2 py-2 sm:py-1.5 text-xs w-28 sm:w-32 outline-none focus:border-black bg-white"><button onclick="saveResi('${o.id}')" id="btnResi_${o.id}" class="bg-blue-600 text-white text-[10px] font-extrabold px-3 py-2.5 sm:py-2 rounded-lg hover:bg-blue-700 transition">${btnText}</button></div>`; 
                     } else { 
-                        resiAction = `<span class="text-xs font-extrabold text-black block mt-1">Resi: ${o.resi || '-'}</span>`; 
+                        resiAction = `<span class="text-xs font-extrabold text-black block mt-2">Resi: ${o.resi || '-'}</span>`; 
                     }
                     
                     let custName = 'Unknown'; let custPhone = '-';
                     if(o.user && o.user.name) custName = o.user.name; else if(o.userEmail) custName = o.userEmail;
                     if(o.user && o.user.phone) custPhone = o.user.phone;
 
-                    tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black align-top">${o.id || '-'}<br><span class="text-[9px] text-stone-400 font-bold">${o.date || '-'}</span></td><td class="p-4 align-top"><p class="font-extrabold text-black">${custName}</p><p class="text-[10px] text-stone-500 font-bold">${custPhone}</p></td><td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch || '-'}</td><td class="p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total || 0))}</td><td class="p-4 align-top"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block mb-2 ${badgeClass}">${o.status || '-'}</span><div>${resiAction}</div></td><td class="p-4 text-center align-middle"><button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button></td></tr>`;
+                    tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black align-top">${o.id || '-'}<br><span class="text-[9px] text-stone-400 font-bold">${o.date || '-'}</span></td><td class="p-4 align-top"><p class="font-extrabold text-black">${custName}</p><p class="text-[10px] text-stone-500 font-bold">${custPhone}</p></td><td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch || '-'}</td><td class="p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total || 0))}</td><td class="p-4 align-top min-w-[200px]"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block ${badgeClass}">${o.status || '-'}</span><div>${resiAction}</div></td><td class="p-4 text-center align-middle"><button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button></td></tr>`;
                 });
             } catch(e) { console.error("Orders Render Error:", e); }
         }
@@ -492,11 +566,10 @@
         }
         function closeProofModal() { document.getElementById('proofModal').classList.add('hidden'); currentEditingOrderIndex = null; }
         
-        // FUNGSI DOWNLOAD BUKTI TRANSFER OTOMATIS (CLOUD ATAU LOKAL)
+        // FUNGSI DOWNLOAD BUKTI TRANSFER OTOMATIS
         function forceDownloadProof() {
             if(!currentProofUrlDownload) return;
             let downloadUrl = currentProofUrlDownload;
-            // Trik Cloudinary untuk memaksa browser mendownload sebagai attachment
             if(downloadUrl.includes('cloudinary.com') && downloadUrl.includes('/upload/')) {
                 downloadUrl = downloadUrl.replace('/upload/', '/upload/fl_attachment/');
             }
@@ -526,7 +599,7 @@
                     let custName = 'Unknown';
                     if(o.user && o.user.name) custName = o.user.name; else if(o.userEmail) custName = o.userEmail;
                     
-                    container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow"><div class="flex-1"><p class="font-extrabold text-lg text-black">${o.id || '-'} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-2 border border-stone-200">${custName}</span></p><div class="mt-2 flex items-center space-x-4"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-4">Resi: <span class="text-black font-extrabold">${o.resi || "Belum Ada"}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch || '-'}</p></div><div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Terakhir:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Menunggu update pertama...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div></div><div class="w-full md:w-2/5 flex flex-col space-y-2 bg-cream-50 p-4 rounded-2xl border border-stone-100"><input type="text" id="manualTrack_${o.id}" placeholder="Ketik status terkini (Cth: Tiba di Bandung)..." class="border border-stone-200 rounded-xl px-4 py-3 text-xs font-bold bg-white text-black focus:border-black outline-none transition-colors"><button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md">TAMBAHKAN HISTORY</button></div></div>`;
+                    container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow"><div class="flex-1"><p class="font-extrabold text-base sm:text-lg text-black">${o.id || '-'} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-1 sm:ml-2 border border-stone-200">${custName}</span></p><div class="mt-2 flex flex-wrap gap-2 items-center"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-3 sm:pr-4">Resi: <span class="text-black font-extrabold">${o.resi || "Belum Ada"}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch || '-'}</p></div><div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Terakhir:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Menunggu update pertama...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div></div><div class="w-full md:w-2/5 flex flex-col space-y-2 bg-cream-50 p-4 rounded-2xl border border-stone-100"><input type="text" id="manualTrack_${o.id}" placeholder="Ketik status terkini (Cth: Tiba di Bandung)..." class="border border-stone-200 rounded-xl px-4 py-3 text-xs font-bold bg-white text-black focus:border-black outline-none transition-colors"><button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md mt-2">TAMBAHKAN HISTORY</button></div></div>`;
                 });
             } catch(e) { console.error("Tracking Render Error:", e); }
         }
@@ -567,7 +640,7 @@
 
             if(itemsParsed && itemsParsed.length > 0){
                 itemsParsed.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
-                for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-4 border-b border-stone-100"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold">${i.country} • ${i.category}</p></td><td class="py-4 text-center font-bold border-b border-stone-100">x${i.qty}</td><td class="py-4 text-right font-extrabold text-black border-b border-stone-100">${formatRp(i.price * i.qty)}</td></tr>`; }
+                for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-4 border-b border-stone-100"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold mt-1">${i.country} • ${i.category}</p></td><td class="py-4 text-center font-bold border-b border-stone-100">x${i.qty}</td><td class="py-4 text-right font-extrabold text-black border-b border-stone-100">${formatRp(i.price * i.qty)}</td></tr>`; }
             }
 
             if(o.discount && o.discount > 0) {
@@ -592,7 +665,7 @@
             keys.forEach(k => { 
                 const v = vouchersDB[k];
                 const textVal = v.type === 'percent' ? `${v.value}%` : formatRp(parseInt(v.value));
-                area.innerHTML += `<div class="flex justify-between items-center bg-white p-3 rounded-xl border border-stone-100 shadow-sm mb-2"><div><span class="text-xs font-extrabold text-pink-600 block uppercase">${k}</span><span class="text-[9px] font-bold text-stone-400 block mt-0.5">Potongan: ${textVal} | Sisa Kuota: <span class="text-black">${v.limit}</span></span></div><button onclick="deleteVoucher('${k}')" class="bg-red-50 text-red-500 p-2 rounded-lg hover:bg-red-100 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; 
+                area.innerHTML += `<div class="flex justify-between items-center bg-white p-3 sm:p-4 rounded-xl border border-stone-100 shadow-sm mb-2"><div class="flex-1"><span class="text-xs font-extrabold text-pink-600 block uppercase">${k}</span><span class="text-[9px] sm:text-[10px] font-bold text-stone-400 block mt-0.5 sm:mt-1">Potongan: ${textVal} | Sisa Kuota: <span class="text-black">${v.limit}</span></span></div><button onclick="deleteVoucher('${k}')" class="bg-red-50 text-red-500 p-2 sm:p-2.5 rounded-lg hover:bg-red-100 transition flex-shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; 
             });
         }
         function addVoucher() {
@@ -600,12 +673,12 @@
             if(!code || !limit || !value) return alert("Lengkapi form voucher!");
             document.getElementById('btnAddVoucher').innerHTML = "...";
             db.ref('vouchers/' + code).set({ type: type, value: value, limit: parseInt(limit) }).then(() => {
-                document.getElementById('vCode').value = ''; document.getElementById('vLimit').value = ''; document.getElementById('vValue').value = ''; showAdminToast("Voucher berhasil dibuat!"); document.getElementById('btnAddVoucher').innerHTML = "+ SIMPAN VOUCHER BARU";
+                document.getElementById('vCode').value = ''; document.getElementById('vLimit').value = ''; document.getElementById('vValue').value = ''; showAdminToast("Voucher berhasil dibuat!"); document.getElementById('btnAddVoucher').innerHTML = "+ SIMPAN VOUCHER";
             });
         }
         function deleteVoucher(code) { if(confirm(`Hapus voucher ${code}?`)) { db.ref('vouchers/' + code).remove().then(() => showAdminToast("Voucher dihapus.")); } }
 
-        // --- MANAJEMEN ATRIBUT (BATCH, KATEGORI, NEGARA) ---
+        // --- MANAJEMEN ATRIBUT ---
         function openBatchModal() { currentAttrType = 'batches'; document.getElementById('attrModalTitle').textContent = "Daftar Batch"; document.getElementById('attrModalDesc').textContent = "Batch akan muncul di Dropdown Checkout User."; document.getElementById('newAttrInput').placeholder = "Misal: Batch USA #02"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
         function openCountryModal() { currentAttrType = 'countries'; document.getElementById('attrModalTitle').textContent = "Daftar Negara"; document.getElementById('attrModalDesc').textContent = "Negara untuk filter dan data produk."; document.getElementById('newAttrInput').placeholder = "Misal: Singapore"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
         function openCategoryModal() { currentAttrType = 'categories'; document.getElementById('attrModalTitle').textContent = "Daftar Kategori"; document.getElementById('attrModalDesc').textContent = "Kategori untuk filter dan data produk."; document.getElementById('newAttrInput').placeholder = "Misal: Sepatu"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
@@ -616,7 +689,7 @@
             let list = [];
             if(currentAttrType === 'batches') list = batchesDB; if(currentAttrType === 'countries') list = countriesDB; if(currentAttrType === 'categories') list = categoriesDB;
             if(list.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada data.</p>`; return; }
-            list.forEach((item, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100"><span class="text-xs font-bold text-black">${item}</span><button onclick="deleteAttr(${i})" class="text-stone-400 hover:text-red-500 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
+            list.forEach((item, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100 mb-2"><span class="text-xs font-bold text-black">${item}</span><button onclick="deleteAttr(${i})" class="text-stone-400 hover:text-red-500 transition p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
         }
         function addAttr() {
             const val = document.getElementById('newAttrInput').value.trim();
@@ -636,7 +709,7 @@
         function renderCatalog() {
             const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
             catalogDB.forEach(p => {
-                grid.innerHTML += `<div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white text-blue-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white text-red-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${p.img}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-3 left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-xs mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-3"><p class="text-[9px] text-stone-400 font-bold uppercase tracking-widest">${p.category}</p><p class="font-extrabold text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
+                grid.innerHTML += `<div class="bg-white rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 z-10 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white/90 sm:bg-white text-blue-600 p-2 sm:p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white/90 sm:bg-white text-red-600 p-2 sm:p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${p.img}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-2 sm:top-3 left-2 sm:left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-3 sm:p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-[11px] sm:text-xs mb-1 sm:mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-2 sm:pt-3"><p class="text-[8px] sm:text-[9px] text-stone-400 font-bold uppercase tracking-widest truncate max-w-[50%]">${p.category}</p><p class="font-extrabold text-xs sm:text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
             });
         }
 
@@ -727,7 +800,6 @@
             } 
         }
 
-        // TAMBAHAN TOMBOL RESET PASSWORD KHUSUS ADMIN
         async function adminResetUserPassword(email) {
             const newPass = prompt(`Masukkan password baru untuk akun:\n${email}`);
             if(!newPass || newPass.trim() === '') return;
@@ -750,7 +822,7 @@
                             <td class="p-4 text-stone-600 font-bold text-xs">${u.email || '-'}</td>
                             <td class="p-4 text-stone-600 font-bold text-xs">${u.phone || '-'}</td>
                             <td class="p-4 text-stone-600 font-bold text-xs text-center">${u.pass || '-'}</td>
-                            <td class="p-4 text-center"><button onclick="adminResetUserPassword('${u.email}')" class="bg-orange-50 text-orange-600 px-3 py-1.5 rounded-lg text-[10px] font-extrabold tracking-widest hover:bg-orange-100 transition shadow-sm">RESET PASS</button></td>
+                            <td class="p-4 text-center"><button onclick="adminResetUserPassword('${u.email}')" class="bg-orange-50 text-orange-600 px-3 py-2 sm:py-1.5 rounded-lg text-[10px] font-extrabold tracking-widest hover:bg-orange-100 transition shadow-sm">RESET PASS</button></td>
                         </tr>`; 
                     }
                 });
