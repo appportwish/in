@@ -143,7 +143,7 @@
             <div id="usersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 bg-cream-50/50 flex justify-between items-center"><h3 class="font-extrabold text-lg">Database Akun Pelanggan</h3><button onclick="exportUsersToExcel()" class="bg-[#107c41] hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95">UNDUH EXCEL</button></div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold text-center">Password</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
+                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold text-center">Password</th><th class="p-4 font-extrabold text-center rounded-tr-xl">Aksi</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
         </div>
@@ -357,6 +357,7 @@
             if(activeTab === 'dashboardTab') renderDashboard();
             if(activeTab === 'ordersTab') renderOrders(document.querySelector('#ordersTab input').value);
             if(activeTab === 'trackingTab') renderTracking();
+            if(activeTab === 'catalogTab') renderCatalog();
             if(activeTab === 'usersTab') renderUsers();
         }
 
@@ -631,19 +632,126 @@
             showAdminToast("Menghapus..."); db.ref(currentAttrType).set(list).then(() => { showAdminToast("Data dihapus."); });
         }
 
-        // --- EXPORT DATABASE PELANGGAN KE EXCEL ---
-        function exportUsersToExcel() {
-            const data = usersDB.map(u => ({ "Nama Lengkap": u.name || '-', "Email Pelanggan": u.email || '-', "No. WhatsApp": u.phone || '-', "Password": u.pass || '-' }));
-            const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Database Pelanggan"); XLSX.writeFile(wb, "Database_Pelanggan_Portwish.xlsx"); showAdminToast("Excel Berhasil Diunduh!");
+        // --- CATALOG DENGAN CLOUDINARY UPLOAD API ---
+        function renderCatalog() {
+            const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
+            catalogDB.forEach(p => {
+                grid.innerHTML += `<div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white text-blue-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white text-red-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${p.img}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-3 left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-xs mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-3"><p class="text-[9px] text-stone-400 font-bold uppercase tracking-widest">${p.category}</p><p class="font-extrabold text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
+            });
+        }
+
+        function previewUploadedImage(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width, height = img.height;
+                        const MAX_WIDTH = 800; // Kompres Max 800px (Katalog)
+                        if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
+                        canvas.width = width; canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.8); 
+                        document.getElementById('prodImgPreview').src = currentUploadedImageBase64;
+                        document.getElementById('prodImgPreview').classList.remove('hidden');
+                        document.getElementById('uploadPlaceholder').classList.add('opacity-0');
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function openProductModal(id = null) {
+            const selCat = document.getElementById('prodCat'); selCat.innerHTML = ''; categoriesDB.forEach(c => selCat.innerHTML += `<option value="${c}">${c}</option>`);
+            const selCou = document.getElementById('prodCountry'); selCou.innerHTML = ''; countriesDB.forEach(c => selCou.innerHTML += `<option value="${c}">${c}</option>`);
+
+            if(id) {
+                const p = catalogDB.find(x => x.id === id); document.getElementById('prodModalTitle').textContent = "Edit Product"; document.getElementById('prodId').value = p.id; 
+                currentUploadedImageBase64 = p.img; document.getElementById('prodImgPreview').src = p.img; document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
+                document.getElementById('prodName').value = p.name; document.getElementById('prodPrice').value = p.price; document.getElementById('prodCat').value = p.category; document.getElementById('prodCountry').value = p.country; 
+            } else { 
+                document.getElementById('prodModalTitle').textContent = "Add New Product"; document.getElementById('prodId').value = ""; 
+                currentUploadedImageBase64 = null; document.getElementById('prodImgFile').value = ''; document.getElementById('prodImgPreview').classList.add('hidden'); document.getElementById('uploadPlaceholder').classList.remove('opacity-0');
+                document.getElementById('prodName').value = ""; document.getElementById('prodPrice').value = "";
+            }
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
+        
+        async function uploadToCloudinary(base64Image) {
+            const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+            const formData = new FormData();
+            formData.append('file', base64Image);
+            formData.append('upload_preset', uploadPreset);
+            const response = await fetch(url, { method: 'POST', body: formData });
+            if(!response.ok) throw new Error("Upload ke Cloudinary Gagal");
+            const data = await response.json();
+            return data.secure_url;
+        }
+
+        async function saveProduct() {
+            const name = document.getElementById('prodName').value, price = document.getElementById('prodPrice').value;
+            if(!name || !price || !currentUploadedImageBase64) return alert("Mohon lengkapi Nama Produk, Harga, dan Upload Foto!");
+            const btn = document.getElementById('btnSaveProduct'); btn.innerHTML = "MENYIMPAN..."; btn.disabled = true;
+
+            try {
+                const id = document.getElementById('prodId').value;
+                const newProdId = id ? parseInt(id) : Date.now();
+                let finalImageUrl = currentUploadedImageBase64;
+
+                if (currentUploadedImageBase64.startsWith('data:image')) {
+                    finalImageUrl = await uploadToCloudinary(currentUploadedImageBase64);
+                } 
+
+                const newProd = { id: newProdId, name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: finalImageUrl };
+                await db.ref('catalog/' + newProdId).set(newProd);
+
+                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); showAdminToast("Katalog diperbarui!");
+            } catch (error) {
+                console.error(error);
+                btn.innerHTML = "SIMPAN"; btn.disabled = false;
+                alert("GAGAL UPLOAD FOTO!\n\nPastikan Cloud Name dan Upload Preset Anda sudah benar.");
+            }
+        }
+
+        function deleteProduct(id) { 
+            if(confirm("Yakin ingin menghapus produk ini?")) { 
+                showAdminToast("Menghapus produk...");
+                db.ref('catalog/' + id).remove().then(() => { showAdminToast("Product deleted."); });
+            } 
+        }
+
+        // TAMBAHAN TOMBOL RESET PASSWORD KHUSUS ADMIN
+        async function adminResetUserPassword(email) {
+            const newPass = prompt(`Masukkan password baru untuk akun:\n${email}`);
+            if(!newPass || newPass.trim() === '') return;
+            
+            const safeEmailKey = email.replace(/\./g, ',');
+            try {
+                await db.ref('users/' + safeEmailKey).update({ pass: newPass.trim() });
+                showAdminToast("Password user berhasil direset!");
+            } catch(e) { alert("Gagal mereset password."); }
         }
 
         function renderUsers() {
             try {
                 const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
-                if(!usersDB || usersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400">Belum ada pelanggan terdaftar.</td></tr>`; return; }
+                if(!usersDB || usersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-xs text-stone-400">Belum ada pelanggan terdaftar.</td></tr>`; return; }
                 usersDB.forEach((u, i) => { 
                     if(u && u.email) {
-                        tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black">${u.name || '-'}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.email || '-'}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.phone || '-'}</td><td class="p-4 text-stone-600 font-bold text-xs text-center">${u.pass || '-'}</td></tr>`; 
+                        tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors">
+                            <td class="p-4 font-extrabold text-black">${u.name || '-'}</td>
+                            <td class="p-4 text-stone-600 font-bold text-xs">${u.email || '-'}</td>
+                            <td class="p-4 text-stone-600 font-bold text-xs">${u.phone || '-'}</td>
+                            <td class="p-4 text-stone-600 font-bold text-xs text-center">${u.pass || '-'}</td>
+                            <td class="p-4 text-center"><button onclick="adminResetUserPassword('${u.email}')" class="bg-orange-50 text-orange-600 px-3 py-1.5 rounded-lg text-[10px] font-extrabold tracking-widest hover:bg-orange-100 transition shadow-sm">RESET PASS</button></td>
+                        </tr>`; 
                     }
                 });
             } catch(e) { console.error("Users Render Error:", e); }
