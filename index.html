@@ -111,10 +111,12 @@
                 <div class="input-float"><input type="text" id="regName" placeholder=" " required autocomplete="off"><label>Full Name</label></div>
                 <div class="input-float"><input type="email" id="regEmail" placeholder=" " required autocomplete="off"><label>Active Email</label></div>
                 <div class="input-float"><input type="tel" id="regPhone" placeholder=" " required autocomplete="off"><label>WhatsApp Number</label></div>
+                <div class="input-float"><input type="password" id="regPass" placeholder=" " required autocomplete="off"><label>Create Password</label></div>
                 <button onclick="processRegister()" id="btnRegSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2">REGISTER NOW</button>
             </div>
             <div id="formLogin" class="space-y-4 hidden">
                 <div class="input-float"><input type="email" id="logEmail" placeholder=" " required autocomplete="off"><label>Registered Email</label></div>
+                <div class="input-float"><input type="password" id="logPass" placeholder=" " required autocomplete="off"><label>Password</label></div>
                 <button onclick="processLogin()" id="btnLogSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2">LOGIN NOW</button>
             </div>
         </div>
@@ -217,9 +219,21 @@
         const scriptURL = 'https://script.google.com/macros/s/AKfycbztjaLEsdsASxFJwZ7hMEMwXIp9BRSWpA0sjQqPhBqLL1a_di7iCx5H5XlMghrlfYTr/exec';
 
         let products = []; let activeCountry = 'ALL', activeCategory = 'ALL', searchQuery = '', cart = [];
-        let usersDB = [{ name: "Dadan Furman", email: "user@portwish.id", phone: "081234", pass: "123" }];
-        let currentUser = null; let authIntent = null; let orders = []; let currentCheckoutBase64 = null;
+        
+        // Mencegah User Reset / Hilang dengan LocalStorage
+        let storedUsers = JSON.parse(localStorage.getItem('pw_users')) || [{ name: "Dadan Furman", email: "user@portwish.id", phone: "081234", pass: "123" }];
+        let usersDB = storedUsers;
+        let currentUser = JSON.parse(localStorage.getItem('pw_currentUser')) || null; 
+        
+        let authIntent = null; let orders = []; let currentCheckoutBase64 = null;
+        let pauseSync = false; // Jeda Sinkronisasi agar Live Update mulus
+
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
+
+        function saveLocalUsers() { 
+            localStorage.setItem('pw_users', JSON.stringify(usersDB)); 
+            localStorage.setItem('pw_currentUser', JSON.stringify(currentUser));
+        }
 
         function getDirectUrl(url) {
             if (!url) return 'https://placehold.co/400';
@@ -236,25 +250,21 @@
             const toast = document.getElementById('liveToast');
             toast.classList.remove('translate-y-[-150%]', 'opacity-0'); toast.classList.add('translate-y-0', 'opacity-100');
             
-            fetch(scriptURL)
-            .then(res => res.json())
-            .then(data => {
+            fetch(scriptURL).then(res => res.json()).then(data => {
                 processIncomingData(data);
                 renderProducts();
-                if(currentUser) renderOrders();
+                if(currentUser) { renderOrders(); document.getElementById('loginIndicator').classList.remove('hidden'); }
                 setTimeout(() => { toast.classList.remove('translate-y-0', 'opacity-100'); toast.classList.add('translate-y-[-150%]', 'opacity-0'); }, 1000);
-            })
-            .catch(err => {
+            }).catch(err => {
                 document.getElementById('toastMsg').textContent = "Offline Mode: Gagal memuat data dari server.";
                 setTimeout(() => { toast.classList.remove('translate-y-0', 'opacity-100'); toast.classList.add('translate-y-[-150%]', 'opacity-0'); }, 3000);
             });
         }
 
-        // --- SILENT POLLING ---
+        // --- SILENT POLLING (REAL TIME TANPA REFRESH) ---
         setInterval(() => {
-            fetch(scriptURL)
-            .then(res => res.json())
-            .then(data => {
+            if(pauseSync) return; // Jangan tarik data jika sedang proses checkout (mencegah kedip/ilang)
+            fetch(scriptURL).then(res => res.json()).then(data => {
                 processIncomingData(data);
                 if(document.getElementById('shopTab').classList.contains('active')) renderProducts();
                 if(currentUser && document.getElementById('dashboardTab').classList.contains('active')) renderOrders();
@@ -275,9 +285,12 @@
                 total: o.total, status: o.status, resi: o.resi, latestTracking: o.latestTracking, trackingTime: o.trackingTime,
                 items: JSON.parse(o.itemsInfo || "[]")
             }));
+            
+            // Gabungkan user dari server ke lokal tanpa menghapus pendaftar baru
             orders.forEach(o => {
                 if(!usersDB.find(u => u.email === o.userEmail)) {
                     usersDB.push({ name: o.user.name, email: o.userEmail, phone: o.user.phone, pass: "123" });
+                    saveLocalUsers();
                 }
             });
         }
@@ -313,16 +326,17 @@
         }
 
         function processRegister() {
-            const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, phone = document.getElementById('regPhone').value;
-            if(!name || !email || !phone) return showErrorToast("Please fill in all details.");
-            const newUser = { name, email, phone, pass: "123" }; usersDB.push(newUser); currentUser = newUser; completeAuthSuccess();
+            const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, phone = document.getElementById('regPhone').value, pass = document.getElementById('regPass').value;
+            if(!name || !email || !phone || !pass) return showErrorToast("Please fill in all details.");
+            if(usersDB.find(u => u.email === email)) return showErrorToast("Email registered. Please Login.");
+            const newUser = { name, email, phone, pass }; usersDB.push(newUser); currentUser = newUser; saveLocalUsers(); completeAuthSuccess();
         }
 
         function processLogin() {
-            const email = document.getElementById('logEmail').value;
-            if(!email) return showErrorToast("Please enter email.");
-            const user = usersDB.find(u => u.email === email);
-            if(user) { currentUser = user; completeAuthSuccess(); } else { showErrorToast("Email tidak terdaftar."); }
+            const email = document.getElementById('logEmail').value, pass = document.getElementById('logPass').value;
+            if(!email || !pass) return showErrorToast("Please enter email & password.");
+            const user = usersDB.find(u => u.email === email && u.pass === pass);
+            if(user) { currentUser = user; saveLocalUsers(); completeAuthSuccess(); } else { showErrorToast("Email atau Password salah!"); }
         }
 
         function completeAuthSuccess() {
@@ -330,7 +344,7 @@
             if(authIntent === 'checkout') { setTimeout(openCheckoutModal, 300); } else if(authIntent === 'dashboard') { setTimeout(() => { switchTab('dashboard'); renderOrders(); }, 300); }
         }
 
-        function logout() { currentUser = null; document.getElementById('loginIndicator').classList.add('hidden'); switchTab('shop'); }
+        function logout() { currentUser = null; saveLocalUsers(); document.getElementById('loginIndicator').classList.add('hidden'); switchTab('shop'); }
         function tryDashboard() { if(!currentUser) { openAuthModal('dashboard'); } else { switchTab('dashboard'); renderOrders(); } }
         function tryCheckout() { if(!currentUser) { openAuthModal('checkout'); } else { openCheckoutModal(); } }
 
@@ -448,9 +462,9 @@
                 proofImageBase64: currentCheckoutBase64, items: cart
             };
 
-            fetch(scriptURL, {
-                method: 'POST', mode: 'no-cors', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-            })
+            pauseSync = true; // Jeda sinkronisasi latar belakang agar pesanan tidak hilang sekejap
+
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
             .then(() => {
                 orders.unshift({ id: newOrderId, userEmail: currentUser.email, address: address, date: orderDate, batch: batchName, items: [...cart], total: orderTotal, status: 'AWAITING VERIFICATION', resi: null }); 
                 cart = []; document.getElementById('batchSelect').value = ""; updateCartUI();
@@ -459,9 +473,11 @@
                 btn.innerHTML = ogText; btn.disabled = false; 
                 closeCheckoutModal(); switchTab('dashboard'); renderOrders();
                 showErrorToast("Order berhasil! Pesanan dikirim ke sistem Admin.");
+                setTimeout(() => pauseSync = false, 15000); // Lanjutkan sync setelah 15 detik
             })
             .catch(error => {
-                btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Error koneksi jaringan murni. Pastikan internet stabil.");
+                btn.innerHTML = ogText; btn.disabled = false; pauseSync = false;
+                showErrorToast("Error koneksi jaringan murni. Pastikan internet stabil.");
             });
         }
 
@@ -479,7 +495,6 @@
                 if(o.status === "COMPLETED") statusColor = "bg-green-100 text-green-700 border-green-200";
 
                 let trackingButton = `<span class="text-[10px] text-stone-400 font-bold uppercase tracking-widest cursor-not-allowed flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> VERIFICATION PROCESS</span>`;
-                
                 if(o.resi) trackingButton = `<button onclick="openTrackingModal('${o.id}')" class="text-[10px] text-black font-extrabold uppercase tracking-widest hover:text-stone-500 flex items-center transition-colors">TRACK PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>`;
 
                 let invoiceBtn = '';
@@ -531,6 +546,7 @@
         function openUniversalTracker() { window.open('https://cekresi.com', '_blank'); }
 
         fetchDatabase();
+        if(currentUser) document.getElementById('loginIndicator').classList.remove('hidden');
     </script>
 </body>
 </html>
