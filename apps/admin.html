@@ -11,7 +11,6 @@
     <!-- FIREBASE SDK V8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
@@ -60,7 +59,7 @@
             </div>
             <nav class="p-4 space-y-2">
                 <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-black text-white font-bold text-sm transition-all shadow-md"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><span>Dashboard</span></button>
-                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span><span class="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full" id="pendingCount">0</span></button>
+                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span></button>
                 <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all relative"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span><span class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse" id="activeShipmentDot"></span></button>
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg><span>Kelola Katalog</span></button>
                 <button onclick="switchTab('users')" id="nav-users" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg><span>Database Akun</span></button>
@@ -125,9 +124,10 @@
 
             <!-- TAB 4: CATALOG -->
             <div id="catalogTab" class="tab-content">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <h3 class="font-extrabold text-xl">Kelola Produk</h3>
                     <div class="flex space-x-2 flex-wrap gap-y-2">
+                        <button onclick="openVoucherModal()" class="bg-pink-50 border border-pink-200 text-pink-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:bg-pink-100 transition-colors flex items-center">Voucher</button>
                         <button onclick="openCategoryModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Kategori</button>
                         <button onclick="openCountryModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Negara</button>
                         <button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Batch</button>
@@ -169,7 +169,7 @@
                         <p class="text-xs font-semibold mt-1 text-stone-400" id="invDate">Date: -</p>
                     </div>
                 </div>
-                <div class="flex justify-between mb-8">
+                <div class="flex justify-between mb-6">
                     <div>
                         <p class="text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Billed To:</p>
                         <h4 class="font-extrabold text-lg" id="invName">Nama Pelanggan</h4>
@@ -190,7 +190,13 @@
                     <thead><tr class="border-b-2 border-black text-[10px] uppercase tracking-widest text-stone-500"><th class="py-3 font-extrabold w-2/3">Deskripsi Produk</th><th class="py-3 font-extrabold text-center">Qty</th><th class="py-3 font-extrabold text-right">Harga</th></tr></thead>
                     <tbody id="invItems" class="text-sm font-semibold border-b border-stone-200"></tbody>
                 </table>
-                <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 text-stone-500 font-bold"><span>Subtotal</span><span id="invSubtotal">Rp 0</span></div><div class="flex justify-between py-3 border-t-2 border-black mt-2 text-lg"><span class="font-extrabold text-black">TOTAL</span><span class="font-extrabold text-black" id="invTotalMain">Rp 0</span></div></div></div>
+                <div class="flex justify-end">
+                    <div class="w-1/2">
+                        <div class="flex justify-between py-1.5 text-stone-500 font-bold"><span>Subtotal</span><span id="invSubtotal">Rp 0</span></div>
+                        <div class="flex justify-between py-1.5 text-green-600 font-bold" id="invDiscountBox" style="display: none;"><span>Discount</span><span id="invDiscount">- Rp 0</span></div>
+                        <div class="flex justify-between py-3 border-t-2 border-black mt-2 text-lg"><span class="font-extrabold text-black">TOTAL</span><span class="font-extrabold text-black" id="invTotalMain">Rp 0</span></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -218,6 +224,29 @@
                 <button onclick="addAttr()" id="btnAddAttr" class="bg-black text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95">TAMBAH</button>
             </div>
             <div id="attrListArea" class="space-y-2 max-h-60 overflow-y-auto hide-scroll pb-2"></div>
+        </div>
+    </div>
+
+    <!-- MODAL VOUCHER -->
+    <div id="voucherModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-[32px] shadow-2xl p-8 relative border border-stone-100">
+            <button onclick="closeVoucherModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <h3 class="font-extrabold text-xl mb-1 text-pink-600">Kelola Voucher Diskon</h3><p class="text-[10px] text-stone-500 font-medium mb-6">Buat kode promo untuk pembeli.</p>
+            
+            <div class="bg-pink-50 p-4 rounded-2xl mb-6 border border-pink-100 space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-[10px] font-bold text-stone-500 uppercase">Kode Voucher</label><input type="text" id="vCode" placeholder="Misal: HEMAT10" class="input-box py-2 text-xs uppercase mt-1"></div>
+                    <div><label class="text-[10px] font-bold text-stone-500 uppercase">Batas Pemakaian</label><input type="number" id="vLimit" placeholder="Misal: 50" class="input-box py-2 text-xs mt-1"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-[10px] font-bold text-stone-500 uppercase">Tipe Diskon</label><select id="vType" class="input-box py-2 text-xs mt-1"><option value="nominal">Nominal (Rp)</option><option value="percent">Persen (%)</option></select></div>
+                    <div><label class="text-[10px] font-bold text-stone-500 uppercase">Nilai Diskon</label><input type="number" id="vValue" placeholder="Misal: 10000 / 10" class="input-box py-2 text-xs mt-1"></div>
+                </div>
+                <button onclick="addVoucher()" id="btnAddVoucher" class="w-full bg-pink-600 text-white font-extrabold py-3 rounded-xl hover:bg-pink-700 transition text-xs mt-2">+ SIMPAN VOUCHER BARU</button>
+            </div>
+            
+            <p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-3">Voucher Aktif</p>
+            <div id="voucherListArea" class="space-y-2 max-h-48 overflow-y-auto hide-scroll pb-2"></div>
         </div>
     </div>
 
@@ -249,23 +278,25 @@
         </div>
     </div>
 
-    <!-- SCRIPT FIREBASE ADMIN -->
+    <!-- SCRIPT FIREBASE ADMIN & CLOUDINARY UPLOAD -->
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyDHHp8I0lsuyyo8nMfFmRR5ILHH5COvwvc",
           authDomain: "portwish-b2fe3.firebaseapp.com",
           databaseURL: "https://portwish-b2fe3-default-rtdb.asia-southeast1.firebasedatabase.app",
           projectId: "portwish-b2fe3",
-          storageBucket: "portwish-b2fe3.firebasestorage.app",
           messagingSenderId: "19359316980",
           appId: "1:19359316980:web:d8e0450b2029fa10e057a1"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const storage = firebase.storage();
+
+        // KONFIGURASI CLOUDINARY ADMIN
+        const cloudName = 'dlgisjmq2';
+        const uploadPreset = 'portwish_foto'; // UBAH INI JIKA NAMA PRESET AKANG BERBEDA
 
         let catalogDB = []; let batchesDB = []; let countriesDB = ['USA', 'Japan', 'Korea']; let categoriesDB = ['Skincare', 'Fashion', 'Food & Snacks']; 
-        let ordersDB = []; let usersDB = []; let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
+        let ordersDB = []; let usersDB = []; let vouchersDB = {}; let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
         let currentEditingOrderIndex = null; let currentUploadedImageBase64 = null; 
         
@@ -279,6 +310,7 @@
         db.ref('countries').on('value', snap => { if(snap.val()) countriesDB = Object.values(snap.val()); if(!document.getElementById('attributeModal').classList.contains('hidden') && currentAttrType==='countries') renderAttrList(); });
         db.ref('categories').on('value', snap => { if(snap.val()) categoriesDB = Object.values(snap.val()); if(!document.getElementById('attributeModal').classList.contains('hidden') && currentAttrType==='categories') renderAttrList(); });
         db.ref('users').on('value', snap => { usersDB = snap.val() ? Object.values(snap.val()) : []; if(document.getElementById('usersTab').classList.contains('active')) renderUsers(); });
+        db.ref('vouchers').on('value', snap => { vouchersDB = snap.val() || {}; if(!document.getElementById('voucherModal').classList.contains('hidden')) renderVouchers(); });
         
         db.ref('orders').on('value', snap => {
             const data = snap.val();
@@ -295,10 +327,12 @@
             } else { document.getElementById('loginErrorMsg').classList.remove('hidden'); document.getElementById('adminPass').value = ''; }
         }
         function handleEnter(e) { if (e.key === 'Enter') loginAdmin(); }
+        
+        // KELUAR TANPA DELAY
         function logoutAdmin() {
             if(confirm("Yakin ingin keluar dari panel admin?")) {
                 document.getElementById('adminEmail').value = ''; document.getElementById('adminPass').value = ''; document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
-                document.getElementById('adminLoginGate').classList.remove('hidden'); setTimeout(() => { document.getElementById('adminLoginGate').classList.remove('opacity-0'); }, 10);
+                document.getElementById('adminLoginGate').classList.remove('hidden'); 
             }
         }
 
@@ -427,13 +461,54 @@
             document.getElementById('invAddress').textContent = o.address; document.getElementById('invBatch').textContent = o.batch;
             document.getElementById('invResiShow').textContent = o.resi || "PENDING";
             const tbody = document.getElementById('invItems'); tbody.innerHTML = '';
+            
             let grouped = {}; JSON.parse(o.itemsInfo || "[]").forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
             for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-4 border-b border-stone-100"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold">${i.country} • ${i.category}</p></td><td class="py-4 text-center font-bold border-b border-stone-100">x${i.qty}</td><td class="py-4 text-right font-extrabold text-black border-b border-stone-100">${formatRp(i.price * i.qty)}</td></tr>`; }
-            document.getElementById('invSubtotal').textContent = formatRp(parseInt(o.total)); document.getElementById('invTotalMain').textContent = formatRp(parseInt(o.total));
+            
+            if(o.discount && o.discount > 0) {
+                document.getElementById('invDiscountBox').style.display = 'flex';
+                document.getElementById('invDiscount').textContent = `- ${formatRp(parseInt(o.discount))}`;
+            } else { document.getElementById('invDiscountBox').style.display = 'none'; }
+
+            document.getElementById('invSubtotal').textContent = formatRp(parseInt(o.total + (o.discount || 0))); 
+            document.getElementById('invTotalMain').textContent = formatRp(parseInt(o.total));
             document.getElementById('invoiceModal').classList.remove('hidden');
         }
         function closeInvoiceModal() { document.getElementById('invoiceModal').classList.add('hidden'); }
         function printInvoice() { window.print(); }
+
+        // --- MANAJEMEN VOUCHER ---
+        function openVoucherModal() { renderVouchers(); document.getElementById('voucherModal').classList.remove('hidden'); }
+        function closeVoucherModal() { document.getElementById('voucherModal').classList.add('hidden'); }
+        function renderVouchers() {
+            const area = document.getElementById('voucherListArea'); area.innerHTML = '';
+            const keys = Object.keys(vouchersDB);
+            if(keys.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada voucher aktif.</p>`; return; }
+            keys.forEach(k => { 
+                const v = vouchersDB[k];
+                const textVal = v.type === 'percent' ? `${v.value}%` : formatRp(parseInt(v.value));
+                area.innerHTML += `<div class="flex justify-between items-center bg-white p-3 rounded-xl border border-stone-100 shadow-sm mb-2"><div><span class="text-xs font-extrabold text-pink-600 block uppercase">${k}</span><span class="text-[9px] font-bold text-stone-400 block mt-0.5">Potongan: ${textVal} | Sisa Kuota: <span class="text-black">${v.limit}</span></span></div><button onclick="deleteVoucher('${k}')" class="bg-red-50 text-red-500 p-2 rounded-lg hover:bg-red-100 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; 
+            });
+        }
+        function addVoucher() {
+            const code = document.getElementById('vCode').value.trim().toUpperCase();
+            const limit = document.getElementById('vLimit').value;
+            const type = document.getElementById('vType').value;
+            const value = document.getElementById('vValue').value;
+
+            if(!code || !limit || !value) return alert("Lengkapi form voucher!");
+            
+            document.getElementById('btnAddVoucher').innerHTML = "...";
+            db.ref('vouchers/' + code).set({ type: type, value: value, limit: parseInt(limit) }).then(() => {
+                document.getElementById('vCode').value = ''; document.getElementById('vLimit').value = ''; document.getElementById('vValue').value = '';
+                showAdminToast("Voucher berhasil dibuat!"); document.getElementById('btnAddVoucher').innerHTML = "+ SIMPAN VOUCHER BARU";
+            });
+        }
+        function deleteVoucher(code) {
+            if(confirm(`Hapus voucher ${code}?`)) {
+                db.ref('vouchers/' + code).remove().then(() => showAdminToast("Voucher dihapus."));
+            }
+        }
 
         // --- MANAJEMEN ATRIBUT (BATCH, KATEGORI, NEGARA) ---
         function openBatchModal() { currentAttrType = 'batches'; document.getElementById('attrModalTitle').textContent = "Daftar Batch"; document.getElementById('attrModalDesc').textContent = "Batch akan muncul di Dropdown Checkout User."; document.getElementById('newAttrInput').placeholder = "Misal: Batch USA #02"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
@@ -475,7 +550,7 @@
             db.ref(currentAttrType).set(list).then(() => { showAdminToast("Data dihapus."); });
         }
 
-        // --- CATALOG DENGAN KOMPRESI (Max lebar 800px) ---
+        // --- CATALOG DENGAN CLOUDINARY UPLOAD API ---
         function renderCatalog() {
             const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
             catalogDB.forEach(p => {
@@ -492,13 +567,13 @@
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         let width = img.width, height = img.height;
-                        const MAX_WIDTH = 800; // Kompresi max 800px biar enteng di server
+                        const MAX_WIDTH = 800; // Kompres Max 800px (Katalog)
                         if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
                         canvas.width = width; canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7); // Kompres kualitas 70%
+                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.8); 
                         document.getElementById('prodImgPreview').src = currentUploadedImageBase64;
                         document.getElementById('prodImgPreview').classList.remove('hidden');
                         document.getElementById('uploadPlaceholder').classList.add('opacity-0');
@@ -527,30 +602,40 @@
 
         function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
         
-        function saveProduct() {
+        // FUNGSI UPLOAD KE CLOUDINARY
+        async function uploadToCloudinary(base64Image) {
+            const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+            const formData = new FormData();
+            formData.append('file', base64Image);
+            formData.append('upload_preset', uploadPreset);
+            const response = await fetch(url, { method: 'POST', body: formData });
+            if(!response.ok) throw new Error("Upload ke Cloudinary Gagal");
+            const data = await response.json();
+            return data.secure_url;
+        }
+
+        async function saveProduct() {
             const name = document.getElementById('prodName').value, price = document.getElementById('prodPrice').value;
             if(!name || !price || !currentUploadedImageBase64) return alert("Mohon lengkapi Nama Produk, Harga, dan Upload Foto!");
             const btn = document.getElementById('btnSaveProduct'); btn.innerHTML = "MENYIMPAN..."; btn.disabled = true;
 
-            const id = document.getElementById('prodId').value;
-            const newProdId = id ? parseInt(id) : Date.now();
+            try {
+                const id = document.getElementById('prodId').value;
+                const newProdId = id ? parseInt(id) : Date.now();
+                let finalImageUrl = currentUploadedImageBase64;
 
-            if (currentUploadedImageBase64.startsWith('data:image')) {
-                const storageRef = storage.ref('catalog/prod_' + newProdId + '.jpg');
-                storageRef.putString(currentUploadedImageBase64, 'data_url')
-                .then(snapshot => {
-                    snapshot.ref.getDownloadURL().then(url => {
-                        const newProd = { id: newProdId, name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: url };
-                        db.ref('catalog/' + newProdId).set(newProd).then(() => { btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); showAdminToast("Katalog diperbarui!"); });
-                    });
-                })
-                .catch(error => {
-                    alert("GAGAL UPLOAD FOTO!\n\nPenyebab: Aturan/Rules Firebase Storage Anda masih terkunci.\n\nSilakan buka Firebase > Build > Storage > Rules, lalu ubah jadi 'allow read, write: if true;' lalu Publish.");
-                    btn.innerHTML = "SIMPAN"; btn.disabled = false;
-                });
-            } else {
-                const newProd = { id: newProdId, name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: currentUploadedImageBase64 };
-                db.ref('catalog/' + newProdId).set(newProd).then(() => { btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); showAdminToast("Katalog diperbarui!"); });
+                if (currentUploadedImageBase64.startsWith('data:image')) {
+                    finalImageUrl = await uploadToCloudinary(currentUploadedImageBase64);
+                } 
+
+                const newProd = { id: newProdId, name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: finalImageUrl };
+                await db.ref('catalog/' + newProdId).set(newProd);
+
+                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); showAdminToast("Katalog diperbarui!");
+            } catch (error) {
+                console.error(error);
+                btn.innerHTML = "SIMPAN"; btn.disabled = false;
+                alert("GAGAL UPLOAD FOTO!\n\nPastikan Cloud Name dan Upload Preset Anda sudah benar.");
             }
         }
 
