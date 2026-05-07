@@ -16,7 +16,7 @@
         .hide-scroll::-webkit-scrollbar { display: none; } .tab-content { display: none; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .input-box { width: 100%; border: 2px solid #e7e5e4; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; outline: none; background: #fff; } .input-box:focus { border-color: var(--primary); }
-        .input-float { position: relative; margin-top: 8px; } .input-float input, .input-float select { border: none; border-bottom: 2px solid #e7e5e4; border-radius: 0; padding: 20px 0 8px 0; background: transparent; transition: all 0.3s ease; outline: none; width: 100%; font-weight: 600; color: var(--primary); } .input-float input:focus, .input-float select:focus { border-bottom-color: var(--primary); } .input-float label { position: absolute; top: 16px; left: 0; color: #a8a29e; font-size: 14px; transition: all 0.3s ease; pointer-events: none; } .input-float input:focus ~ label, .input-float input:not(:placeholder-shown) ~ label, .input-float select:focus ~ label, .input-float select:not([value=""]) ~ label { top: 0px; font-size: 10px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-float { position: relative; margin-top: 8px; } .input-float input, .input-float select, .input-float textarea { border: none; border-bottom: 2px solid #e7e5e4; border-radius: 0; padding: 20px 0 8px 0; background: transparent; transition: all 0.3s ease; outline: none; width: 100%; font-weight: 600; color: var(--primary); } .input-float input:focus, .input-float select:focus, .input-float textarea:focus { border-bottom-color: var(--primary); } .input-float label { position: absolute; top: 16px; left: 0; color: #a8a29e; font-size: 14px; transition: all 0.3s ease; pointer-events: none; } .input-float input:focus ~ label, .input-float input:not(:placeholder-shown) ~ label, .input-float select:focus ~ label, .input-float select:not([value=""]) ~ label, .input-float textarea:focus ~ label, .input-float textarea:not(:placeholder-shown) ~ label { top: 0px; font-size: 10px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         .loader { border: 3px solid #e7e5e4; border-top: 3px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; } .loader-white { border-top-color: #fff; border-color: rgba(255,255,255,0.3); } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @media print { body * { visibility: hidden; } #invoiceModal, #invoiceModal * { visibility: visible; } #invoiceModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white; padding: 20px; } .no-print { display: none !important; } }
     </style>
@@ -55,7 +55,7 @@
             <nav class="p-4 space-y-2">
                 <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-black text-white font-bold text-sm transition-all shadow-md"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><span>Dashboard</span></button>
                 <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span><span class="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full" id="pendingCount">0</span></button>
-                <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all relative"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span><span class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse" id="activeShipmentDot"></span></button>
+                <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all relative"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span><span class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse" id="activeShipmentDot" style="display:none;"></span></button>
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg><span>Kelola Katalog</span></button>
                 <button onclick="switchTab('users')" id="nav-users" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg><span>Database Akun</span></button>
             </nav>
@@ -76,7 +76,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-cream-100 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Total Pendapatan</p><h3 class="text-3xl font-extrabold" id="statRevenue">Rp 0</h3></div></div>
                     <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Paket Dalam Perjalanan</p><h3 class="text-3xl font-extrabold" id="statOrders">0</h3></div></div>
-                    <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Verifikasi/Resi</p><h3 class="text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
+                    <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Konfirmasi</p><h3 class="text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
                 </div>
                 <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -103,7 +103,7 @@
 
             <div id="trackingTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-stone-100 bg-blue-50/30"><h3 class="font-extrabold text-lg">Update Logistik Manual</h3><p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">IN TRANSIT</span>. Update status agar pembeli bisa melacak via web portwish.</p></div>
+                    <div class="p-6 border-b border-stone-100 bg-blue-50/30"><h3 class="font-extrabold text-lg">Update Logistik Manual</h3><p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">In Transit</span> / <span class="font-bold text-black border-b border-black">Shipped to Customer</span>. Update status agar pembeli bisa melacak di web.</p></div>
                     <div class="p-6 space-y-4" id="trackingListArea"></div>
                 </div>
             </div>
@@ -179,11 +179,16 @@
                     </label>
                 </div>
                 <div class="input-float"><input type="text" id="prodName" placeholder=" " required><label>Nama Produk</label></div>
+                <div class="input-float"><textarea id="prodDesc" placeholder=" " required class="resize-none" rows="2"></textarea><label>Deskripsi Produk</label></div>
+                
                 <div class="grid grid-cols-2 gap-4">
                     <div class="input-float"><input type="number" id="prodPrice" placeholder=" " required><label>Harga (Rp)</label></div>
-                    <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black"><option value="Skincare">Skincare</option><option value="Fashion">Fashion</option><option value="Food">Food & Snacks</option></select></div>
+                    <div class="input-float"><input type="number" id="prodWeight" placeholder=" " required><label>Berat (Gram)</label></div>
                 </div>
-                <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full"><option value="USA">USA</option><option value="JAPAN">Japan</option><option value="KOREA">Korea</option></select></div>
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <div class="relative"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black"><option value="Skincare">Skincare</option><option value="Fashion">Fashion</option><option value="Food">Food & Snacks</option></select></div>
+                    <div class="relative"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full"><option value="USA">USA</option><option value="JAPAN">Japan</option><option value="KOREA">Korea</option></select></div>
+                </div>
             </div>
             <div class="flex space-x-3 mt-8">
                 <button onclick="closeProductModal()" class="flex-1 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl transition hover:bg-stone-50 text-[11px] tracking-widest uppercase">BATAL</button>
@@ -203,6 +208,17 @@
         let currentEditingOrderIndex = null;
         let currentUploadedImageBase64 = null; 
         let pauseSync = false;
+
+        const ORDER_STATUS_LIST = [
+            "Pending Payment",
+            "Payment Confirmed",
+            "Waiting for Batch",
+            "Purchased",
+            "In Transit",
+            "Arrived at Warehouse",
+            "Shipped to Customer",
+            "Completed"
+        ];
 
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -249,12 +265,21 @@
         function processIncomingData(data) {
             catalogDB = data.catalog || [];
             batchesDB = data.batches || [];
-            ordersDB = (data.orders || []).map(o => ({
-                id: o.id, date: o.date, user: { name: o.user.name, phone: o.user.phone, email: o.user.email },
-                address: o.address, batch: o.batch, total: o.total, status: o.status, resi: o.resi, 
-                latestTracking: o.latestTracking, trackingTime: o.trackingTime, proofImg: o.proofImg, 
-                items: JSON.parse(o.itemsInfo || "[]")
-            }));
+            
+            ordersDB = (data.orders || []).map(o => {
+                // Auto mapper untuk status order versi lama
+                let mappedStatus = o.status;
+                if(mappedStatus === "AWAITING VERIFICATION") mappedStatus = "Pending Payment";
+                if(mappedStatus === "PROCESS (INPUT RESI)") mappedStatus = "Shipped to Customer";
+                if(mappedStatus === "IN TRANSIT") mappedStatus = "In Transit";
+
+                return {
+                    id: o.id, date: o.date, user: { name: o.user.name, phone: o.user.phone, email: o.user.email },
+                    address: o.address, batch: o.batch, total: o.total, status: mappedStatus, resi: o.resi, 
+                    latestTracking: o.latestTracking, trackingTime: o.trackingTime, proofImg: o.proofImg, 
+                    items: JSON.parse(o.itemsInfo || "[]")
+                };
+            });
             
             ordersDB.forEach(o => {
                 if(!usersDB.find(u => u.email === o.user.email)) {
@@ -299,9 +324,9 @@
         }
 
         function renderDashboard() {
-            const totalRev = ordersDB.filter(o => o.status !== 'AWAITING VERIFICATION').reduce((sum, o) => sum + parseInt(o.total), 0);
-            const shippingOrd = ordersDB.filter(o => o.status === 'IN TRANSIT').length;
-            const pendingOrd = ordersDB.filter(o => o.status === 'AWAITING VERIFICATION' || o.status === 'PROCESS (INPUT RESI)').length;
+            const totalRev = ordersDB.filter(o => o.status !== 'Pending Payment').reduce((sum, o) => sum + parseInt(o.total), 0);
+            const shippingOrd = ordersDB.filter(o => o.status === 'In Transit' || o.status === 'Shipped to Customer').length;
+            const pendingOrd = ordersDB.filter(o => o.status === 'Pending Payment').length;
 
             document.getElementById('statRevenue').textContent = formatRp(totalRev); 
             document.getElementById('statOrders').textContent = shippingOrd; 
@@ -314,7 +339,13 @@
                 recentBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400 font-bold">Belum ada transaksi.</td></tr>`;
             } else {
                 latestOrders.forEach(o => {
-                    let badgeClass = o.status === "IN TRANSIT" ? "bg-black text-white border-black" : (o.status === "PROCESS (INPUT RESI)" ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-orange-100 text-orange-700 border-orange-200");
+                    let badgeClass = "bg-stone-100 text-stone-700 border-stone-200";
+                    if(o.status === "Pending Payment") badgeClass = "bg-orange-100 text-orange-700 border-orange-200";
+                    else if(o.status === "Payment Confirmed" || o.status === "Waiting for Batch") badgeClass = "bg-blue-100 text-blue-700 border-blue-200";
+                    else if(o.status === "Purchased" || o.status === "Arrived at Warehouse") badgeClass = "bg-purple-100 text-purple-700 border-purple-200";
+                    else if(o.status === "In Transit" || o.status === "Shipped to Customer") badgeClass = "bg-black text-white border-black";
+                    else if(o.status === "Completed") badgeClass = "bg-green-100 text-green-700 border-green-200";
+
                     let resiText = o.resi ? `<span class="font-extrabold text-black bg-cream-100 px-2 py-1 rounded-md border border-stone-200">${o.resi}</span>` : `<span class="text-stone-400 italic text-[10px]">Belum diinput</span>`;
                     recentBody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 align-middle"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-400 font-bold">${o.id}</p></td><td class="p-4 align-middle"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block ${badgeClass}">${o.status}</span></td><td class="p-4 text-xs align-middle">${resiText}</td><td class="p-4 font-extrabold text-black text-right align-middle">${formatRp(parseInt(o.total))}</td></tr>`;
                 });
@@ -327,45 +358,65 @@
             const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan"); XLSX.writeFile(wb, "Laporan_Keuangan_Portwish.xlsx"); showAdminToast("Laporan Keuangan Berhasil Diunduh!");
         }
 
+        function handleStatusChange(orderId, newStatus, oldStatus) {
+            pauseSync = true;
+            const sel = document.getElementById(`status_${orderId}`);
+            sel.disabled = true;
+            
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, status: newStatus}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+            .then(() => {
+                const idx = ordersDB.findIndex(x => x.id === orderId);
+                ordersDB[idx].status = newStatus;
+                showAdminToast("Status Order Diperbarui!");
+                refreshActiveTab();
+                setTimeout(() => pauseSync = false, 3000);
+            }).catch(e => {
+                showAdminToast("Gangguan jaringan, coba lagi.");
+                sel.value = oldStatus;
+                sel.disabled = false;
+                pauseSync = false;
+            });
+        }
+
         function renderOrders(search = '') {
             const tbody = document.getElementById('orderTableBody'); tbody.innerHTML = '';
             let filtered = search ? ordersDB.filter(o => o.id.toLowerCase().includes(search) || o.user.name.toLowerCase().includes(search)) : ordersDB;
+            
             filtered.forEach((o, index) => {
-                let badgeClass = o.status === "IN TRANSIT" ? "bg-black text-white border-black" : (o.status === "PROCESS (INPUT RESI)" ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-orange-100 text-orange-700 border-orange-200");
-                let resiAction = ``;
-                if(o.status === "AWAITING VERIFICATION") { 
-                    resiAction = `<div class="flex space-x-2 w-full max-w-[200px]"><button onclick="viewProof('${o.id}')" class="flex-1 bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:text-black hover:border-black transition whitespace-nowrap">CEK BUKTI</button><button onclick="approveOrder('${o.id}')" class="flex-1 bg-black text-white text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:bg-stone-800 transition whitespace-nowrap" id="btnAppv_${o.id}">APPROVE</button></div>`; 
-                } else if(o.status === "PROCESS (INPUT RESI)") { 
-                    resiAction = `<div class="flex items-center space-x-2 mt-2"><input type="text" id="resiInput_${o.id}" placeholder="Input Resi..." class="border border-stone-300 rounded-lg px-2 py-1.5 text-xs w-32 outline-none focus:border-black bg-white"><button onclick="saveResi('${o.id}')" id="btnResi_${o.id}" class="bg-blue-600 text-white text-[10px] font-extrabold px-3 py-2 rounded-lg hover:bg-blue-700 transition">KIRIM</button></div>`; 
-                } else { 
-                    resiAction = `<span class="text-xs font-extrabold text-black block mt-1">Resi: ${o.resi}</span>`; 
+                let statusDropdown = `<select id="status_${o.id}" onchange="handleStatusChange('${o.id}', this.value, '${o.status}')" class="text-[10px] font-extrabold px-2 py-1.5 rounded-lg border outline-none cursor-pointer mb-2 bg-cream-50 border-stone-200 w-full max-w-[150px]">`;
+                ORDER_STATUS_LIST.forEach(s => {
+                    statusDropdown += `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s}</option>`;
+                });
+                statusDropdown += `</select>`;
+
+                let resiAction = o.resi ? `<span class="text-xs font-extrabold text-black block mt-1">Resi: ${o.resi}</span>` : '';
+                if (o.status === 'Shipped to Customer' && !o.resi) {
+                    resiAction = `<div class="flex items-center space-x-2 mt-2"><input type="text" id="resiInput_${o.id}" placeholder="Input Resi..." class="border border-stone-300 rounded-lg px-2 py-1.5 text-xs w-28 outline-none focus:border-black bg-white"><button onclick="saveResi('${o.id}')" id="btnResi_${o.id}" class="bg-blue-600 text-white text-[10px] font-extrabold px-3 py-2 rounded-lg hover:bg-blue-700 transition">KIRIM</button></div>`;
                 }
-                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black align-top">${o.id}<br><span class="text-[9px] text-stone-400 font-bold">${o.date}</span></td><td class="p-4 align-top"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-500 font-bold">${o.user.phone}</p></td><td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch}</td><td class="p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total))}</td><td class="p-4 align-top"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block mb-2 ${badgeClass}">${o.status}</span><div>${resiAction}</div></td><td class="p-4 text-center align-middle"><button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button></td></tr>`;
+
+                let proofBtn = o.proofImg ? `<button onclick="viewProof('${o.id}')" class="bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-3 py-1.5 rounded-lg shadow-sm hover:text-black hover:border-black transition whitespace-nowrap mb-2 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3 mr-1"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>CEK BUKTI BAYAR</button>` : '';
+
+                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors">
+                    <td class="p-4 font-extrabold text-black align-top">${o.id}<br><span class="text-[9px] text-stone-400 font-bold">${o.date}</span></td>
+                    <td class="p-4 align-top"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-500 font-bold">${o.user.phone}</p></td>
+                    <td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch}</td>
+                    <td class="p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total))}</td>
+                    <td class="p-4 align-top flex flex-col items-start">${proofBtn}${statusDropdown}${resiAction}</td>
+                    <td class="p-4 text-center align-middle"><button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button></td>
+                </tr>`;
             });
         }
 
         function filterOrders(val) { renderOrders(val.toLowerCase()); }
 
-        function approveOrder(orderId) { 
-            const btn = document.getElementById(`btnAppv_${orderId}`);
-            if(btn) { btn.innerHTML = "..."; btn.disabled = true; }
-            pauseSync = true;
-            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "PROCESS (INPUT RESI)"}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
-            .then(() => {
-                const idx = ordersDB.findIndex(x => x.id === orderId);
-                ordersDB[idx].status = "PROCESS (INPUT RESI)"; showAdminToast("Payment Approved!"); refreshActiveTab(); 
-                setTimeout(() => pauseSync = false, 3000);
-            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); if(btn){btn.innerHTML = "APPROVE"; btn.disabled = false;} pauseSync = false; });
-        }
-
         function saveResi(orderId) { 
             const r = document.getElementById(`resiInput_${orderId}`).value; if(!r) return alert("Silakan input nomor resi!"); 
             const btn = document.getElementById(`btnResi_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
             pauseSync = true;
-            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "IN TRANSIT", resi: r}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, resi: r}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
             .then(() => {
                 const idx = ordersDB.findIndex(x => x.id === orderId);
-                ordersDB[idx].resi = r; ordersDB[idx].status = "IN TRANSIT"; showAdminToast("Resi diinput!"); refreshActiveTab();
+                ordersDB[idx].resi = r; showAdminToast("Resi berhasil diinput!"); refreshActiveTab();
                 setTimeout(() => pauseSync = false, 3000);
             }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "KIRIM"; btn.disabled = false; pauseSync = false; });
         }
@@ -391,18 +442,28 @@
             document.getElementById('proofModal').classList.remove('hidden');
         }
         function closeProofModal() { document.getElementById('proofModal').classList.add('hidden'); currentEditingOrderIndex = null; }
+        
         function approveFromProof() {
             if(currentEditingOrderIndex !== null) {
                 document.getElementById('btnProofApprove').innerHTML = "MEMPROSES...";
-                approveOrder(ordersDB[currentEditingOrderIndex].id);
-                setTimeout(() => { document.getElementById('btnProofApprove').innerHTML = "VERIFIKASI"; closeProofModal(); }, 1000);
+                const orderId = ordersDB[currentEditingOrderIndex].id;
+                
+                pauseSync = true;
+                fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "Payment Confirmed"}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+                .then(() => {
+                    const idx = ordersDB.findIndex(x => x.id === orderId);
+                    ordersDB[idx].status = "Payment Confirmed"; showAdminToast("Payment Approved!"); refreshActiveTab(); 
+                    document.getElementById('btnProofApprove').innerHTML = "VERIFIKASI"; closeProofModal();
+                    setTimeout(() => pauseSync = false, 3000);
+                }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); document.getElementById('btnProofApprove').innerHTML = "VERIFIKASI"; pauseSync = false; });
             }
         }
 
         function renderTracking() {
             const container = document.getElementById('trackingListArea'); container.innerHTML = '';
-            const active = ordersDB.filter(o => o.status === "IN TRANSIT" && o.resi);
-            if(active.length === 0) { container.innerHTML = `<div class="text-center py-10"><p class="text-stone-400 font-bold text-sm">Belum ada paket yang sedang dikirim (IN TRANSIT).</p></div>`; return; }
+            const active = ordersDB.filter(o => (o.status === "In Transit" || o.status === "Shipped to Customer") && o.resi);
+            if(active.length === 0) { container.innerHTML = `<div class="text-center py-10"><p class="text-stone-400 font-bold text-sm">Belum ada paket yang sedang dikirim dengan input resi.</p></div>`; return; }
+            
             active.forEach(o => {
                 container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow"><div class="flex-1"><p class="font-extrabold text-lg text-black">${o.id} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-2 border border-stone-200">${o.user.name}</span></p><div class="mt-2 flex items-center space-x-4"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-4">Resi: <span class="text-black font-extrabold">${o.resi}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch}</p></div><div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Web Pengguna:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Waiting for first update...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div></div><div class="w-full md:w-2/5 flex flex-col space-y-2 bg-cream-50 p-4 rounded-2xl border border-stone-100"><input type="text" id="manualTrack_${o.id}" placeholder="Ketik status terkini..." class="border border-stone-200 rounded-xl px-4 py-3 text-xs font-bold bg-white text-black focus:border-black outline-none transition-colors"><button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md">UPDATE USER STATUS</button></div></div>`;
             });
@@ -465,7 +526,7 @@
             const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
             catalogDB.forEach(p => {
                 const imgSrc = getDirectUrl(p.img);
-                grid.innerHTML += `<div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white text-blue-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white text-red-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${imgSrc}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-3 left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-xs mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-3"><p class="text-[9px] text-stone-400 font-bold uppercase tracking-widest">${p.category}</p><p class="font-extrabold text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
+                grid.innerHTML += `<div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white text-blue-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white text-red-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${imgSrc}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-3 left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-xs mb-1 text-black line-clamp-2 leading-relaxed">${p.name}</h3><p class="text-[10px] text-stone-500 mb-2 line-clamp-2">${p.desc || 'Belum ada deskripsi.'}</p><div class="mt-auto flex justify-between items-end pt-3 border-t border-stone-100"><p class="text-[9px] text-stone-400 font-bold uppercase tracking-widest">${p.category} &bull; ${p.weight || 0}g</p><p class="font-extrabold text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
             });
         }
 
@@ -496,11 +557,11 @@
             if(id) {
                 const p = catalogDB.find(x => x.id === id); document.getElementById('prodModalTitle').textContent = "Edit Product"; document.getElementById('prodId').value = p.id; 
                 currentUploadedImageBase64 = p.img; document.getElementById('prodImgPreview').src = getDirectUrl(p.img); document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
-                document.getElementById('prodName').value = p.name; document.getElementById('prodPrice').value = p.price; document.getElementById('prodCat').value = p.category; document.getElementById('prodCountry').value = p.country; 
+                document.getElementById('prodName').value = p.name; document.getElementById('prodDesc').value = p.desc || ""; document.getElementById('prodPrice').value = p.price; document.getElementById('prodWeight').value = p.weight || ""; document.getElementById('prodCat').value = p.category; document.getElementById('prodCountry').value = p.country; 
             } else { 
                 document.getElementById('prodModalTitle').textContent = "Add New Product"; document.getElementById('prodId').value = ""; 
                 currentUploadedImageBase64 = null; document.getElementById('prodImgFile').value = ''; document.getElementById('prodImgPreview').classList.add('hidden'); document.getElementById('uploadPlaceholder').classList.remove('opacity-0');
-                document.getElementById('prodName').value = ""; document.getElementById('prodPrice').value = "";
+                document.getElementById('prodName').value = ""; document.getElementById('prodDesc').value = ""; document.getElementById('prodPrice').value = ""; document.getElementById('prodWeight').value = "";
             }
             document.getElementById('productModal').classList.remove('hidden');
         }
@@ -508,12 +569,12 @@
         function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
         
         function saveProduct() {
-            const name = document.getElementById('prodName').value, price = document.getElementById('prodPrice').value;
-            if(!name || !price || !currentUploadedImageBase64) return alert("Mohon lengkapi Nama Produk, Harga, dan Upload Foto!");
+            const name = document.getElementById('prodName').value, price = document.getElementById('prodPrice').value, desc = document.getElementById('prodDesc').value, weight = document.getElementById('prodWeight').value;
+            if(!name || !price || !desc || !weight || !currentUploadedImageBase64) return alert("Mohon lengkapi Nama, Deskripsi, Harga, Berat, dan Foto Produk!");
             const btn = document.getElementById('btnSaveProduct'); btn.innerHTML = "MENYIMPAN..."; btn.disabled = true;
 
             const id = document.getElementById('prodId').value;
-            const newProd = { id: id ? parseInt(id) : Date.now(), name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: currentUploadedImageBase64 };
+            const newProd = { id: id ? parseInt(id) : Date.now(), name: name, desc: desc, price: parseInt(price), weight: parseInt(weight), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: currentUploadedImageBase64 };
 
             pauseSync = true;
             fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveProduct", product: newProd}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
