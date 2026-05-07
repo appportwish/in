@@ -103,16 +103,27 @@
             <div id="ordersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 flex flex-col sm:flex-row justify-between items-center bg-cream-50/50 gap-4">
-                        <div>
-                            <h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3>
-                            <p class="text-xs text-stone-500 font-medium mt-1">Urusan input resi dan status Shipped ada di menu <span class="font-bold border-b border-stone-400">Update Logistik</span>.</p>
-                        </div>
+                        <h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3>
                         <div class="flex space-x-2 w-full sm:w-auto">
                             <input type="text" id="orderSearchInput" placeholder="Cari ID / Nama..." class="input-box sm:w-64 py-2 text-sm font-semibold" oninput="filterOrders(this.value)">
                             <button onclick="document.getElementById('orderSearchInput').value=''; renderOrders();" class="bg-stone-100 text-stone-600 px-3 py-2 rounded-xl text-[10px] font-extrabold border border-stone-200 hover:bg-stone-200">RESET FILTER</button>
                         </div>
                     </div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Order ID</th><th class="p-4 font-extrabold">Pelanggan</th><th class="p-4 font-extrabold">Batch</th><th class="p-4 font-extrabold">Total</th><th class="p-4 font-extrabold">Status Awal & Aksi</th><th class="p-4 font-extrabold text-center">Invoice</th></tr></thead><tbody id="orderTableBody" class="text-sm"></tbody></table></div>
+                    <div class="overflow-x-auto hide-scroll">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200 whitespace-nowrap">
+                                    <th class="p-4 font-extrabold">Order ID</th>
+                                    <th class="p-4 font-extrabold">Pelanggan</th>
+                                    <th class="p-4 font-extrabold">Batch</th>
+                                    <th class="p-4 font-extrabold">Total</th>
+                                    <th class="p-4 font-extrabold w-64">Status & Aksi</th>
+                                    <th class="p-4 font-extrabold text-center">Invoice</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderTableBody" class="text-sm"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -205,8 +216,14 @@
             <button onclick="closeProofModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black transition-colors border border-stone-200"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
             <h3 class="font-extrabold text-lg mb-4 text-black">Bukti Pembayaran</h3>
             <div class="bg-cream-50 p-2 rounded-[24px] border border-stone-200 mb-4"><img id="proofImage" src="https://placehold.co/400" alt="Bukti Transfer" class="w-full rounded-[16px] object-cover max-h-[50vh]"></div>
+            
             <div class="flex space-x-3">
-                <a id="downloadProofBtn" href="#" download="Bukti_Transfer.jpg" class="w-full bg-black border border-stone-200 text-white font-extrabold py-3.5 rounded-2xl shadow-sm hover:bg-stone-800 transition text-[11px] uppercase tracking-widest flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> UNDUH BUKTI BAYAR</a>
+                <a id="downloadProofBtn" href="#" target="_blank" download="Bukti_Transfer.jpg" class="flex-1 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl shadow-sm hover:bg-stone-50 transition text-[11px] uppercase tracking-widest flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> UNDUH
+                </a>
+                <button id="verifyProofBtn" onclick="verifyPayment()" class="flex-1 bg-green-600 text-white font-extrabold py-3.5 rounded-2xl shadow-xl hover:bg-green-700 transition text-[11px] uppercase tracking-widest">
+                    VERIFIKASI
+                </button>
             </div>
         </div>
     </div>
@@ -292,7 +309,7 @@
         const db = firebase.database();
 
         // =========================================================
-        // DEFINISI STATUS ORDER 
+        // DEFINISI STATUS ORDER TERBARU (FULL 8 OPSI)
         // =========================================================
         const STATUS_OPTIONS = [
             "Pending Payment",
@@ -303,17 +320,6 @@
             "Arrived at Warehouse",
             "Shipped to Customer",
             "Completed"
-        ];
-
-        // Opsi Dropdown untuk Update Tracking Logistik
-        const TRACKING_OPTIONS = [
-            "Barang telah dibeli oleh Personal Shopper",
-            "Barang sedang dikirim ke gudang luar negeri",
-            "Barang dalam penerbangan menuju Indonesia",
-            "Barang tiba di Indonesia & Proses Cukai",
-            "Barang tiba di Gudang Portwish",
-            "Barang telah diserahkan ke Kurir Lokal",
-            "Pesanan telah diterima oleh pelanggan"
         ];
         
         let catalogDB = []; let batchesDB = []; let ordersDB = []; let vouchersDB = []; let researchDB = [];
@@ -328,7 +334,7 @@
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         // =========================================================
-        // AUTENTIKASI: VALIDASI MENGGUNAKAN NODE "admin_account"
+        // AUTENTIKASI
         // =========================================================
         function loginAdmin() {
             const email = document.getElementById('adminEmail').value;
@@ -533,13 +539,8 @@
             filtered.forEach((o) => {
                 let badgeClass = getBadgeColor(o.status);
                 
-                let availableStatuses = STATUS_OPTIONS.filter(s => s !== "Shipped to Customer" && s !== "Completed");
-                
-                if (!availableStatuses.includes(o.status) && o.status.toUpperCase() !== "AWAITING VERIFICATION") {
-                    availableStatuses.push(o.status);
-                }
-
-                let dropdownOptions = availableStatuses.map(s => {
+                // MENGGUNAKAN FULL 8 OPSI STATUS
+                let dropdownOptions = STATUS_OPTIONS.map(s => {
                     let isSelected = '';
                     if (o.status.toLowerCase() === s.toLowerCase()) isSelected = 'selected';
                     if (o.status === 'AWAITING VERIFICATION' && s === 'Pending Payment') isSelected = 'selected';
@@ -548,17 +549,30 @@
                 
                 let proofBtn = o.proofImg ? `<button onclick="viewProof('${o.id}')" class="bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-1.5 rounded-lg shadow-sm hover:text-black hover:border-black transition mb-2 w-full">LIHAT BUKTI BAYAR</button>` : '';
 
+                // KELAS whitespace-normal & min-w-[200px] DITAMBAHKAN AGAR TIDAK NABRAK KE INVOICE
                 let statusAction = `
-                    <div class="mt-2 w-full max-w-[200px]">
+                    <div class="mt-2 w-full">
                         ${proofBtn}
-                        <select id="statusSelect_${o.id}" class="input-box bg-cream-50 py-1.5 px-2 text-[10px] w-full font-bold mb-2">
+                        <select id="statusSelect_${o.id}" class="input-box bg-cream-50 py-1.5 px-2 text-[10px] w-full font-bold mb-2 outline-none">
                             ${dropdownOptions}
                         </select>
-                        <button onclick="updateOrderStatus('${o.id}')" id="btnUpdate_${o.id}" class="bg-black text-white text-[9px] font-extrabold px-3 py-2 rounded-lg w-full hover:bg-stone-800 transition shadow-sm">SIMPAN STATUS AWAL</button>
+                        <button onclick="updateOrderStatus('${o.id}')" id="btnUpdate_${o.id}" class="bg-black text-white text-[9px] font-extrabold px-3 py-2 rounded-lg w-full hover:bg-stone-800 transition shadow-sm">SIMPAN STATUS</button>
                     </div>
                 `;
                 
-                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black align-top">${o.id}<br><span class="text-[9px] text-stone-400 font-bold">${o.date}</span></td><td class="p-4 align-top"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-500 font-bold">${o.user.phone}</p></td><td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch}</td><td class="p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total))}</td><td class="p-4 align-top"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block mb-1 ${badgeClass}">${o.status}</span>${statusAction}</td><td class="p-4 text-center align-top pt-5"><button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button></td></tr>`;
+                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors">
+                    <td class="p-4 font-extrabold text-black align-top">${o.id}<br><span class="text-[9px] text-stone-400 font-bold">${o.date}</span></td>
+                    <td class="p-4 align-top"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-500 font-bold">${o.user.phone}</p></td>
+                    <td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch}</td>
+                    <td class="p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total))}</td>
+                    <td class="p-4 align-top whitespace-normal min-w-[200px]">
+                        <span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block mb-1 ${badgeClass}">${o.status}</span>
+                        ${statusAction}
+                    </td>
+                    <td class="p-4 text-center align-top pt-5">
+                        <button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button>
+                    </td>
+                </tr>`;
             });
         }
 
@@ -575,16 +589,18 @@
 
             db.ref('orders/' + order.dbKey).update({ status: newStatus }).then(() => {
                 showAdminToast("Status pesanan diupdate!");
-                btn.innerHTML = "SIMPAN STATUS AWAL"; btn.disabled = false;
+                btn.innerHTML = "SIMPAN STATUS"; btn.disabled = false;
             }).catch(e => {
                 showAdminToast("Gagal mengupdate status.");
-                btn.innerHTML = "SIMPAN STATUS AWAL"; btn.disabled = false;
+                btn.innerHTML = "SIMPAN STATUS"; btn.disabled = false;
             });
         }
 
         // =========================================================
-        // VIEW PROOF
+        // VIEW PROOF & VERIFIKASI (MODAL)
         // =========================================================
+        let currentProofOrderId = null;
+
         function getDirectUrl(url) {
             if (!url) return 'https://placehold.co/400';
             if (url.includes('drive.google.com')) {
@@ -597,13 +613,38 @@
         }
 
         function viewProof(orderId) {
+            currentProofOrderId = orderId;
             const order = ordersDB.find(x => x.id === orderId);
             const imgSrc = getDirectUrl(order.proofImg);
             document.getElementById('proofImage').src = imgSrc;
-            const downloadBtn = document.getElementById('downloadProofBtn'); downloadBtn.href = imgSrc; downloadBtn.download = `Bukti_Transfer_${order.id}.jpg`;
+            const downloadBtn = document.getElementById('downloadProofBtn'); 
+            downloadBtn.href = imgSrc; 
+            downloadBtn.download = `Bukti_Transfer_${order.id}.jpg`;
             document.getElementById('proofModal').classList.remove('hidden');
         }
-        function closeProofModal() { document.getElementById('proofModal').classList.add('hidden'); }
+
+        function closeProofModal() { 
+            currentProofOrderId = null;
+            document.getElementById('proofModal').classList.add('hidden'); 
+        }
+
+        function verifyPayment() {
+            if(!currentProofOrderId) return;
+            const order = ordersDB.find(x => x.id === currentProofOrderId);
+            if(!order || !order.dbKey) return alert("Data order tidak valid.");
+
+            const btn = document.getElementById('verifyProofBtn');
+            btn.innerHTML = "..."; btn.disabled = true;
+
+            db.ref('orders/' + order.dbKey).update({ status: 'Payment Confirmed' }).then(() => {
+                showAdminToast("Pembayaran diverifikasi!");
+                btn.innerHTML = "VERIFIKASI"; btn.disabled = false;
+                closeProofModal();
+            }).catch(e => {
+                showAdminToast("Gagal memverifikasi.");
+                btn.innerHTML = "VERIFIKASI"; btn.disabled = false;
+            });
+        }
 
         // =========================================================
         // TRACKING UPDATE (TAB UPDATE LOGISTIK)
@@ -616,8 +657,6 @@
             });
             
             if(active.length === 0) { container.innerHTML = `<div class="text-center py-10"><p class="text-stone-400 font-bold text-sm">Belum ada paket yang statusnya In Transit, Arrived di Warehouse, atau Shipped.</p></div>`; return; }
-            
-            const trackOptsHTML = TRACKING_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('');
 
             active.forEach(o => {
                 let badgeClass = getBadgeColor(o.status);
@@ -640,10 +679,7 @@
                     <div class="w-full md:w-[45%] flex flex-col gap-3">
                         <div class="bg-cream-50 p-4 rounded-2xl border border-stone-100">
                             <label class="text-[9px] font-extrabold text-stone-400 uppercase tracking-widest mb-1.5 block">1. Pesan Tracking (Web User)</label>
-                            <select id="manualTrack_${o.id}" class="border border-stone-200 rounded-xl px-3 py-2 text-[10px] font-bold bg-white text-black focus:border-black outline-none transition-colors w-full mb-2">
-                                <option value="">-- Pilih Pesan Tracking --</option>
-                                ${trackOptsHTML}
-                            </select>
+                            <input type="text" id="manualTrack_${o.id}" placeholder="Ketik Pesan Tracking (Misal: Barang di Cukai)" class="border border-stone-200 rounded-xl px-3 py-2 text-[10px] font-bold bg-white text-black focus:border-black outline-none transition-colors w-full mb-2">
                             <button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-white border border-stone-200 text-black text-[9px] font-extrabold px-4 py-2.5 rounded-xl w-full hover:bg-stone-50 transition-colors uppercase tracking-widest shadow-sm">UPDATE PESAN SAJA</button>
                         </div>
 
@@ -661,8 +697,8 @@
         }
 
         function updateManualTracking(orderId) {
-            const v = document.getElementById(`manualTrack_${orderId}`).value; 
-            if(!v) return alert("Pilih pesan status terlebih dahulu dari dropdown!");
+            const v = document.getElementById(`manualTrack_${orderId}`).value.trim(); 
+            if(!v) return alert("Ketik pesan logistik terlebih dahulu!");
             
             const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
             const btn = document.getElementById(`btnTrack_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
@@ -689,7 +725,7 @@
             db.ref('orders/' + order.dbKey).update({
                 status: "Shipped to Customer",
                 resi: resi,
-                latestTracking: "Barang telah diserahkan ke Kurir Lokal",
+                latestTracking: "Barang telah diserahkan ke Kurir Lokal (" + resi + ")",
                 trackingTime: t
             }).then(() => { showAdminToast("Status diubah menjadi Shipped!"); });
         }
@@ -785,13 +821,13 @@
         function deleteCountry(index) { const newC = [...countriesDB]; newC.splice(index, 1); db.ref('countries').set(newC).then(() => showAdminToast("Negara dihapus.")); }
 
         // =========================================================
-        // VOUCHERS MANAGEMENT (DENGAN BATAS KUOTA)
+        // VOUCHERS MANAGEMENT
         // =========================================================
         function renderVouchers() {
             const tbody = document.getElementById('voucherTableBody'); tbody.innerHTML = '';
             if(vouchersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400">Belum ada voucher.</td></tr>`; return; }
             vouchersDB.forEach(v => {
-                if(!v.code) return; // Penawar bug undefined data sebelumnya
+                if(!v.code) return; // Penawar bug undefined
                 let quotaText = v.quota ? `${(v.quota - (v.used || 0))} dari ${v.quota}` : 'Unlimited';
                 
                 tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors">
