@@ -6,7 +6,6 @@
     <title>Portwish - Your Personal Shopper</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- FIREBASE SDK V8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
@@ -34,18 +33,15 @@
 </head>
 <body class="overflow-x-hidden selection:bg-black selection:text-white relative">
 
-    <!-- FLOATING WHATSAPP BUTTON -->
     <a href="https://wa.me/62811836570?text=Hello%20Portwish%20Admin,%20I%20have%20a%20request..." target="_blank" class="fixed bottom-6 right-6 z-[45] bg-black text-white px-5 py-3.5 rounded-full shadow-[0_8px_20px_rgba(46,46,46,0.3)] hover:scale-105 transition-all duration-300 flex items-center justify-center group border-2 border-white animate-bounce-wa">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" class="mr-2"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
         <span class="text-[10px] font-extrabold tracking-widest uppercase">HAVE A REQUEST?</span>
     </a>
 
-    <!-- LIVE NOTIFICATION TOAST -->
     <div id="errorToast" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-[110] transition-all duration-500 translate-y-[-150%] opacity-0 pointer-events-none w-max max-w-[90vw]">
         <div id="errorToastBody" class="bg-black/95 backdrop-blur-md text-white text-[10px] sm:text-xs font-bold px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 border"><span id="errorMsg"></span></div>
     </div>
 
-    <!-- TOP NAVIGATION -->
     <nav class="glass sticky top-0 z-40 border-b border-stone-200/60 shadow-sm">
         <div class="max-w-md mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex flex-col cursor-pointer" onclick="switchTab('shop')"><img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-7 md:h-8 w-auto object-contain"></div>
@@ -56,7 +52,6 @@
         </div>
     </nav>
 
-    <!-- SHOP TAB -->
     <section id="shopTab" class="tab-content active max-w-md mx-auto pb-8">
         <div class="px-6 pt-6 pb-2"><div class="bg-black rounded-[24px] p-6 text-white relative overflow-hidden shadow-xl shadow-stone-300"><div class="absolute top-0 right-0 w-32 h-32 bg-cream-200/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl"></div><div class="absolute bottom-0 left-0 w-24 h-24 bg-cream-100/10 rounded-full translate-y-1/3 -translate-x-1/3 blur-xl"></div><div class="relative z-10"><span class="bg-white/10 backdrop-blur-sm text-[9px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-widest mb-3 inline-block border border-white/20 text-cream-50">100% ORIGINAL AUTHENTIC</span><h2 class="text-2xl font-extrabold mb-1.5 tracking-tight leading-tight text-white">Your Personal Shopper<br>Across the World</h2><p class="text-[11px] text-stone-300 max-w-[85%] leading-relaxed">Shop branded items from USA, Japan & Korea hassle-free.</p></div></div></div>
         
@@ -90,7 +85,14 @@
 
         <footer class="mt-8 border-t border-stone-200 bg-white pt-10 pb-10 px-6 text-center rounded-t-[32px] shadow-[0_-5px_20px_rgba(0,0,0,0.02)]">
             <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-8 w-auto object-contain mx-auto mb-3">
-            <p class="text-xs text-stone-500 mb-8 font-medium">Your trusted premium personal shopper.</p>
+            <p class="text-xs text-stone-500 mb-6 font-medium">Your trusted premium personal shopper.</p>
+            
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <a href="faq.html" class="text-[9px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest bg-cream-50 px-4 py-2 rounded-xl border border-stone-200 shadow-sm transition-colors">FAQ</a>
+                <a href="terms.html" class="text-[9px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest bg-cream-50 px-4 py-2 rounded-xl border border-stone-200 shadow-sm transition-colors">T&C</a>
+                <a href="refund.html" class="text-[9px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest bg-cream-50 px-4 py-2 rounded-xl border border-stone-200 shadow-sm transition-colors">Refund Policy</a>
+            </div>
+
             <div class="flex justify-center space-x-6 mb-8">
                 <a href="https://www.instagram.com/" target="_blank" class="text-stone-400 hover:text-black transition-colors transform hover:scale-110"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
                 <a href="https://wa.me/62811836570" target="_blank" class="text-stone-400 hover:text-black transition-colors transform hover:scale-110"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></a>
@@ -99,7 +101,6 @@
         </footer>
     </section>
 
-    <!-- DASHBOARD TAB -->
     <section id="dashboardTab" class="tab-content max-w-md mx-auto min-h-screen flex flex-col bg-white pb-8">
         <div class="px-6 py-8 flex-1">
             <button onclick="switchTab('shop')" class="text-xs font-bold text-stone-500 mb-6 flex items-center hover:text-black transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg> BACK TO SHOP</button>
@@ -110,12 +111,10 @@
             
             <div id="emptyOrder" class="text-center py-20 hidden"><p class="text-stone-400 text-sm font-medium">No order history yet.</p></div>
             <div id="orderList" class="space-y-5">
-                <!-- Orders Injected Here -->
-            </div>
+                </div>
         </div>
     </section>
 
-    <!-- AUTH MODAL DENGAN RESET PASSWORD -->
     <div id="authModal" class="fixed inset-0 z-[90] hidden flex items-center justify-center px-4">
         <div onclick="closeAuthModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="authOverlay"></div>
         <div class="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300 relative z-10 border border-stone-100" id="authBox">
@@ -127,7 +126,6 @@
                 <button onclick="switchAuthMode('login')" id="btnAuthLog" class="flex-1 text-stone-400 text-[10px] font-extrabold tracking-widest py-3 rounded-xl">LOGIN</button>
             </div>
 
-            <!-- Register -->
             <div id="formRegister" class="space-y-4">
                 <div class="input-float"><input type="text" id="regName" placeholder=" " required autocomplete="off"><label>Full Name</label></div>
                 <div class="input-float"><input type="email" id="regEmail" placeholder=" " required autocomplete="off"><label>Active Email</label></div>
@@ -136,7 +134,6 @@
                 <button onclick="processRegister()" id="btnRegSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2 transition active:scale-95">REGISTER NOW</button>
             </div>
 
-            <!-- Login -->
             <div id="formLogin" class="space-y-4 hidden">
                 <div class="input-float"><input type="email" id="logEmail" placeholder=" " required autocomplete="off"><label>Registered Email</label></div>
                 <div class="input-float"><input type="password" id="logPass" placeholder=" " required autocomplete="off"><label>Password</label></div>
@@ -145,7 +142,6 @@
                 <button onclick="switchAuthMode('reset')" class="w-full mt-4 bg-stone-100 text-stone-600 py-3.5 rounded-xl font-extrabold text-[10px] hover:bg-stone-200 transition uppercase tracking-widest">FORGOT PASSWORD? RESET HERE</button>
             </div>
 
-            <!-- Reset Password -->
             <div id="formReset" class="space-y-4 hidden">
                 <p class="text-[10px] font-extrabold text-stone-500 uppercase tracking-widest text-center mb-4 bg-stone-50 py-2 rounded-lg">Verify Account Data</p>
                 <div class="input-float"><input type="email" id="resEmail" placeholder=" " required autocomplete="off"><label>Registered Email</label></div>
@@ -157,7 +153,6 @@
         </div>
     </div>
 
-    <!-- CART DRAWER -->
     <div id="cartDrawer" class="fixed inset-0 z-[60] invisible pointer-events-none transition-all duration-300">
         <div onclick="toggleCart()" class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="cartOverlay"></div>
         <div class="absolute right-0 top-0 h-full w-full max-w-sm bg-cream-50 shadow-2xl translate-x-full transition-transform duration-300 ease-in-out flex flex-col" id="cartBody">
@@ -174,7 +169,6 @@
         </div>
     </div>
 
-    <!-- CHECKOUT MODAL -->
     <div id="checkoutModal" class="fixed inset-0 z-[70] hidden bg-cream-50 overflow-y-auto hide-scroll">
         <div class="max-w-md mx-auto min-h-screen flex flex-col bg-white shadow-2xl relative">
             <div class="sticky top-0 bg-white/95 backdrop-blur-md px-6 py-5 border-b border-stone-200 flex items-center z-10">
@@ -238,7 +232,6 @@
         </div>
     </div>
 
-    <!-- TRACKING MODAL DENGAN HISTORY KEBAWAH LION PARCEL -->
     <div id="trackingModal" class="fixed inset-0 z-[80] invisible pointer-events-none flex items-center justify-center px-4">
         <div onclick="closeTrackingModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="trackingOverlay"></div>
         <div class="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300 relative z-10 border border-stone-100" id="trackingBox">
@@ -254,9 +247,8 @@
             
             <div class="mb-6 bg-cream-50/50 border border-stone-100 rounded-2xl p-5 shadow-sm">
                 <p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-5">Tracking History</p>
-                <div id="trackingHistoryList" class="relative">
-                    <!-- History Injected Here -->
-                </div>
+                <div id="trackingHistoryList" class="relative pl-1">
+                    </div>
                 <p class="text-[8px] text-stone-400 text-center mt-4 border-t border-stone-100 pt-3 italic">*This status updates automatically (Live). If you experience network issues, please <span class="font-bold text-stone-500 underline cursor-pointer" onclick="window.location.reload()">Refresh Page</span>.</p>
             </div>
 
@@ -264,7 +256,6 @@
         </div>
     </div>
     
-    <!-- INVOICE MODAL -->
     <div id="userInvoiceModal" class="fixed inset-0 z-[120] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-lg rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print">
@@ -296,7 +287,7 @@
                     </div>
                 </div>
                 <table class="w-full text-left border-collapse mb-6">
-                    <thead><tr class="border-b-2 border-black text-[9px] uppercase tracking-widest text-stone-500"><th class="py-2 font-extrabold w-2/3">Item Description</th><th class="py-2 font-extrabold text-center">Qty</th><th class="py-2 font-extrabold text-right">Price</th></tr></thead>
+                    <thead><tr class="border-b-2 border-black text-[9px] uppercase tracking-widest text-stone-500"><th class="py-2 font-extrabold w-[60%]">Item Description</th><th class="py-2 font-extrabold text-center">Qty</th><th class="py-2 font-extrabold text-right">Price</th></tr></thead>
                     <tbody id="uInvItems" class="text-xs font-bold border-b border-stone-200"></tbody>
                 </table>
                 <div class="flex justify-end">
@@ -310,7 +301,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT UTAMA -->
     <script>
         // ANTI-INSPECT ELEMENT & RIGHT CLICK (KEAMANAN WEB)
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -527,8 +517,21 @@
                 filtered.forEach(p => {
                     container.innerHTML += `
                         <div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col justify-between relative group hover:shadow-lg transition-shadow duration-300 h-full">
-                            <div><div class="relative pb-[100%] bg-cream-50 overflow-hidden border-b border-stone-50"><img src="${p.img}" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eeeeee/999999';" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"><span class="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm text-black border border-stone-100">${p.country}</span></div><div class="p-4 pb-2"><h3 class="text-xs font-bold text-black line-clamp-2 leading-relaxed mb-1">${p.name}</h3><p class="text-[9px] text-stone-400 font-bold tracking-widest uppercase">${p.category}</p></div></div>
-                            <div class="p-4 pt-1 mt-auto"><p class="text-sm font-extrabold text-black mb-3">${formatRp(parseInt(p.price))}</p><button onclick="addToCart('${p.id}')" class="w-full bg-cream-50 border border-stone-100 hover:bg-black hover:text-white transition-all duration-300 text-black text-[10px] font-bold py-3 rounded-xl active:scale-95 flex items-center justify-center">+ ADD TO CART</button></div>
+                            <div>
+                                <div class="relative pb-[100%] bg-cream-50 overflow-hidden border-b border-stone-50">
+                                    <img src="${p.img}" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eeeeee/999999';" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out">
+                                    <span class="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm text-black border border-stone-100">${p.country}</span>
+                                </div>
+                                <div class="p-4 pb-2">
+                                    <h3 class="text-xs font-bold text-black line-clamp-2 leading-relaxed mb-1">${p.name}</h3>
+                                    <p class="text-[9px] text-stone-400 font-bold tracking-widest uppercase mb-1">${p.category} • ${p.weight || 0}g</p>
+                                    <p class="text-[10px] text-stone-500 line-clamp-2 leading-relaxed mb-2">${p.description || ''}</p>
+                                </div>
+                            </div>
+                            <div class="p-4 pt-1 mt-auto">
+                                <p class="text-sm font-extrabold text-black mb-3">${formatRp(parseInt(p.price))}</p>
+                                <button onclick="addToCart('${p.id}')" class="w-full bg-cream-50 border border-stone-100 hover:bg-black hover:text-white transition-all duration-300 text-black text-[10px] font-bold py-3 rounded-xl active:scale-95 flex items-center justify-center">+ ADD TO CART</button>
+                            </div>
                         </div>`;
                 });
             }
@@ -558,7 +561,17 @@
                 total += parseInt(item.price);
                 list.innerHTML += `
                     <div class="flex justify-between items-center border-stone-100 bg-white border p-3 rounded-2xl shadow-sm relative overflow-hidden group transition-all">
-                        <div class="flex items-center space-x-3 w-full pr-8"><div class="bg-cream-50 rounded-xl w-14 h-14 flex-shrink-0 relative border border-stone-100"><img src="${item.img}" onerror="this.onerror=null;this.src='https://placehold.co/400x400';" class="w-full h-full object-cover rounded-xl"></div><div class="flex-1 min-w-0"><p class="text-xs font-bold text-black truncate">${item.name}</p><p class="text-[9px] font-extrabold text-stone-500 uppercase tracking-widest mt-0.5">${item.country}</p><p class="text-xs font-extrabold mt-1 text-black">${formatRp(item.price)}</p></div></div>
+                        <div class="flex items-center space-x-3 w-full pr-8">
+                            <div class="bg-cream-50 rounded-xl w-14 h-14 flex-shrink-0 relative border border-stone-100">
+                                <img src="${item.img}" onerror="this.onerror=null;this.src='https://placehold.co/400x400';" class="w-full h-full object-cover rounded-xl">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-bold text-black truncate">${item.name}</p>
+                                <p class="text-[9px] font-extrabold text-stone-500 uppercase tracking-widest mt-0.5">${item.country} • ${item.weight || 0}g</p>
+                                <p class="text-[9px] text-stone-400 truncate mt-0.5">${item.description || ''}</p>
+                                <p class="text-xs font-extrabold mt-1 text-black">${formatRp(item.price)}</p>
+                            </div>
+                        </div>
                         <button onclick="removeFromCart(${item.cartId})" class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-300 hover:text-black hover:bg-cream-100 p-2 rounded-full transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg></button>
                     </div>`;
             });
@@ -573,18 +586,22 @@
             
             document.getElementById('btnApplyVoucher').innerHTML = '...';
             try {
-                const snap = await db.ref('vouchers/' + code).once('value');
+                const snap = await db.ref('vouchers').orderByChild('code').equalTo(code).once('value');
                 if(snap.exists()) {
-                    const v = snap.val();
-                    if(v.limit > 0) {
-                        appliedVoucher = { code: code, type: v.type, value: parseInt(v.value) };
+                    let vKey = Object.keys(snap.val())[0];
+                    let v = snap.val()[vKey];
+                    let limit = v.quota || 0;
+                    let used = v.used || 0;
+
+                    if(limit > used) {
+                        appliedVoucher = { code: code, dbKey: vKey, value: parseInt(v.discount) };
                         msgEl.className = 'text-green-500 text-[10px] font-bold mt-2';
                         msgEl.textContent = `Voucher applied successfully!`;
                         msgEl.classList.remove('hidden');
                         updateCheckoutTotal();
                     } else {
                         msgEl.className = 'text-red-500 text-[10px] font-bold mt-2';
-                        msgEl.textContent = 'Voucher usage limit reached.';
+                        msgEl.textContent = 'Voucher quota limit reached.';
                         msgEl.classList.remove('hidden');
                         appliedVoucher = null; updateCheckoutTotal();
                     }
@@ -601,10 +618,7 @@
         function updateCheckoutTotal() {
             let subtotal = cart.reduce((sum, item) => sum + parseInt(item.price), 0);
             let discount = 0;
-            if(appliedVoucher) {
-                if(appliedVoucher.type === 'percent') { discount = subtotal * (appliedVoucher.value / 100); } 
-                else { discount = appliedVoucher.value; }
-            }
+            if(appliedVoucher) { discount = appliedVoucher.value; }
             let total = subtotal - discount;
             if(total < 0) total = 0;
 
@@ -669,16 +683,23 @@
                 const batchName = document.getElementById('batchSelect').value.split('(')[0].trim();
                 const pricing = updateCheckoutTotal();
 
+                // Generate First Tracking History
+                const initialHistory = [{
+                    status: "Pembayaran telah kami terima dan sedang diverifikasi.",
+                    time: new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB'
+                }];
+
                 const newOrder = {
                     id: newOrderId, date: orderDate, user: { name: name, email: currentUser.email, phone: document.getElementById('cusPhone').value }, userEmail: currentUser.email,
                     address: address, batch: batchName, total: pricing.total, discount: pricing.discount, voucherCode: appliedVoucher ? appliedVoucher.code : "", 
-                    status: 'AWAITING VERIFICATION', resi: "", latestTracking: "", trackingTime: "", proofImg: imageUrl, itemsInfo: JSON.stringify(cart), timestamp: Date.now()
+                    status: 'AWAITING VERIFICATION', resi: "", latestTracking: "Pembayaran sedang diverifikasi Admin.", trackingTime: initialHistory[0].time, 
+                    trackingHistory: initialHistory, proofImg: imageUrl, itemsInfo: JSON.stringify(cart), timestamp: Date.now()
                 };
                 
                 await db.ref('orders/' + newOrderId).set(newOrder);
 
                 if(appliedVoucher) {
-                    await db.ref('vouchers/' + appliedVoucher.code + '/limit').set(firebase.database.ServerValue.increment(-1));
+                    await db.ref('vouchers/' + appliedVoucher.dbKey + '/used').set(firebase.database.ServerValue.increment(1));
                 }
 
                 cart = []; document.getElementById('batchSelect').value = ""; updateCartUI();
@@ -712,16 +733,15 @@
                 list.innerHTML = '';
                 userOrders.forEach(o => {
                     let statusColor = "bg-cream-100 text-stone-600 border-stone-200";
-                    if(o.status === "IN TRANSIT") statusColor = "bg-black text-white border-black";
-                    if(o.status === "COMPLETED") statusColor = "bg-green-100 text-green-700 border-green-200";
+                    if(o.status === "IN TRANSIT" || o.status === "Shipped to Customer" || o.status === "Arrived at Warehouse") statusColor = "bg-black text-white border-black";
+                    if(o.status === "Completed") statusColor = "bg-green-100 text-green-700 border-green-200";
 
-                    let trackingButton = `<span class="text-[10px] text-stone-400 font-bold uppercase tracking-widest cursor-not-allowed flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> VERIFICATION PROCESS</span>`;
-                    if(o.status !== 'AWAITING VERIFICATION') trackingButton = `<button onclick="openTrackingModal('${o.id}')" class="text-[10px] text-black font-extrabold uppercase tracking-widest hover:text-stone-500 flex items-center transition-colors">TRACK PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>`;
+                    let trackingButton = `<span class="text-[10px] text-stone-400 font-bold uppercase tracking-widest cursor-not-allowed flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> PENDING...</span>`;
+                    if(o.status !== 'AWAITING VERIFICATION' && o.status !== 'Pending Payment') trackingButton = `<button onclick="openTrackingModal('${o.id}')" class="text-[10px] text-black font-extrabold uppercase tracking-widest hover:text-stone-500 flex items-center transition-colors">TRACK PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>`;
 
                     let invoiceBtn = '';
-                    if(o.status !== 'AWAITING VERIFICATION') invoiceBtn = `<button onclick="openUserInvoice('${o.id}')" class="absolute top-6 right-6 text-stone-400 hover:text-black bg-cream-50 p-2 rounded-lg border border-stone-100 z-20 shadow-sm transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg></button>`;
+                    if(o.status !== 'AWAITING VERIFICATION' && o.status !== 'Pending Payment') invoiceBtn = `<button onclick="openUserInvoice('${o.id}')" class="absolute top-6 right-6 text-stone-400 hover:text-black bg-cream-50 p-2 rounded-lg border border-stone-100 z-20 shadow-sm transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg></button>`;
 
-                    // PENGAMAN JIKA ADA DATA KORUP/JADUL
                     let itemsParsed = [];
                     try { 
                         if(o.itemsInfo) itemsParsed = JSON.parse(o.itemsInfo); 
@@ -774,7 +794,18 @@
 
             if(itemsParsed.length > 0){
                 itemsParsed.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
-                for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-3"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold">${i.country} • ${i.category}</p></td><td class="py-3 text-center font-bold">x${i.qty}</td><td class="py-3 text-right font-extrabold text-black">${formatRp(i.price * i.qty)}</td></tr>`; }
+                for(let k in grouped) { 
+                    const i = grouped[k]; 
+                    tbody.innerHTML += `<tr>
+                        <td class="py-3">
+                            <p class="font-extrabold text-black">${i.name}</p>
+                            <p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold">${i.country} • ${i.category} • ${i.weight || 0}g</p>
+                            <p class="text-[9px] text-stone-500 mt-1 line-clamp-2">${i.description || '-'}</p>
+                        </td>
+                        <td class="py-3 text-center font-bold">x${i.qty}</td>
+                        <td class="py-3 text-right font-extrabold text-black">${formatRp(i.price * i.qty)}</td>
+                    </tr>`; 
+                }
             }
             
             if(o.discount && o.discount > 0) {
@@ -793,7 +824,7 @@
             if(order) {
                 document.getElementById('trackResi').textContent = order.resi || "Being updated by Admin"; 
                 
-                // HISTORY TRACKING RENDER (Live Update & Susun ke Bawah)
+                // HISTORY TRACKING RENDER (Timeline - Terbaru di Atas)
                 let historyHTML = '';
                 let historyArray = order.trackingHistory ? [...order.trackingHistory] : [];
                 
@@ -802,14 +833,17 @@
                 }
 
                 if(historyArray.length > 0) {
-                    historyArray.forEach((h, idx) => {
-                        let color = idx === 0 ? 'bg-green-500' : 'bg-stone-300';
-                        let pulse = idx === 0 ? 'animate-pulse' : '';
+                    // Reverse agar data terbaru selalu berada di paling atas
+                    historyArray.slice().reverse().forEach((h, idx) => {
+                        let isLatest = (idx === 0);
+                        let color = isLatest ? 'bg-green-500' : 'bg-stone-300';
+                        let pulse = isLatest ? 'animate-pulse' : '';
                         let line = idx === historyArray.length - 1 ? '' : '<div class="absolute top-3 left-1.5 w-0.5 h-full bg-stone-200 -z-10"></div>';
+                        
                         historyHTML += `
                         <div class="relative flex items-start space-x-3 mb-4">
                             ${line}
-                            <div class="flex flex-col items-center relative z-10 bg-white pb-1">
+                            <div class="flex flex-col items-center relative z-10 bg-cream-50/50 pb-1">
                                 <div class="w-3 h-3 ${color} rounded-full mt-1 ${pulse}"></div>
                             </div>
                             <div class="-mt-0.5">
@@ -825,7 +859,7 @@
                 document.getElementById('trackingHistoryList').innerHTML = historyHTML;
                 
                 const truckIcon = document.getElementById('truckIcon'); 
-                if(order.status === 'IN TRANSIT') truckIcon.classList.add('animate-truck'); 
+                if(order.status === 'In Transit' || order.status === 'Shipped to Customer') truckIcon.classList.add('animate-truck'); 
                 else truckIcon.classList.remove('animate-truck');
 
                 const modal = document.getElementById('trackingModal'); 
