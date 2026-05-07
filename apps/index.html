@@ -6,6 +6,7 @@
     <title>Portwish - Your Personal Shopper</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- FIREBASE SDK V8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
@@ -15,6 +16,7 @@
     </script>
     <style>
         :root { --primary: #2E2E2E; --bg: #FCFAF8; } 
+        /* ANTI COPY & USER SELECT NONE */
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); -webkit-tap-highlight-color: transparent; color: var(--primary); -webkit-user-select: none; user-select: none; } 
         html { scroll-behavior: smooth; } .hide-scroll::-webkit-scrollbar { display: none; } .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; } 
         .glass { background: rgba(252, 250, 248, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); } .tab-content { display: none; animation: fadeIn 0.4s ease; } .tab-content.active { display: block; } 
@@ -22,6 +24,7 @@
         .input-float { position: relative; margin-top: 8px; } .input-float input, .input-float textarea { border: none; border-bottom: 2px solid #e7e5e4; border-radius: 0; padding: 20px 0 8px 0; background: transparent; transition: all 0.3s ease; outline: none; width: 100%; font-weight: 600; color: var(--primary); } .input-float input:focus, .input-float textarea:focus { border-bottom-color: var(--primary); } .input-float label { position: absolute; top: 16px; left: 0; color: #a8a29e; font-size: 14px; transition: all 0.3s ease; pointer-events: none; } .input-float input:focus ~ label, .input-float input:not(:placeholder-shown) ~ label, .input-float textarea:focus ~ label, .input-float textarea:not(:placeholder-shown) ~ label { top: 0px; font-size: 10px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; } 
         .loader { border: 3px solid #e7e5e4; border-top: 3px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; } .loader-white { border-top-color: #fff; border-color: rgba(255,255,255,0.3); } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } 
         @media print { body * { visibility: hidden; } #userInvoiceModal, #userInvoiceModal * { visibility: visible; } #userInvoiceModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white; padding: 20px; } .no-print { display: none !important; } }
+        /* ANIMASI TRUCK & WA */
         @keyframes driveTruck { 0% { transform: translateX(-10px); } 50% { transform: translateX(5px) translateY(-1px); } 100% { transform: translateX(-10px); } }
         .animate-truck { animation: driveTruck 2s ease-in-out infinite; }
         @keyframes bounce-subtle { 0%, 100% { transform: translateY(-5%); } 50% { transform: translateY(0); } }
@@ -31,15 +34,18 @@
 </head>
 <body class="overflow-x-hidden selection:bg-black selection:text-white relative">
 
+    <!-- FLOATING WHATSAPP BUTTON -->
     <a href="https://wa.me/62811836570?text=Hello%20Portwish%20Admin,%20I%20have%20a%20request..." target="_blank" class="fixed bottom-6 right-6 z-[45] bg-black text-white px-5 py-3.5 rounded-full shadow-[0_8px_20px_rgba(46,46,46,0.3)] hover:scale-105 transition-all duration-300 flex items-center justify-center group border-2 border-white animate-bounce-wa">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" class="mr-2"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
         <span class="text-[10px] font-extrabold tracking-widest uppercase">HAVE A REQUEST?</span>
     </a>
 
+    <!-- LIVE NOTIFICATION TOAST -->
     <div id="errorToast" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-[110] transition-all duration-500 translate-y-[-150%] opacity-0 pointer-events-none w-max max-w-[90vw]">
         <div id="errorToastBody" class="bg-black/95 backdrop-blur-md text-white text-[10px] sm:text-xs font-bold px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 border"><span id="errorMsg"></span></div>
     </div>
 
+    <!-- TOP NAVIGATION -->
     <nav class="glass sticky top-0 z-40 border-b border-stone-200/60 shadow-sm">
         <div class="max-w-md mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex flex-col cursor-pointer" onclick="switchTab('shop')"><img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-7 md:h-8 w-auto object-contain"></div>
@@ -50,6 +56,7 @@
         </div>
     </nav>
 
+    <!-- SHOP TAB -->
     <section id="shopTab" class="tab-content active max-w-md mx-auto pb-8">
         <div class="px-6 pt-6 pb-2"><div class="bg-black rounded-[24px] p-6 text-white relative overflow-hidden shadow-xl shadow-stone-300"><div class="absolute top-0 right-0 w-32 h-32 bg-cream-200/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl"></div><div class="absolute bottom-0 left-0 w-24 h-24 bg-cream-100/10 rounded-full translate-y-1/3 -translate-x-1/3 blur-xl"></div><div class="relative z-10"><span class="bg-white/10 backdrop-blur-sm text-[9px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-widest mb-3 inline-block border border-white/20 text-cream-50">100% ORIGINAL AUTHENTIC</span><h2 class="text-2xl font-extrabold mb-1.5 tracking-tight leading-tight text-white">Your Personal Shopper<br>Across the World</h2><p class="text-[11px] text-stone-300 max-w-[85%] leading-relaxed">Shop branded items from USA, Japan & Korea hassle-free.</p></div></div></div>
         
@@ -92,6 +99,7 @@
         </footer>
     </section>
 
+    <!-- DASHBOARD TAB -->
     <section id="dashboardTab" class="tab-content max-w-md mx-auto min-h-screen flex flex-col bg-white pb-8">
         <div class="px-6 py-8 flex-1">
             <button onclick="switchTab('shop')" class="text-xs font-bold text-stone-500 mb-6 flex items-center hover:text-black transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg> BACK TO SHOP</button>
@@ -102,10 +110,12 @@
             
             <div id="emptyOrder" class="text-center py-20 hidden"><p class="text-stone-400 text-sm font-medium">No order history yet.</p></div>
             <div id="orderList" class="space-y-5">
-                </div>
+                <!-- Orders Injected Here -->
+            </div>
         </div>
     </section>
 
+    <!-- AUTH MODAL DENGAN RESET PASSWORD -->
     <div id="authModal" class="fixed inset-0 z-[90] hidden flex items-center justify-center px-4">
         <div onclick="closeAuthModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="authOverlay"></div>
         <div class="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300 relative z-10 border border-stone-100" id="authBox">
@@ -117,6 +127,7 @@
                 <button onclick="switchAuthMode('login')" id="btnAuthLog" class="flex-1 text-stone-400 text-[10px] font-extrabold tracking-widest py-3 rounded-xl">LOGIN</button>
             </div>
 
+            <!-- Register -->
             <div id="formRegister" class="space-y-4">
                 <div class="input-float"><input type="text" id="regName" placeholder=" " required autocomplete="off"><label>Full Name</label></div>
                 <div class="input-float"><input type="email" id="regEmail" placeholder=" " required autocomplete="off"><label>Active Email</label></div>
@@ -125,13 +136,16 @@
                 <button onclick="processRegister()" id="btnRegSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2 transition active:scale-95">REGISTER NOW</button>
             </div>
 
+            <!-- Login -->
             <div id="formLogin" class="space-y-4 hidden">
                 <div class="input-float"><input type="email" id="logEmail" placeholder=" " required autocomplete="off"><label>Registered Email</label></div>
                 <div class="input-float"><input type="password" id="logPass" placeholder=" " required autocomplete="off"><label>Password</label></div>
                 <button onclick="processLogin()" id="btnLogSubmit" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-sm shadow-lg mt-2 transition active:scale-95">LOGIN NOW</button>
+                
                 <button onclick="switchAuthMode('reset')" class="w-full mt-4 bg-stone-100 text-stone-600 py-3.5 rounded-xl font-extrabold text-[10px] hover:bg-stone-200 transition uppercase tracking-widest">FORGOT PASSWORD? RESET HERE</button>
             </div>
 
+            <!-- Reset Password -->
             <div id="formReset" class="space-y-4 hidden">
                 <p class="text-[10px] font-extrabold text-stone-500 uppercase tracking-widest text-center mb-4 bg-stone-50 py-2 rounded-lg">Verify Account Data</p>
                 <div class="input-float"><input type="email" id="resEmail" placeholder=" " required autocomplete="off"><label>Registered Email</label></div>
@@ -143,6 +157,7 @@
         </div>
     </div>
 
+    <!-- CART DRAWER -->
     <div id="cartDrawer" class="fixed inset-0 z-[60] invisible pointer-events-none transition-all duration-300">
         <div onclick="toggleCart()" class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="cartOverlay"></div>
         <div class="absolute right-0 top-0 h-full w-full max-w-sm bg-cream-50 shadow-2xl translate-x-full transition-transform duration-300 ease-in-out flex flex-col" id="cartBody">
@@ -159,6 +174,7 @@
         </div>
     </div>
 
+    <!-- CHECKOUT MODAL -->
     <div id="checkoutModal" class="fixed inset-0 z-[70] hidden bg-cream-50 overflow-y-auto hide-scroll">
         <div class="max-w-md mx-auto min-h-screen flex flex-col bg-white shadow-2xl relative">
             <div class="sticky top-0 bg-white/95 backdrop-blur-md px-6 py-5 border-b border-stone-200 flex items-center z-10">
@@ -222,6 +238,7 @@
         </div>
     </div>
 
+    <!-- TRACKING MODAL DENGAN HISTORY KEBAWAH LION PARCEL -->
     <div id="trackingModal" class="fixed inset-0 z-[80] invisible pointer-events-none flex items-center justify-center px-4">
         <div onclick="closeTrackingModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="trackingOverlay"></div>
         <div class="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300 relative z-10 border border-stone-100" id="trackingBox">
@@ -230,22 +247,24 @@
                 <div id="animContainer" class="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-md relative overflow-hidden">
                     <svg id="truckIcon" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l3 5m-3-5v8M8 7v8M8 7L5 4H3M8 15a2 2 0 11-4 0 2 2 0 014 0zm12 0a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                 </div>
-                <h3 class="text-xl font-extrabold text-black tracking-tight">Status Pengiriman</h3>
+                <h3 class="text-xl font-extrabold text-black tracking-tight">Shipping Status</h3>
             </div>
             
-            <div class="bg-cream-50 border border-stone-200 rounded-2xl p-4 flex justify-between items-center mb-5"><div class="overflow-hidden"><p class="text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-1">Nomor Resi</p><p id="trackResi" class="font-extrabold text-lg text-black truncate tracking-wider">-</p></div><button onclick="copyResi()" id="copyBtn" class="bg-white border border-stone-200 text-black hover:bg-stone-50 text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition-all active:scale-95 shadow-sm uppercase tracking-widest">SALIN</button></div>
+            <div class="bg-cream-50 border border-stone-200 rounded-2xl p-4 flex justify-between items-center mb-5"><div class="overflow-hidden"><p class="text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-1">Tracking Number</p><p id="trackResi" class="font-extrabold text-lg text-black truncate tracking-wider">-</p></div><button onclick="copyResi()" id="copyBtn" class="bg-white border border-stone-200 text-black hover:bg-stone-50 text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition-all active:scale-95 shadow-sm uppercase tracking-widest">COPY</button></div>
             
             <div class="mb-6 bg-cream-50/50 border border-stone-100 rounded-2xl p-5 shadow-sm">
-                <p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-5">Riwayat Perjalanan</p>
+                <p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-5">Tracking History</p>
                 <div id="trackingHistoryList" class="relative">
-                    </div>
-                <p class="text-[8px] text-stone-400 text-center mt-4 border-t border-stone-100 pt-3 italic">*Pembaruan status ini berjalan otomatis (Live). Namun jika jaringan Anda bermasalah, silakan <span class="font-bold text-stone-500 underline cursor-pointer" onclick="window.location.reload()">Refresh Halaman</span>.</p>
+                    <!-- History Injected Here -->
+                </div>
+                <p class="text-[8px] text-stone-400 text-center mt-4 border-t border-stone-100 pt-3 italic">*This status updates automatically (Live). If you experience network issues, please <span class="font-bold text-stone-500 underline cursor-pointer" onclick="window.location.reload()">Refresh Page</span>.</p>
             </div>
 
-            <button onclick="openUniversalTracker()" class="w-full bg-stone-100 hover:bg-stone-200 text-black py-4 rounded-2xl font-extrabold text-xs transition-all active:scale-95 flex items-center justify-center uppercase tracking-widest border border-stone-200 shadow-sm">CEK WEB LION PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg></button>
+            <button onclick="openUniversalTracker()" class="w-full bg-stone-100 hover:bg-stone-200 text-black py-4 rounded-2xl font-extrabold text-xs transition-all active:scale-95 flex items-center justify-center uppercase tracking-widest border border-stone-200 shadow-sm">CHECK LION PARCEL WEB <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg></button>
         </div>
     </div>
     
+    <!-- INVOICE MODAL -->
     <div id="userInvoiceModal" class="fixed inset-0 z-[120] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-lg rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print">
@@ -291,6 +310,7 @@
         </div>
     </div>
 
+    <!-- SCRIPT UTAMA -->
     <script>
         // ANTI-INSPECT ELEMENT & RIGHT CLICK (KEAMANAN WEB)
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -305,7 +325,9 @@
           apiKey: "AIzaSyDHHp8I0lsuyyo8nMfFmRR5ILHH5COvwvc",
           authDomain: "portwish-b2fe3.firebaseapp.com",
           databaseURL: "https://portwish-b2fe3-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "portwish-b2fe3"
+          projectId: "portwish-b2fe3",
+          messagingSenderId: "19359316980",
+          appId: "1:19359316980:web:d8e0450b2029fa10e057a1"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -313,18 +335,6 @@
         // KONFIGURASI CLOUDINARY
         const cloudName = 'dlgisjmq2';
         const uploadPreset = 'portwish_foto';
-
-        // ORDER STATUS MAPPING (WARNA & DESKRIPSI)
-        const ORDER_STATUSES = [
-            { id: "Pending Payment", color: "bg-orange-100 text-orange-700 border-orange-200" },
-            { id: "Payment Confirmed", color: "bg-blue-100 text-blue-700 border-blue-200" },
-            { id: "Waiting for Batch", color: "bg-purple-100 text-purple-700 border-purple-200" },
-            { id: "Purchased", color: "bg-indigo-100 text-indigo-700 border-indigo-200" },
-            { id: "In Transit", color: "bg-yellow-100 text-yellow-700 border-yellow-200" },
-            { id: "Arrived at Warehouse", color: "bg-teal-100 text-teal-700 border-teal-200" },
-            { id: "Shipped to Customer", color: "bg-black text-white border-black" },
-            { id: "Completed", color: "bg-green-100 text-green-700 border-green-200" }
-        ];
 
         let products = []; let activeCountry = 'ALL', activeCategory = 'ALL', searchQuery = '', cart = [];
         let countriesDB = ["USA", "Japan", "Korea"];
@@ -361,7 +371,7 @@
                     if(newO.userEmail === currentUser.email) {
                         let oldO = orders.find(o => o.id === newO.id);
                         if(oldO && oldO.status !== newO.status) {
-                            showErrorToast(`Status Update: Pesanan ${newO.id} menjadi ${newO.status}!`);
+                            showErrorToast(`Status Update: Order ${newO.id} is being processed!`);
                         }
                     }
                 });
@@ -383,7 +393,7 @@
         function showErrorToast(msg) {
             let toast = document.getElementById('errorToast'); let msgEl = document.getElementById('errorMsg'); let bodyEl = document.getElementById('errorToastBody');
             msgEl.textContent = msg;
-            if(msg.includes('berhasil') || msg.includes('Success') || msg.includes('Update')) {
+            if(msg.includes('berhasil') || msg.includes('successful') || msg.includes('Update')) {
                 bodyEl.classList.replace('border-red-500', 'border-green-500');
                 bodyEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span id="errorMsg">${msg}</span>`;
             } else {
@@ -432,31 +442,31 @@
             const safeEmailKey = email.replace(/\./g, ',');
             try {
                 const snap = await db.ref('users/' + safeEmailKey).once('value');
-                if(snap.exists()) { btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Email terdaftar. Silakan Login."); } 
+                if(snap.exists()) { btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Email already registered. Please login."); } 
                 else {
                     const newUser = { name, email, phone, pass }; await db.ref('users/' + safeEmailKey).set(newUser);
                     currentUser = newUser; localStorage.setItem('pw_currentUser', JSON.stringify(currentUser));
                     btn.innerHTML = ogText; btn.disabled = false; completeAuthSuccess();
                 }
-            } catch(e) { btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Error database."); }
+            } catch(e) { btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Database error."); }
         }
 
         async function processLogin() {
             const email = document.getElementById('logEmail').value, pass = document.getElementById('logPass').value;
-            if(!email || !pass) return showErrorToast("Masukkan email & password.");
+            if(!email || !pass) return showErrorToast("Please enter email & password.");
             const btn = document.getElementById('btnLogSubmit'), ogText = btn.innerHTML; btn.innerHTML = `<span class="loader loader-white"></span>`; btn.disabled = true;
             const safeEmailKey = email.replace(/\./g, ',');
             try {
                 const snap = await db.ref('users/' + safeEmailKey).once('value');
                 const user = snap.val(); btn.innerHTML = ogText; btn.disabled = false;
                 if(user && user.pass === pass) { currentUser = user; localStorage.setItem('pw_currentUser', JSON.stringify(currentUser)); completeAuthSuccess(); } 
-                else { showErrorToast("Email atau Password salah!"); }
-            } catch(e) { btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Error database."); }
+                else { showErrorToast("Incorrect Email or Password!"); }
+            } catch(e) { btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Database error."); }
         }
 
         async function processReset() {
             const email = document.getElementById('resEmail').value, phone = document.getElementById('resPhone').value, newPass = document.getElementById('resPass').value;
-            if(!email || !phone || !newPass) return showErrorToast("Lengkapi data reset password.");
+            if(!email || !phone || !newPass) return showErrorToast("Please complete the reset password form.");
             const btn = document.getElementById('btnResSubmit'), ogText = btn.innerHTML; btn.innerHTML = `<span class="loader loader-white"></span>`; btn.disabled = true;
             const safeEmailKey = email.replace(/\./g, ',');
             try {
@@ -465,13 +475,13 @@
                 if(user && user.phone === phone) { 
                     await db.ref('users/' + safeEmailKey).update({ pass: newPass });
                     btn.innerHTML = ogText; btn.disabled = false;
-                    showErrorToast("Reset berhasil! Silakan Login.");
+                    showErrorToast("Reset successful! Please login.");
                     switchAuthMode('login');
                 } else { 
                     btn.innerHTML = ogText; btn.disabled = false;
-                    showErrorToast("Data tidak cocok dengan database."); 
+                    showErrorToast("Data does not match our records."); 
                 }
-            } catch(e) { btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Error database."); }
+            } catch(e) { btn.innerHTML = ogText; btn.disabled = false; showErrorToast("Database error."); }
         }
 
         function completeAuthSuccess() { closeAuthModal(); document.getElementById('loginIndicator').classList.remove('hidden'); if(authIntent === 'checkout') { setTimeout(openCheckoutModal, 300); } else if(authIntent === 'dashboard') { setTimeout(() => { switchTab('dashboard'); renderOrders(); }, 300); } }
@@ -647,10 +657,10 @@
 
         async function processOrder() {
             const name = document.getElementById('cusName').value; const address = document.getElementById('cusAddress').value;
-            if(!name || !address || !currentCheckoutBase64) return showErrorToast("Mohon lengkapi Alamat dan Upload Bukti Pembayaran.");
+            if(!name || !address || !currentCheckoutBase64) return showErrorToast("Please complete your address and upload payment proof.");
             
             const btn = document.getElementById('finalSubmitBtn'), ogText = '<span class="relative z-10">CONFIRM ORDER</span>';
-            btn.innerHTML = `<span class="loader loader-white"></span> <span class="relative z-10 ml-2">MENGIRIM DATA...</span>`; btn.disabled = true;
+            btn.innerHTML = `<span class="loader loader-white"></span> <span class="relative z-10 ml-2">SENDING DATA...</span>`; btn.disabled = true;
 
             try {
                 const imageUrl = await uploadToCloudinary(currentCheckoutBase64);
@@ -662,7 +672,7 @@
                 const newOrder = {
                     id: newOrderId, date: orderDate, user: { name: name, email: currentUser.email, phone: document.getElementById('cusPhone').value }, userEmail: currentUser.email,
                     address: address, batch: batchName, total: pricing.total, discount: pricing.discount, voucherCode: appliedVoucher ? appliedVoucher.code : "", 
-                    status: 'Pending Payment', resi: "", latestTracking: "Pending Payment - Payment belum diterima.", trackingTime: new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB', proofImg: imageUrl, itemsInfo: JSON.stringify(cart), timestamp: Date.now()
+                    status: 'AWAITING VERIFICATION', resi: "", latestTracking: "", trackingTime: "", proofImg: imageUrl, itemsInfo: JSON.stringify(cart), timestamp: Date.now()
                 };
                 
                 await db.ref('orders/' + newOrderId).set(newOrder);
@@ -675,11 +685,11 @@
                 document.getElementById('receiptFile').value = ''; currentCheckoutBase64 = null;
                 document.getElementById('previewImg').classList.add('hidden'); document.getElementById('uploadPlaceholder').classList.remove('opacity-0'); document.getElementById('cusAddress').value = '';
                 btn.innerHTML = ogText; btn.disabled = false; closeCheckoutModal(); switchTab('dashboard');
-                showErrorToast("Order berhasil dikirim! Silakan tunggu verifikasi admin.");
+                showErrorToast("Order submitted successfully! Please wait for admin verification.");
 
             } catch (error) {
                 console.error(error); btn.innerHTML = ogText; btn.disabled = false; 
-                showErrorToast("Gagal! Pastikan Cloudinary Setup sudah benar.");
+                showErrorToast("Failed! Please ensure Cloudinary setup is correct.");
             }
         }
 
@@ -701,15 +711,15 @@
                 
                 list.innerHTML = '';
                 userOrders.forEach(o => {
-                    // DYNAMIC STATUS COLOR MAPPING
-                    let statusObj = ORDER_STATUSES.find(s => s.id === o.status) || { color: "bg-cream-100 text-stone-600 border-stone-200" };
-                    let statusColor = statusObj.color;
+                    let statusColor = "bg-cream-100 text-stone-600 border-stone-200";
+                    if(o.status === "IN TRANSIT") statusColor = "bg-black text-white border-black";
+                    if(o.status === "COMPLETED") statusColor = "bg-green-100 text-green-700 border-green-200";
 
-                    let trackingButton = `<span class="text-[10px] text-stone-400 font-bold uppercase tracking-widest cursor-not-allowed flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> CHECKING STATUS</span>`;
-                    if(o.status !== 'Pending Payment' && o.status !== 'AWAITING VERIFICATION') trackingButton = `<button onclick="openTrackingModal('${o.id}')" class="text-[10px] text-black font-extrabold uppercase tracking-widest hover:text-stone-500 flex items-center transition-colors">TRACK PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>`;
+                    let trackingButton = `<span class="text-[10px] text-stone-400 font-bold uppercase tracking-widest cursor-not-allowed flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> VERIFICATION PROCESS</span>`;
+                    if(o.status !== 'AWAITING VERIFICATION') trackingButton = `<button onclick="openTrackingModal('${o.id}')" class="text-[10px] text-black font-extrabold uppercase tracking-widest hover:text-stone-500 flex items-center transition-colors">TRACK PARCEL <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>`;
 
                     let invoiceBtn = '';
-                    if(o.status !== 'Pending Payment' && o.status !== 'AWAITING VERIFICATION') invoiceBtn = `<button onclick="openUserInvoice('${o.id}')" class="absolute top-6 right-6 text-stone-400 hover:text-black bg-cream-50 p-2 rounded-lg border border-stone-100 z-20 shadow-sm transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg></button>`;
+                    if(o.status !== 'AWAITING VERIFICATION') invoiceBtn = `<button onclick="openUserInvoice('${o.id}')" class="absolute top-6 right-6 text-stone-400 hover:text-black bg-cream-50 p-2 rounded-lg border border-stone-100 z-20 shadow-sm transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg></button>`;
 
                     // PENGAMAN JIKA ADA DATA KORUP/JADUL
                     let itemsParsed = [];
@@ -733,7 +743,7 @@
                             ${invoiceBtn}
                             <div class="flex justify-between items-start mb-5 relative z-10 pr-10">
                                 <div><p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest">${o.id || '-'} • ${o.date || '-'}</p><p class="font-extrabold text-sm mt-1.5 text-black">${itemsParsed.length} Item • ${o.batch || '-'}</p></div>
-                                <span class="text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest border ${statusColor} text-center max-w-[120px] leading-tight">${o.status || '-'}</span>
+                                <span class="text-[9px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest border ${statusColor}">${o.status || '-'}</span>
                             </div>
                             ${itemsHTML}
                             <div class="pt-4 border-t border-stone-100 flex justify-between items-center relative z-10">
@@ -781,7 +791,7 @@
             currentTrackingOrderId = orderId;
             const order = orders.find(o => o.id === orderId);
             if(order) {
-                document.getElementById('trackResi').textContent = order.resi || "Sedang Diinput Admin"; 
+                document.getElementById('trackResi').textContent = order.resi || "Being updated by Admin"; 
                 
                 // HISTORY TRACKING RENDER (Live Update & Susun ke Bawah)
                 let historyHTML = '';
@@ -809,13 +819,13 @@
                         </div>`;
                     });
                 } else {
-                    historyHTML = `<div class="flex items-center space-x-3"><div class="w-3 h-3 bg-stone-300 rounded-full animate-pulse"></div><p class="text-xs font-extrabold text-black">Paket sedang disiapkan.</p></div>`;
+                    historyHTML = `<div class="flex items-center space-x-3"><div class="w-3 h-3 bg-stone-300 rounded-full animate-pulse"></div><p class="text-xs font-extrabold text-black">Package is being prepared.</p></div>`;
                 }
                 
                 document.getElementById('trackingHistoryList').innerHTML = historyHTML;
                 
                 const truckIcon = document.getElementById('truckIcon'); 
-                if(order.status === 'In Transit' || order.status === 'Shipped to Customer') truckIcon.classList.add('animate-truck'); 
+                if(order.status === 'IN TRANSIT') truckIcon.classList.add('animate-truck'); 
                 else truckIcon.classList.remove('animate-truck');
 
                 const modal = document.getElementById('trackingModal'); 
