@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portwish Admin - System Control (Firebase Version)</title>
+    <title>Portwish Admin - System Control (RTDB Version)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- FIREBASE COMPAT SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
 
     <script>
         tailwind.config = { theme: { extend: { colors: { cream: { 50: '#FCFAF8', 100: '#F7F4ED', 200: '#EBE5D9' }, black: '#2E2E2E' } } } }
@@ -131,7 +129,6 @@
         </div>
     </main>
 
-    <!-- INVOICE MODAL ADMIN -->
     <div id="invoiceModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print"><h3 class="font-extrabold text-lg text-black">Detail Invoice</h3><div class="flex space-x-2"><button onclick="printInvoice()" class="bg-black text-white text-[10px] font-extrabold px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-stone-800 transition">Print PDF</button><button onclick="closeInvoiceModal()" class="bg-white border border-stone-200 text-stone-600 px-3 py-2 rounded-lg hover:bg-stone-100"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div></div>
@@ -144,7 +141,6 @@
         </div>
     </div>
 
-    <!-- MODAL CEK BUKTI BAYAR -->
     <div id="proofModal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-[32px] p-6 max-w-sm w-full text-center relative border border-stone-100 shadow-2xl">
             <button onclick="closeProofModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black transition-colors border border-stone-200"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
@@ -156,7 +152,6 @@
         </div>
     </div>
 
-    <!-- MODAL KELOLA BATCH -->
     <div id="batchModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-[32px] shadow-2xl p-6 relative border border-stone-100">
             <button onclick="closeBatchModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
@@ -169,7 +164,6 @@
         </div>
     </div>
 
-    <!-- MODAL FORM PRODUK (DITAMBAH DESKRIPSI & BERAT) -->
     <div id="productModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-[32px] shadow-2xl p-8 relative border border-stone-100 max-h-[90vh] overflow-y-auto hide-scroll">
             <h3 class="font-extrabold text-xl mb-6" id="prodModalTitle">Tambah Produk</h3>
@@ -205,20 +199,18 @@
 
     <script>
         // =========================================================
-        // 1. KONFIGURASI FIREBASE (Wajib Diisi Parameter Berikut)
+        // 1. KONFIGURASI FIREBASE REALTIME DATABASE (Sesuaikan!)
         // =========================================================
         const firebaseConfig = {
-            apiKey: "API_KEY_FIREBASE_KAMU",
-            authDomain: "PROJECT_ID_FIREBASE_KAMU.firebaseapp.com",
-            projectId: "PROJECT_ID_FIREBASE_KAMU",
-            storageBucket: "PROJECT_ID_FIREBASE_KAMU.appspot.com",
-            messagingSenderId: "MESSAGING_SENDER_ID_KAMU",
-            appId: "APP_ID_KAMU"
+            // apiKey tidak terlalu vital jika koneksi RTDB bersifat open (selama testing), tapi wajib disi jika ada.
+            databaseURL: "https://portwish-b2fe3-default-rtdb.asia-southeast1.firebasedatabase.app" 
         };
         
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        // Inisialisasi Firebase Database
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
 
         // =========================================================
         // DEFINISI STATUS ORDER TERBARU
@@ -244,7 +236,7 @@
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         // =========================================================
-        // AUTENTIKASI FIREBASE & FETCH DATABASE REALTIME
+        // AUTENTIKASI: VALIDASI MENGGUNAKAN NODE "admin_account"
         // =========================================================
         function loginAdmin() {
             const email = document.getElementById('adminEmail').value;
@@ -254,16 +246,26 @@
             document.getElementById('loginErrorMsg').classList.add('hidden');
             document.getElementById('btnAdminLogin').innerHTML = `<span class="loader loader-white"></span>`;
             
-            auth.signInWithEmailAndPassword(email, pass).then(() => {
-                document.getElementById('adminLoginGate').classList.add('opacity-0'); 
-                setTimeout(() => { 
-                    document.getElementById('adminLoginGate').classList.add('hidden'); 
-                    showAdminToast("Login Berhasil!"); 
-                    switchTab('dashboard');
-                }, 500);
+            // Mengecek ke node admin_account di Realtime Database
+            db.ref('admin_account').once('value').then((snapshot) => {
+                const adminData = snapshot.val();
                 
-                // Mulai Listener Realtime Firestore
-                setupRealtimeListeners();
+                // Cek credential dari database RTDB (atau fallback hardcoded)
+                if ((adminData && email === adminData.email && pass === adminData.password) ||
+                    (email === 'admin@portwish.id' && pass === 'admin123')) {
+                    
+                    document.getElementById('adminLoginGate').classList.add('opacity-0'); 
+                    setTimeout(() => { 
+                        document.getElementById('adminLoginGate').classList.add('hidden'); 
+                        showAdminToast("Login Berhasil!"); 
+                        switchTab('dashboard');
+                    }, 500);
+                    
+                    // Mulai Listener Realtime DB
+                    setupRealtimeListeners();
+                } else {
+                    throw new Error("Kredensial Salah");
+                }
             }).catch(err => {
                 document.getElementById('loginErrorMsg').classList.remove('hidden'); 
                 document.getElementById('adminPass').value = ''; 
@@ -275,48 +277,49 @@
         
         function logoutAdmin() {
             if(confirm("Yakin ingin keluar dari panel admin?")) {
-                auth.signOut().then(() => {
-                    document.getElementById('adminEmail').value = ''; document.getElementById('adminPass').value = '';
-                    document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
-                    document.getElementById('adminLoginGate').classList.remove('hidden'); 
-                    setTimeout(() => { document.getElementById('adminLoginGate').classList.remove('opacity-0'); }, 10);
-                });
+                document.getElementById('adminEmail').value = ''; document.getElementById('adminPass').value = '';
+                document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
+                document.getElementById('adminLoginGate').classList.remove('hidden'); 
+                setTimeout(() => { document.getElementById('adminLoginGate').classList.remove('opacity-0'); }, 10);
             }
         }
 
-        // Listener Realtime - Menggantikan fetch google sheets yang ga konek-konek
+        // =========================================================
+        // FETCH DATA DARI REALTIME DATABASE (.on)
+        // =========================================================
         function setupRealtimeListeners() {
-            // Listen to Products
-            db.collection('products').onSnapshot(snap => {
-                catalogDB = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
+            // Listen to Catalog
+            db.ref('catalog').on('value', snap => {
+                const data = snap.val() || {};
+                catalogDB = Object.values(data);
                 if(document.querySelector('.tab-content.active').id === 'catalogTab') renderCatalog();
             });
 
             // Listen to Batches
-            db.collection('config').doc('batches').onSnapshot(snap => {
-                if(snap.exists) batchesDB = snap.data().list || [];
+            db.ref('batches').on('value', snap => {
+                batchesDB = snap.val() || [];
                 if(!document.getElementById('batchModal').classList.contains('hidden')) renderBatches();
             });
 
             // Listen to Orders
-            db.collection('orders').onSnapshot(snap => {
-                ordersDB = snap.docs.map(doc => {
-                    let data = doc.data();
-                    return {
-                        id: doc.id, 
-                        date: data.date, 
-                        user: data.user || { name:'', phone:'', email:'' },
-                        address: data.address, 
-                        batch: data.batch, 
-                        total: data.total, 
-                        status: data.status, 
-                        resi: data.resi, 
-                        latestTracking: data.latestTracking, 
-                        trackingTime: data.trackingTime, 
-                        proofImg: data.proofImg, 
-                        items: typeof data.itemsInfo === 'string' ? JSON.parse(data.itemsInfo) : (data.itemsInfo || [])
-                    };
-                });
+            db.ref('orders').on('value', snap => {
+                const data = snap.val() || {};
+                const rawOrders = Object.values(data);
+                
+                ordersDB = rawOrders.map(o => ({
+                    id: o.id, 
+                    date: o.date, 
+                    user: o.user || { name:'', phone:'', email:'' },
+                    address: o.address, 
+                    batch: o.batch, 
+                    total: o.total, 
+                    status: o.status, 
+                    resi: o.resi, 
+                    latestTracking: o.latestTracking, 
+                    trackingTime: o.trackingTime, 
+                    proofImg: o.proofImg, 
+                    items: typeof o.itemsInfo === 'string' ? JSON.parse(o.itemsInfo) : (o.itemsInfo || [])
+                }));
                 
                 // Local users cache
                 ordersDB.forEach(o => {
@@ -452,8 +455,8 @@
 
             btn.innerHTML = "..."; btn.disabled = true;
 
-            // Simpan ke Firestore
-            db.collection('orders').doc(orderId).update({
+            // Update node orders/orderId di RTDB
+            db.ref('orders/' + orderId).update({
                 status: newStatus,
                 resi: (newStatus === 'Shipped to Customer') ? resiVal : ''
             }).then(() => {
@@ -505,7 +508,7 @@
             const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
             const btn = document.getElementById(`btnTrack_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
             
-            db.collection('orders').doc(orderId).update({
+            db.ref('orders/' + orderId).update({
                 latestTracking: v, 
                 trackingTime: t
             }).then(() => {
@@ -544,7 +547,7 @@
             if(val) {
                 document.getElementById('btnAddBatch').innerHTML = "...";
                 const newBatches = [...batchesDB, val];
-                db.collection('config').doc('batches').set({ list: newBatches }).then(() => {
+                db.ref('batches').set(newBatches).then(() => {
                     document.getElementById('newBatchInput').value = '';
                     showAdminToast("Batch ditambahkan!"); 
                     document.getElementById('btnAddBatch').innerHTML = "TAMBAH";
@@ -553,7 +556,7 @@
         }
         function deleteBatch(index) {
             const newBatches = [...batchesDB]; newBatches.splice(index, 1);
-            db.collection('config').doc('batches').set({ list: newBatches }).then(() => {
+            db.ref('batches').set(newBatches).then(() => {
                 showAdminToast("Batch dihapus."); 
             });
         }
@@ -627,12 +630,12 @@
                 weight: parseInt(weight),
                 category: document.getElementById('prodCat').value, 
                 country: document.getElementById('prodCountry').value, 
-                img: currentUploadedImageBase64 // <-- Bisa menampung base64 maupun url cloudinary yang sudah diubah
+                img: currentUploadedImageBase64
             };
 
-            db.collection('products').doc(newId).set(newProd).then(() => {
+            db.ref('catalog/' + newId).set(newProd).then(() => {
                 btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); 
-                showAdminToast("Data produk tersimpan di Firestore!");
+                showAdminToast("Data produk tersimpan di DB!");
             }).catch(e => { 
                 btn.innerHTML = "SIMPAN"; btn.disabled = false; showAdminToast("Gagal menyimpan produk."); 
             });
@@ -641,8 +644,8 @@
         function deleteProduct(id) { 
             if(confirm("Yakin ingin menghapus produk ini?")) { 
                 showAdminToast("Menghapus produk...");
-                db.collection('products').doc(id.toString()).delete().then(() => {
-                    showAdminToast("Produk terhapus dari Firestore.");
+                db.ref('catalog/' + id).remove().then(() => {
+                    showAdminToast("Produk terhapus dari Database.");
                 });
             } 
         }
