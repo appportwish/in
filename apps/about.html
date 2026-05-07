@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portwish - About Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { cream: { 50: '#FCFAF8', 100: '#F7F4ED', 200: '#EBE5D9' }, black: '#2E2E2E' } } } }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FCFAF8; color: #2E2E2E; -webkit-tap-highlight-color: transparent; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="selection:bg-black selection:text-white relative overflow-x-hidden">
+
+    <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200/60 shadow-sm">
+        <div class="max-w-md mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="https://appportwish.github.io/in/apps/index.html" class="bg-cream-50 p-2 rounded-full border border-stone-100 text-stone-500 hover:text-black transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </a>
+            <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-6 md:h-7 w-auto object-contain">
+            <div class="w-9"></div> </div>
+    </nav>
+
+    <main class="max-w-md mx-auto pb-12 px-6 pt-8">
+        
+        <div class="bg-black rounded-[24px] p-8 text-white relative overflow-hidden shadow-xl shadow-stone-300 mb-6">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-cream-200/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-cream-100/10 rounded-full translate-y-1/3 -translate-x-1/3 blur-xl"></div>
+            <div class="relative z-10 text-center">
+                <span class="bg-white/10 backdrop-blur-sm text-[9px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-widest mb-4 inline-block border border-white/20 text-cream-50">GET TO KNOW US</span>
+                <h1 class="text-3xl font-extrabold mb-2 tracking-tight leading-tight text-white">About Portwish</h1>
+                <p class="text-xs text-stone-300 leading-relaxed">Your curated personal shopping & international sourcing platform.</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-[24px] border border-stone-200 p-6 shadow-sm space-y-5 text-sm text-stone-500 leading-relaxed text-justify">
+            <p>
+                Portwish was created to make overseas shopping feel easier, more organized, and more accessible without the hassle of manual ordering through chats and scattered catalogs.
+            </p>
+            <p>
+                We source and curate products from multiple countries including USA, Japan, Korea, Europe, and Indonesia bringing together everyday finds, lifestyle products, beauty essentials, wellness products, snacks, fashion, and unique items loved by customers worldwide. At Portwish, we focus on products that are useful, interesting, trending, and worth discovering.
+            </p>
+            <div class="bg-cream-50 p-4 rounded-2xl border border-stone-100">
+                <p class="text-black font-semibold text-center italic">
+                    "Our goal is to create a seamless shopping experience where customers can browse products, select available shipping batches, complete checkout easily, and track orders directly through their account."
+                </p>
+            </div>
+            <p>
+                More than just a typical personal shopping service, Portwish is built with a long-term vision to grow into a trusted global sourcing and curated product platform. We believe international shopping should feel exciting, transparent, and simple all in one place.
+            </p>
+        </div>
+
+        <div class="mt-8 text-center">
+            <p class="text-[10px] font-extrabold text-black uppercase tracking-widest bg-white border border-stone-200 inline-block px-5 py-2.5 rounded-full shadow-sm">
+                Thank you for being part of our journey
+            </p>
+        </div>
+    </main>
+
+</body>
+</html>
