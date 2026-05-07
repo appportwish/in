@@ -103,19 +103,25 @@
             <div id="ordersTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
                     <div class="p-6 border-b border-stone-100 flex flex-col sm:flex-row justify-between items-center bg-cream-50/50 gap-4">
-                        <h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3>
+                        <div>
+                            <h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3>
+                            <p class="text-xs text-stone-500 font-medium mt-1">Urusan input resi dan status Shipped ada di menu <span class="font-bold border-b border-stone-400">Update Logistik</span>.</p>
+                        </div>
                         <div class="flex space-x-2 w-full sm:w-auto">
                             <input type="text" id="orderSearchInput" placeholder="Cari ID / Nama..." class="input-box sm:w-64 py-2 text-sm font-semibold" oninput="filterOrders(this.value)">
                             <button onclick="document.getElementById('orderSearchInput').value=''; renderOrders();" class="bg-stone-100 text-stone-600 px-3 py-2 rounded-xl text-[10px] font-extrabold border border-stone-200 hover:bg-stone-200">RESET FILTER</button>
                         </div>
                     </div>
-                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Order ID</th><th class="p-4 font-extrabold">Pelanggan</th><th class="p-4 font-extrabold">Batch</th><th class="p-4 font-extrabold">Total</th><th class="p-4 font-extrabold">Status & Aksi</th><th class="p-4 font-extrabold text-center">Invoice</th></tr></thead><tbody id="orderTableBody" class="text-sm"></tbody></table></div>
+                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Order ID</th><th class="p-4 font-extrabold">Pelanggan</th><th class="p-4 font-extrabold">Batch</th><th class="p-4 font-extrabold">Total</th><th class="p-4 font-extrabold">Status Awal & Aksi</th><th class="p-4 font-extrabold text-center">Invoice</th></tr></thead><tbody id="orderTableBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
 
             <div id="trackingTab" class="tab-content">
                 <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-stone-100 bg-blue-50/30"><h3 class="font-extrabold text-lg">Update Logistik (Tracking)</h3><p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">In Transit</span> atau <span class="font-bold text-black border-b border-black">Shipped to Customer</span>.</p></div>
+                    <div class="p-6 border-b border-stone-100 bg-blue-50/30">
+                        <h3 class="font-extrabold text-lg">Update Logistik & Pengiriman</h3>
+                        <p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">In Transit</span>, <span class="font-bold text-black border-b border-black">Arrived at Warehouse</span>, dan <span class="font-bold text-black border-b border-black">Shipped to Customer</span>.</p>
+                    </div>
                     <div class="p-6 space-y-4" id="trackingListArea"></div>
                 </div>
             </div>
@@ -305,8 +311,8 @@
         ];
         
         let catalogDB = []; let batchesDB = []; let ordersDB = []; let vouchersDB = []; let researchDB = [];
-        let categoriesDB = ["Skincare", "Fashion", "Food & Snacks"]; // Default fallback
-        let countriesDB = ["USA", "JAPAN", "KOREA"]; // Default fallback
+        let categoriesDB = ["Skincare", "Fashion", "Food & Snacks"]; 
+        let countriesDB = ["USA", "JAPAN", "KOREA"]; 
 
         let usersDB = JSON.parse(localStorage.getItem('pw_users')) || [];
         let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
@@ -360,48 +366,41 @@
         // FETCH DATA DARI REALTIME DATABASE 
         // =========================================================
         function setupRealtimeListeners() {
-            // Listen to Catalog
             db.ref('catalog').on('value', snap => {
                 const data = snap.val() || {};
                 catalogDB = Object.keys(data).map(k => ({...data[k], dbKey: k}));
                 if(document.querySelector('.tab-content.active').id === 'catalogTab') renderCatalog();
             });
 
-            // Listen to Batches
             db.ref('batches').on('value', snap => {
                 batchesDB = snap.val() || [];
                 if(!document.getElementById('batchModal').classList.contains('hidden')) renderBatches();
             });
 
-            // Listen to Categories
             db.ref('categories').on('value', snap => {
                 if(snap.exists()) categoriesDB = snap.val() || [];
                 updateDropdowns();
                 if(!document.getElementById('categoryModal').classList.contains('hidden')) renderCategories();
             });
 
-            // Listen to Countries
             db.ref('countries').on('value', snap => {
                 if(snap.exists()) countriesDB = snap.val() || [];
                 updateDropdowns();
                 if(!document.getElementById('countryModal').classList.contains('hidden')) renderCountries();
             });
 
-            // Listen to Vouchers
             db.ref('vouchers').on('value', snap => {
                 const data = snap.val() || {};
                 vouchersDB = Object.keys(data).map(k => ({...data[k], dbKey: k}));
                 if(document.querySelector('.tab-content.active').id === 'vouchersTab') renderVouchers();
             });
 
-            // Listen to Research
             db.ref('research').on('value', snap => {
                 const data = snap.val() || {};
                 researchDB = Object.keys(data).map(k => ({...data[k], dbKey: k}));
                 if(document.querySelector('.tab-content.active').id === 'researchTab') renderResearch();
             });
 
-            // Listen to Orders
             db.ref('orders').on('value', snap => {
                 const data = snap.val() || {};
                 ordersDB = Object.keys(data).map(key => {
@@ -511,7 +510,7 @@
         }
 
         // =========================================================
-        // ORDER MANAGEMENT & SELECT DROPDOWN LOGIC
+        // ORDER MANAGEMENT (TAB PESANAN & RESI) - TANPA INPUT RESI
         // =========================================================
         function getBadgeColor(status) {
             const s = status.toLowerCase();
@@ -528,9 +527,18 @@
             filtered.forEach((o) => {
                 let badgeClass = getBadgeColor(o.status);
                 
-                let dropdownOptions = STATUS_OPTIONS.map(s => {
+                // HAPUS Opsi Shipped dan Completed dari Dropdown Pesanan
+                let availableStatuses = STATUS_OPTIONS.filter(s => s !== "Shipped to Customer" && s !== "Completed");
+                
+                // Pastikan status saat ini tetap muncul di dropdown (meskipun itu shipped/completed) biar nggak ngereset visual
+                if (!availableStatuses.includes(o.status) && o.status.toUpperCase() !== "AWAITING VERIFICATION") {
+                    availableStatuses.push(o.status);
+                }
+
+                let dropdownOptions = availableStatuses.map(s => {
                     let isSelected = '';
                     if (o.status.toLowerCase() === s.toLowerCase()) isSelected = 'selected';
+                    // Mapping status lama ke status baru
                     if (o.status === 'AWAITING VERIFICATION' && s === 'Pending Payment') isSelected = 'selected';
                     return `<option value="${s}" ${isSelected}>${s}</option>`;
                 }).join('');
@@ -540,11 +548,10 @@
                 let statusAction = `
                     <div class="mt-2 w-full max-w-[200px]">
                         ${proofBtn}
-                        <select id="statusSelect_${o.id}" onchange="toggleResiInput('${o.id}')" class="input-box bg-cream-50 py-1.5 px-2 text-[10px] w-full font-bold mb-2">
+                        <select id="statusSelect_${o.id}" class="input-box bg-cream-50 py-1.5 px-2 text-[10px] w-full font-bold mb-2">
                             ${dropdownOptions}
                         </select>
-                        <input type="text" id="resiInput_${o.id}" placeholder="Input Resi Disini..." class="input-box py-1.5 px-2 text-[10px] w-full mb-2 bg-white" style="display: ${o.status === 'Shipped to Customer' ? 'block' : 'none'}" value="${o.resi || ''}">
-                        <button onclick="updateOrderStatus('${o.id}')" id="btnUpdate_${o.id}" class="bg-black text-white text-[9px] font-extrabold px-3 py-2 rounded-lg w-full hover:bg-stone-800 transition shadow-sm">SIMPAN STATUS</button>
+                        <button onclick="updateOrderStatus('${o.id}')" id="btnUpdate_${o.id}" class="bg-black text-white text-[9px] font-extrabold px-3 py-2 rounded-lg w-full hover:bg-stone-800 transition shadow-sm">SIMPAN STATUS AWAL</button>
                     </div>
                 `;
                 
@@ -554,34 +561,21 @@
 
         function filterOrders(val) { renderOrders(val.toLowerCase()); }
 
-        function toggleResiInput(orderId) {
-            const sel = document.getElementById(`statusSelect_${orderId}`).value;
-            document.getElementById(`resiInput_${orderId}`).style.display = (sel === 'Shipped to Customer') ? 'block' : 'none';
-        }
-
         function updateOrderStatus(orderId) { 
             const newStatus = document.getElementById(`statusSelect_${orderId}`).value;
-            const resiVal = document.getElementById(`resiInput_${orderId}`).value;
             const btn = document.getElementById(`btnUpdate_${orderId}`);
-            
-            if(newStatus === 'Shipped to Customer' && !resiVal.trim()) {
-                return alert("Harap isi nomor resi jika pesanan dikirim!");
-            }
 
             const order = ordersDB.find(x => x.id === orderId);
             if(!order || !order.dbKey) return alert("Error: Order Data (dbKey) tidak valid!");
 
             btn.innerHTML = "..."; btn.disabled = true;
 
-            db.ref('orders/' + order.dbKey).update({
-                status: newStatus,
-                resi: (newStatus === 'Shipped to Customer') ? resiVal : ''
-            }).then(() => {
+            db.ref('orders/' + order.dbKey).update({ status: newStatus }).then(() => {
                 showAdminToast("Status pesanan diupdate!");
-                btn.innerHTML = "SIMPAN STATUS"; btn.disabled = false;
+                btn.innerHTML = "SIMPAN STATUS AWAL"; btn.disabled = false;
             }).catch(e => {
                 showAdminToast("Gagal mengupdate status.");
-                btn.innerHTML = "SIMPAN STATUS"; btn.disabled = false;
+                btn.innerHTML = "SIMPAN STATUS AWAL"; btn.disabled = false;
             });
         }
 
@@ -609,29 +603,55 @@
         function closeProofModal() { document.getElementById('proofModal').classList.add('hidden'); }
 
         // =========================================================
-        // TRACKING UPDATE
+        // TRACKING UPDATE (TAB UPDATE LOGISTIK)
         // =========================================================
         function renderTracking() {
             const container = document.getElementById('trackingListArea'); container.innerHTML = '';
-            const active = ordersDB.filter(o => o.status.toLowerCase() === "in transit" || o.status.toLowerCase() === "shipped to customer");
+            const active = ordersDB.filter(o => {
+                const s = o.status.toLowerCase();
+                return s === "in transit" || s === "arrived at warehouse" || s === "shipped to customer";
+            });
             
-            if(active.length === 0) { container.innerHTML = `<div class="text-center py-10"><p class="text-stone-400 font-bold text-sm">Belum ada paket yang statusnya In Transit atau Shipped.</p></div>`; return; }
+            if(active.length === 0) { container.innerHTML = `<div class="text-center py-10"><p class="text-stone-400 font-bold text-sm">Belum ada paket yang statusnya In Transit, Arrived di Warehouse, atau Shipped.</p></div>`; return; }
             
             const trackOptsHTML = TRACKING_OPTIONS.map(opt => `<option value="${opt}">${opt}</option>`).join('');
 
             active.forEach(o => {
-                container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow">
-                    <div class="flex-1">
-                        <p class="font-extrabold text-lg text-black">${o.id} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-2 border border-stone-200">${o.user.name}</span></p>
-                        <div class="mt-2 flex items-center space-x-4"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-4">Resi: <span class="text-black font-extrabold">${o.resi || 'Belum ada'}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch}</p></div>
-                        <div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Web Pengguna:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Menunggu update...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div>
+                let badgeClass = getBadgeColor(o.status);
+
+                container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-5 flex flex-col md:flex-row gap-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex-1 border-b md:border-b-0 md:border-r border-stone-100 pb-4 md:pb-0 md:pr-6">
+                        <div class="flex items-center gap-2 mb-1">
+                            <p class="font-extrabold text-lg text-black">${o.id}</p>
+                            <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-md border ${badgeClass}">${o.status}</span>
+                        </div>
+                        <p class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md border border-stone-200 inline-block mb-3">${o.user.name} • ${o.batch}</p>
+                        
+                        <div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl">
+                            <p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Web Pengguna:</p>
+                            <p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Menunggu update...'}</p>
+                            <p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p>
+                        </div>
                     </div>
-                    <div class="w-full md:w-2/5 flex flex-col bg-cream-50 p-4 rounded-2xl border border-stone-100">
-                        <select id="manualTrack_${o.id}" class="border border-stone-200 rounded-xl px-4 py-3 text-[11px] font-bold bg-white text-black focus:border-black outline-none transition-colors w-full mb-2">
-                            <option value="">-- Pilih Pesan Logistik --</option>
-                            ${trackOptsHTML}
-                        </select>
-                        <button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md">UPDATE USER STATUS</button>
+                    
+                    <div class="w-full md:w-[45%] flex flex-col gap-3">
+                        <div class="bg-cream-50 p-4 rounded-2xl border border-stone-100">
+                            <label class="text-[9px] font-extrabold text-stone-400 uppercase tracking-widest mb-1.5 block">1. Pesan Tracking (Web User)</label>
+                            <select id="manualTrack_${o.id}" class="border border-stone-200 rounded-xl px-3 py-2 text-[10px] font-bold bg-white text-black focus:border-black outline-none transition-colors w-full mb-2">
+                                <option value="">-- Pilih Pesan Tracking --</option>
+                                ${trackOptsHTML}
+                            </select>
+                            <button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-white border border-stone-200 text-black text-[9px] font-extrabold px-4 py-2.5 rounded-xl w-full hover:bg-stone-50 transition-colors uppercase tracking-widest shadow-sm">UPDATE PESAN SAJA</button>
+                        </div>
+
+                        <div class="bg-blue-50/30 p-4 rounded-2xl border border-blue-100">
+                            <label class="text-[9px] font-extrabold text-blue-800 uppercase tracking-widest mb-1.5 block">2. Input Resi & Kirim Paket</label>
+                            <input type="text" id="resiTrack_${o.id}" placeholder="Input Nomor Resi..." class="border border-stone-200 rounded-xl px-3 py-2 text-[10px] font-bold bg-white text-black focus:border-blue-300 outline-none transition-colors w-full mb-2" value="${o.resi || ''}">
+                            <div class="flex gap-2">
+                                <button onclick="setShipped('${o.id}')" class="flex-1 bg-blue-600 text-white text-[9px] font-extrabold px-2 py-2.5 rounded-xl hover:bg-blue-700 transition-colors uppercase tracking-widest shadow-md">SET SHIPPED</button>
+                                <button onclick="setCompleted('${o.id}')" class="flex-1 bg-green-600 text-white text-[9px] font-extrabold px-2 py-2.5 rounded-xl hover:bg-green-700 transition-colors uppercase tracking-widest shadow-md">SET COMPLETED</button>
+                            </div>
+                        </div>
                     </div>
                 </div>`;
             });
@@ -650,13 +670,38 @@
                 latestTracking: v, 
                 trackingTime: t
             }).then(() => {
-                showAdminToast("Status logistik diupdate!");
+                showAdminToast("Pesan logistik diupdate!");
                 document.getElementById(`manualTrack_${orderId}`).value = '';
-                btn.innerHTML = "UPDATE USER STATUS"; btn.disabled = false;
-            }).catch(e => {
-                showAdminToast("Gagal update status logistik.");
-                btn.innerHTML = "UPDATE USER STATUS"; btn.disabled = false;
+                btn.innerHTML = "UPDATE PESAN SAJA"; btn.disabled = false;
             });
+        }
+
+        function setShipped(orderId) {
+            const resi = document.getElementById(`resiTrack_${orderId}`).value.trim();
+            if(!resi) return alert("Harap input nomor resi sebelum klik Set Shipped!");
+
+            const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
+            const order = ordersDB.find(x => x.id === orderId);
+
+            db.ref('orders/' + order.dbKey).update({
+                status: "Shipped to Customer",
+                resi: resi,
+                latestTracking: "Barang telah diserahkan ke Kurir Lokal",
+                trackingTime: t
+            }).then(() => { showAdminToast("Status diubah menjadi Shipped!"); });
+        }
+
+        function setCompleted(orderId) {
+            if(confirm("Tandai pesanan ini Selesai (Completed)? Paket dianggap sudah diterima pelanggan.")) {
+                const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
+                const order = ordersDB.find(x => x.id === orderId);
+
+                db.ref('orders/' + order.dbKey).update({
+                    status: "Completed",
+                    latestTracking: "Pesanan telah diterima oleh pelanggan",
+                    trackingTime: t
+                }).then(() => { showAdminToast("Pesanan selesai!"); });
+            }
         }
 
         // =========================================================
