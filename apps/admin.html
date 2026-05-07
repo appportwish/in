@@ -2,39 +2,29 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portwish Admin - System Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
-    <!-- FIREBASE SDK V8 -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = { theme: { extend: { colors: { cream: { 50: '#FCFAF8', 100: '#F7F4ED', 200: '#EBE5D9' }, black: '#2E2E2E' } } } }
     </script>
     <style>
-        :root { --primary: #2E2E2E; --bg: #FCFAF8; } 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--primary); -webkit-user-select: none; user-select: none; }
-        .hide-scroll::-webkit-scrollbar { display: none; } 
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-        .tab-content { display: none; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .input-box { width: 100%; border: 2px solid #e7e5e4; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; outline: none; background: #fff; } .input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(46,46,46,0.1); }
+        :root { --primary: #2E2E2E; --bg: #FCFAF8; } body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--primary); }
+        .hide-scroll::-webkit-scrollbar { display: none; } .tab-content { display: none; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .input-box { width: 100%; border: 2px solid #e7e5e4; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; outline: none; background: #fff; } .input-box:focus { border-color: var(--primary); }
         .input-float { position: relative; margin-top: 8px; } .input-float input, .input-float select { border: none; border-bottom: 2px solid #e7e5e4; border-radius: 0; padding: 20px 0 8px 0; background: transparent; transition: all 0.3s ease; outline: none; width: 100%; font-weight: 600; color: var(--primary); } .input-float input:focus, .input-float select:focus { border-bottom-color: var(--primary); } .input-float label { position: absolute; top: 16px; left: 0; color: #a8a29e; font-size: 14px; transition: all 0.3s ease; pointer-events: none; } .input-float input:focus ~ label, .input-float input:not(:placeholder-shown) ~ label, .input-float select:focus ~ label, .input-float select:not([value=""]) ~ label { top: 0px; font-size: 10px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         .loader { border: 3px solid #e7e5e4; border-top: 3px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; } .loader-white { border-top-color: #fff; border-color: rgba(255,255,255,0.3); } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @media print { body * { visibility: hidden; } #invoiceModal, #invoiceModal * { visibility: visible; } #invoiceModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white; padding: 0; } .no-print { display: none !important; } }
-        input, textarea { -webkit-user-select: text; user-select: text; }
+        @media print { body * { visibility: hidden; } #invoiceModal, #invoiceModal * { visibility: visible; } #invoiceModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white; padding: 20px; } .no-print { display: none !important; } }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden selection:bg-black selection:text-white">
 
-    <!-- LOGIN GATE -->
-    <div id="adminLoginGate" class="fixed inset-0 z-[999] bg-cream-50 flex items-center justify-center px-4 sm:px-0 transition-opacity duration-500">
-        <div class="bg-white w-full max-w-sm rounded-[32px] p-6 sm:p-8 shadow-2xl border border-stone-200 text-center relative overflow-hidden">
+    <div id="adminLoginGate" class="fixed inset-0 z-[999] bg-cream-50 flex items-center justify-center px-4 transition-opacity duration-500">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-8 shadow-2xl border border-stone-200 text-center relative overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-stone-100 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl"></div>
             <div class="relative z-10">
                 <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" alt="Portwish" class="h-10 mx-auto mb-6">
@@ -50,7 +40,6 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="adminToast" class="fixed top-10 left-1/2 transform -translate-x-1/2 z-[1000] transition-all duration-500 translate-y-[-150%] opacity-0 pointer-events-none w-max max-w-[90vw]">
         <div class="bg-black/95 backdrop-blur-md text-white text-[11px] font-bold px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 border border-stone-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
@@ -58,137 +47,79 @@
         </div>
     </div>
 
-    <!-- MOBILE SIDEBAR OVERLAY -->
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden md:hidden transition-opacity" onclick="toggleSidebar()"></div>
-
-    <!-- SIDEBAR NAVIGATION -->
-    <aside id="sidebar" class="w-72 sm:w-64 bg-white border-r border-stone-200 flex flex-col justify-between fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-50 shadow-2xl md:shadow-none">
+    <aside class="w-64 bg-white border-r border-stone-200 flex flex-col justify-between hidden md:flex z-20">
         <div>
-            <div class="h-20 flex items-center justify-between md:justify-start px-6 md:px-8 border-b border-stone-100">
-                <div class="flex items-center">
-                    <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-7">
-                    <span class="ml-2 text-[9px] font-extrabold bg-cream-100 text-black px-2 py-0.5 rounded uppercase tracking-widest border border-stone-200">ADMIN</span>
-                </div>
-                <!-- Close Button Mobile -->
-                <button onclick="toggleSidebar()" class="md:hidden text-stone-400 hover:text-black">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+            <div class="h-20 flex items-center px-8 border-b border-stone-100">
+                <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-7"><span class="ml-2 text-[9px] font-extrabold bg-cream-100 text-black px-2 py-0.5 rounded uppercase tracking-widest border border-stone-200">ADMIN</span>
             </div>
-            <nav class="p-4 space-y-2 overflow-y-auto hide-scroll" style="max-height: calc(100vh - 160px);">
+            <nav class="p-4 space-y-2">
                 <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-black text-white font-bold text-sm transition-all shadow-md"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><span>Dashboard</span></button>
-                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span><span class="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full" id="pendingCount" style="display:none;">0</span></button>
+                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>Pesanan & Resi</span><span class="ml-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full" id="pendingCount">0</span></button>
                 <button onclick="switchTab('tracking')" id="nav-tracking" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all relative"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span>Update Logistik</span><span class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse" id="activeShipmentDot"></span></button>
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg><span>Kelola Katalog</span></button>
                 <button onclick="switchTab('users')" id="nav-users" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg><span>Database Akun</span></button>
             </nav>
         </div>
-        <div class="p-4 border-t border-stone-100 bg-white">
+        <div class="p-4 border-t border-stone-100">
             <button onclick="logoutAdmin()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 font-bold text-sm transition-all"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg><span>Keluar Admin</span></button>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 flex flex-col h-screen overflow-hidden bg-cream-50 relative">
-        <header class="h-20 bg-white/90 backdrop-blur-md border-b border-stone-200 flex-none z-10 flex items-center justify-between px-4 sm:px-8 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-            <div class="flex items-center space-x-3">
-                <button onclick="toggleSidebar()" class="md:hidden text-stone-600 hover:text-black p-1">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                </button>
-                <h2 class="text-lg sm:text-xl font-extrabold tracking-tight" id="headerTitle">Dashboard Analytics</h2>
-            </div>
-            <div class="flex items-center space-x-4">
-                <span class="text-xs font-bold text-stone-400 uppercase tracking-widest hidden lg:block" id="currentDate"></span>
-                <div class="h-9 w-9 sm:h-10 sm:w-10 bg-black rounded-full border-2 border-stone-200 flex items-center justify-center text-white font-bold shadow-sm text-sm">A</div>
-            </div>
+    <main class="flex-1 overflow-y-auto bg-cream-50 relative">
+        <header class="h-20 bg-white/90 backdrop-blur-md border-b border-stone-200 sticky top-0 z-10 flex items-center justify-between px-8 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+            <h2 class="text-xl font-extrabold tracking-tight" id="headerTitle">Dashboard Analytics</h2>
+            <div class="flex items-center space-x-4"><span class="text-xs font-bold text-stone-400 uppercase tracking-widest hidden sm:block" id="currentDate"></span><div class="h-10 w-10 bg-black rounded-full border-2 border-stone-200 flex items-center justify-center text-white font-bold shadow-sm">A</div></div>
         </header>
 
-        <div class="p-4 sm:p-8 overflow-y-auto hide-scroll flex-1">
-            <!-- TAB 1: DASHBOARD -->
-            <div id="dashboardTab" class="tab-content active space-y-4 sm:space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                    <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-cream-100 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Total Pendapatan</p><h3 class="text-2xl sm:text-3xl font-extrabold truncate" id="statRevenue">Rp 0</h3></div></div>
-                    <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Paket Dalam Perjalanan</p><h3 class="text-2xl sm:text-3xl font-extrabold" id="statOrders">0</h3></div></div>
-                    <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Verifikasi</p><h3 class="text-2xl sm:text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
+        <div class="p-8">
+            <div id="dashboardTab" class="tab-content active space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-cream-100 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Total Pendapatan</p><h3 class="text-3xl font-extrabold" id="statRevenue">Rp 0</h3></div></div>
+                    <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Paket Dalam Perjalanan</p><h3 class="text-3xl font-extrabold" id="statOrders">0</h3></div></div>
+                    <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Verifikasi/Resi</p><h3 class="text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
                 </div>
-                
-                <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm">
+                <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                        <div><h3 class="font-extrabold text-base sm:text-lg">Kurva Penjualan 2026</h3><p class="text-xs text-stone-500 font-medium">Statistik pendapatan per bulan</p></div>
-                        <button onclick="exportToExcel()" class="w-full sm:w-auto justify-center bg-[#107c41] hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-3 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1.5 16h-1.8l-1.6-3.8-1.7 3.8H8.6l2.6-5.4-2.4-5.2h1.8l1.4 3.6 1.5-3.6h1.7l-2.4 5.2 2.7 5.4zM13 9V3.5L18.5 9H13z"/></svg> UNDUH LAPORAN</button>
+                        <div><h3 class="font-extrabold text-lg">Kurva Penjualan 2026</h3><p class="text-xs text-stone-500 font-medium">Statistik pendapatan per bulan</p></div>
+                        <button onclick="exportToExcel()" class="bg-[#107c41] hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-3 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1.5 16h-1.8l-1.6-3.8-1.7 3.8H8.6l2.6-5.4-2.4-5.2h1.8l1.4 3.6 1.5-3.6h1.7l-2.4 5.2 2.7 5.4zM13 9V3.5L18.5 9H13z"/></svg> UNDUH LAPORAN KEUANGAN</button>
                     </div>
-                    <div class="w-full h-60 sm:h-72"><canvas id="salesChart"></canvas></div>
+                    <div class="w-full h-72"><canvas id="salesChart"></canvas></div>
                 </div>
-
-                <div class="bg-white p-5 sm:p-6 rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm">
-                    <div class="flex justify-between items-center mb-4 sm:mb-6">
-                        <div><h3 class="font-extrabold text-base sm:text-lg">Transaksi Terkini</h3><p class="text-xs text-stone-500 font-medium">Pantau nama pemesan dan nomor resi terbaru</p></div>
-                        <button onclick="switchTab('orders')" class="hidden sm:flex text-[10px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest transition-colors items-center">Lihat Semua <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                <div class="bg-white p-6 rounded-[24px] border border-stone-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <div><h3 class="font-extrabold text-lg">Transaksi Terkini</h3><p class="text-xs text-stone-500 font-medium">Pantau nama pemesan dan nomor resi terbaru</p></div>
+                        <button onclick="switchTab('orders')" class="text-[10px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest transition-colors flex items-center">Lihat Semua <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                     </div>
-                    <div class="overflow-x-auto hide-scroll -mx-5 px-5 sm:mx-0 sm:px-0">
-                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[600px]">
-                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead>
-                            <tbody id="recentOrdersBody" class="text-sm"></tbody>
-                        </table>
-                    </div>
-                    <button onclick="switchTab('orders')" class="w-full mt-4 sm:hidden bg-stone-50 text-stone-600 text-xs font-bold py-3 rounded-xl border border-stone-200">Lihat Semua Transaksi</button>
+                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-4 font-extrabold">Status Pembayaran</th><th class="p-4 font-extrabold">No. Resi Pengiriman</th><th class="p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead><tbody id="recentOrdersBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
 
-            <!-- TAB 2: ORDERS -->
             <div id="ordersTab" class="tab-content">
-                <div class="bg-white rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
-                    <div class="p-5 sm:p-6 border-b border-stone-100 flex flex-col lg:flex-row justify-between items-start lg:items-center bg-cream-50/50 gap-4">
-                        <h3 class="font-extrabold text-base sm:text-lg">Daftar Semua Transaksi</h3>
-                        <input type="text" placeholder="Cari ID / Nama..." class="input-box w-full lg:w-72 py-2 text-sm font-semibold" oninput="filterOrders(this.value)">
-                    </div>
-                    <div class="overflow-x-auto hide-scroll">
-                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[800px]">
-                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Order ID</th><th class="p-4 font-extrabold">Pelanggan</th><th class="p-4 font-extrabold">Batch</th><th class="p-4 font-extrabold">Total</th><th class="p-4 font-extrabold">Status & Aksi</th><th class="p-4 font-extrabold text-center">Invoice</th></tr></thead>
-                            <tbody id="orderTableBody" class="text-sm"></tbody>
-                        </table>
-                    </div>
+                <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-stone-100 flex flex-col sm:flex-row justify-between items-center bg-cream-50/50 gap-4"><h3 class="font-extrabold text-lg w-full sm:w-auto">Daftar Semua Transaksi</h3><input type="text" placeholder="Cari ID / Nama..." class="input-box sm:w-64 py-2 text-sm font-semibold" oninput="filterOrders(this.value)"></div>
+                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Order ID</th><th class="p-4 font-extrabold">Pelanggan</th><th class="p-4 font-extrabold">Batch</th><th class="p-4 font-extrabold">Total</th><th class="p-4 font-extrabold">Status & Aksi</th><th class="p-4 font-extrabold text-center">Invoice</th></tr></thead><tbody id="orderTableBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
 
-            <!-- TAB 3: TRACKING -->
             <div id="trackingTab" class="tab-content">
-                <div class="bg-white rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
-                    <div class="p-5 sm:p-6 border-b border-stone-100 bg-blue-50/30">
-                        <h3 class="font-extrabold text-base sm:text-lg">Update Logistik Manual</h3>
-                        <p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">IN TRANSIT</span>. Update status agar pembeli bisa melacak via web.</p>
-                    </div>
-                    <div class="p-4 sm:p-6 space-y-4" id="trackingListArea"></div>
+                <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-stone-100 bg-blue-50/30"><h3 class="font-extrabold text-lg">Update Logistik Manual</h3><p class="text-xs text-stone-500 mt-1">Hanya pesanan berstatus <span class="font-bold text-black border-b border-black">IN TRANSIT</span>. Update status agar pembeli bisa melacak via web portwish.</p></div>
+                    <div class="p-6 space-y-4" id="trackingListArea"></div>
                 </div>
             </div>
 
-            <!-- TAB 4: CATALOG -->
             <div id="catalogTab" class="tab-content">
-                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
-                    <h3 class="font-extrabold text-lg sm:text-xl">Kelola Produk</h3>
-                    <div class="flex flex-wrap gap-2 w-full lg:w-auto">
-                        <button onclick="openVoucherModal()" class="flex-1 sm:flex-none justify-center bg-pink-50 border border-pink-200 text-pink-600 text-[11px] font-extrabold px-3 sm:px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:bg-pink-100 transition-colors flex items-center">Voucher</button>
-                        <button onclick="openCategoryModal()" class="flex-1 sm:flex-none justify-center bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-3 sm:px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Kategori</button>
-                        <button onclick="openCountryModal()" class="flex-1 sm:flex-none justify-center bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-3 sm:px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Negara</button>
-                        <button onclick="openBatchModal()" class="flex-1 sm:flex-none justify-center bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-3 sm:px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center">Batch</button>
-                        <button onclick="openProductModal()" class="w-full sm:w-auto justify-center bg-black text-white text-[11px] font-extrabold px-4 py-3 sm:py-2.5 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors mt-2 sm:mt-0">+ Produk Baru</button>
-                    </div>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-xl">Kelola Produk</h3>
+                    <div class="flex space-x-3"><button onclick="openBatchModal()" class="bg-white border border-stone-200 text-stone-600 text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> Kelola Batch</button><button onclick="openProductModal()" class="bg-black text-white text-[11px] font-extrabold px-5 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">+ Tambah Produk</button></div>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6" id="adminCatalogGrid"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="adminCatalogGrid"></div>
             </div>
 
-            <!-- TAB 5: USERS -->
             <div id="usersTab" class="tab-content">
-                <div class="bg-white rounded-[20px] sm:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
-                    <div class="p-5 sm:p-6 border-b border-stone-100 bg-cream-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <h3 class="font-extrabold text-base sm:text-lg">Database Akun Pelanggan</h3>
-                        <button onclick="exportUsersToExcel()" class="w-full sm:w-auto justify-center bg-[#107c41] hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-3 sm:py-2.5 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95">UNDUH EXCEL</button>
-                    </div>
-                    <div class="overflow-x-auto hide-scroll">
-                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[700px]">
-                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold text-center">Password</th><th class="p-4 font-extrabold text-center rounded-tr-xl">Aksi</th></tr></thead>
-                            <tbody id="userTableBody" class="text-sm"></tbody>
-                        </table>
-                    </div>
+                <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-stone-100 bg-cream-50/50"><h3 class="font-extrabold text-lg">Database Akun Pelanggan</h3></div>
+                    <div class="overflow-x-auto hide-scroll"><table class="w-full text-left border-collapse whitespace-nowrap"><thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Nama Lengkap</th><th class="p-4 font-extrabold">Email</th><th class="p-4 font-extrabold">No. WhatsApp</th><th class="p-4 font-extrabold">Password</th></tr></thead><tbody id="userTableBody" class="text-sm"></tbody></table></div>
                 </div>
             </div>
         </div>
@@ -196,121 +127,48 @@
 
     <!-- INVOICE MODAL ADMIN -->
     <div id="invoiceModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-2xl rounded-[24px] sm:rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print flex-shrink-0">
-                <h3 class="font-extrabold text-base sm:text-lg text-black">Detail Invoice</h3>
-                <div class="flex space-x-2">
-                    <button onclick="printInvoice()" class="bg-black text-white text-[10px] font-extrabold px-3 sm:px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-stone-800 transition">Print</button>
-                    <button onclick="closeInvoiceModal()" class="bg-white border border-stone-200 text-stone-600 px-3 py-2 rounded-lg hover:bg-stone-100"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-                </div>
-            </div>
-            <div class="p-5 sm:p-8 overflow-y-auto hide-scroll flex-1 text-black bg-white" id="invoicePrintArea">
-                <div class="flex flex-col sm:flex-row justify-between items-start mb-8 border-b border-stone-200 pb-6 gap-4">
-                    <div>
-                        <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-6 sm:h-8 mb-2 sm:mb-4">
-                        <p class="text-[9px] sm:text-[10px] text-stone-500 font-bold uppercase tracking-widest">Premium Personal Shopper</p>
-                    </div>
-                    <div class="text-left sm:text-right">
-                        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tighter mb-1">INVOICE</h1>
-                        <p class="font-bold text-stone-500 text-sm" id="invId">INV-000000</p>
-                        <p class="text-[11px] sm:text-xs font-semibold mt-1 text-stone-400" id="invDate">Date: -</p>
-                    </div>
-                </div>
-                <div class="flex flex-col sm:flex-row justify-between mb-6 gap-6">
-                    <div>
-                        <p class="text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Billed To:</p>
-                        <h4 class="font-extrabold text-base sm:text-lg" id="invName">Nama Pelanggan</h4>
-                        <p class="text-xs sm:text-sm text-stone-600 mt-1 font-medium" id="invEmail">email@domain.com</p>
-                        <p class="text-xs sm:text-sm text-stone-600 w-full sm:max-w-xs mt-1 font-medium" id="invAddress">Alamat</p>
-                    </div>
-                    <div class="text-left sm:text-right border-t sm:border-t-0 pt-4 sm:pt-0 border-stone-100">
-                        <p class="text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Batch / Status:</p>
-                        <span class="bg-cream-100 text-black font-extrabold px-3 py-1 rounded-full text-[11px] sm:text-xs border border-stone-200 inline-block mb-2" id="invBatch">BATCH NAME</span><br>
-                        <span class="bg-green-100 text-green-700 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest border border-green-200">PAID</span>
-                        <div class="mt-3 sm:mt-2">
-                            <p class="text-[9px] text-stone-400 font-extrabold uppercase tracking-widest mb-0.5">Tracking No:</p>
-                            <p class="font-extrabold text-sm text-black" id="invResiShow">PENDING</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="overflow-x-auto hide-scroll">
-                    <table class="w-full text-left border-collapse mb-8 min-w-[400px]">
-                        <thead><tr class="border-b-2 border-black text-[10px] uppercase tracking-widest text-stone-500"><th class="py-3 font-extrabold w-2/3">Deskripsi Produk</th><th class="py-3 font-extrabold text-center">Qty</th><th class="py-3 font-extrabold text-right">Harga</th></tr></thead>
-                        <tbody id="invItems" class="text-xs sm:text-sm font-semibold border-b border-stone-200"></tbody>
-                    </table>
-                </div>
-                <div class="flex justify-end">
-                    <div class="w-full sm:w-1/2">
-                        <div class="flex justify-between py-1.5 text-stone-500 font-bold text-sm"><span>Subtotal</span><span id="invSubtotal">Rp 0</span></div>
-                        <div class="flex justify-between py-1.5 text-green-600 font-bold text-sm" id="invDiscountBox" style="display: none;"><span>Discount</span><span id="invDiscount">- Rp 0</span></div>
-                        <div class="flex justify-between py-3 border-t-2 border-black mt-2 text-base sm:text-lg"><span class="font-extrabold text-black">TOTAL</span><span class="font-extrabold text-black" id="invTotalMain">Rp 0</span></div>
-                    </div>
-                </div>
+        <div class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print"><h3 class="font-extrabold text-lg text-black">Detail Invoice</h3><div class="flex space-x-2"><button onclick="printInvoice()" class="bg-black text-white text-[10px] font-extrabold px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-stone-800 transition">Print PDF</button><button onclick="closeInvoiceModal()" class="bg-white border border-stone-200 text-stone-600 px-3 py-2 rounded-lg hover:bg-stone-100"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div></div>
+            <div class="p-8 overflow-y-auto flex-1 text-black bg-white" id="invoicePrintArea">
+                <div class="flex justify-between items-start mb-10 border-b border-stone-200 pb-8"><div><img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-8 mb-4"><p class="text-[10px] text-stone-500 font-bold uppercase tracking-widest">Premium Personal Shopper</p></div><div class="text-right"><h1 class="text-4xl font-extrabold tracking-tighter mb-1">INVOICE</h1><p class="font-bold text-stone-500" id="invId">INV-000000</p><p class="text-xs font-semibold mt-1 text-stone-400" id="invDate">Date: -</p></div></div>
+                <div class="flex justify-between mb-8"><div><p class="text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Billed To:</p><h4 class="font-extrabold text-lg" id="invName">Nama Pelanggan</h4><p class="text-sm text-stone-600 mt-1 font-medium" id="invEmail">email@domain.com</p><p class="text-sm text-stone-600 max-w-xs mt-1 font-medium" id="invAddress">Alamat</p></div><div class="text-right"><p class="text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Batch:</p><span class="bg-cream-100 text-black font-extrabold px-3 py-1 rounded-full text-xs border border-stone-200 inline-block" id="invBatch">BATCH NAME</span></div></div>
+                <table class="w-full text-left border-collapse mb-8"><thead><tr class="border-b-2 border-black text-[10px] uppercase tracking-widest text-stone-500"><th class="py-3 font-extrabold w-2/3">Deskripsi Produk</th><th class="py-3 font-extrabold text-center">Qty</th><th class="py-3 font-extrabold text-right">Harga</th></tr></thead><tbody id="invItems" class="text-sm font-semibold border-b border-stone-200"></tbody></table>
+                <div class="flex justify-end"><div class="w-1/2"><div class="flex justify-between py-2 text-stone-500 font-bold"><span>Subtotal</span><span id="invSubtotal">Rp 0</span></div><div class="flex justify-between py-3 border-t-2 border-black mt-2 text-lg"><span class="font-extrabold text-black">TOTAL</span><span class="font-extrabold text-black" id="invTotalMain">Rp 0</span></div></div></div>
             </div>
         </div>
     </div>
 
     <!-- MODAL CEK BUKTI BAYAR -->
     <div id="proofModal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 max-w-sm w-full text-center relative border border-stone-100 shadow-2xl max-h-[90vh] overflow-y-auto hide-scroll">
+        <div class="bg-white rounded-[32px] p-6 max-w-sm w-full text-center relative border border-stone-100 shadow-2xl">
             <button onclick="closeProofModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black transition-colors border border-stone-200"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            <h3 class="font-extrabold text-lg mb-4 text-black text-left sm:text-center mt-2 sm:mt-0">Bukti Pembayaran</h3>
-            <div class="bg-cream-50 p-2 rounded-[20px] sm:rounded-[24px] border border-stone-200 mb-4"><img id="proofImage" src="https://placehold.co/400" alt="Bukti Transfer" class="w-full rounded-[16px] object-contain max-h-[50vh]"></div>
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                <button onclick="forceDownloadProof()" id="downloadProofBtn" class="w-full sm:w-1/3 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl shadow-sm hover:bg-stone-50 transition text-[11px] uppercase tracking-widest flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> UNDUH</button>
-                <button onclick="approveFromProof()" id="btnProofApprove" class="w-full sm:w-2/3 bg-black text-white font-extrabold py-3.5 rounded-2xl shadow-xl hover:bg-stone-800 transition text-[11px] uppercase tracking-widest">VERIFIKASI</button>
+            <h3 class="font-extrabold text-lg mb-4 text-black">Bukti Pembayaran</h3>
+            <div class="bg-cream-50 p-2 rounded-[24px] border border-stone-200 mb-4"><img id="proofImage" src="https://placehold.co/400" alt="Bukti Transfer" class="w-full rounded-[16px] object-cover max-h-[50vh]"></div>
+            <div class="flex space-x-3">
+                <a id="downloadProofBtn" href="#" download="Bukti_Transfer.jpg" class="w-1/3 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl shadow-sm hover:bg-stone-50 transition text-[11px] uppercase tracking-widest flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> UNDUH</a>
+                <button onclick="approveFromProof()" id="btnProofApprove" class="w-2/3 bg-black text-white font-extrabold py-3.5 rounded-2xl shadow-xl hover:bg-stone-800 transition text-[11px] uppercase tracking-widest">VERIFIKASI</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL ATRIBUT UMUM -->
-    <div id="attributeModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[24px] sm:rounded-[32px] shadow-2xl p-5 sm:p-6 relative border border-stone-100 max-h-[90vh] flex flex-col">
-            <button onclick="closeAttributeModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            <div class="flex-shrink-0 pr-8">
-                <h3 class="font-extrabold text-lg mb-1" id="attrModalTitle">Daftar Atribut</h3><p class="text-[10px] text-stone-500 font-medium mb-4" id="attrModalDesc">Kelola atribut toko.</p>
-                <div class="flex space-x-2 mb-4">
-                    <input type="text" id="newAttrInput" placeholder="Ketik nama baru..." class="input-box py-2.5 text-xs">
-                    <button onclick="addAttr()" id="btnAddAttr" class="bg-black text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95">TAMBAH</button>
-                </div>
+    <!-- MODAL KELOLA BATCH -->
+    <div id="batchModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[32px] shadow-2xl p-6 relative border border-stone-100">
+            <button onclick="closeBatchModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <h3 class="font-extrabold text-lg mb-1">Daftar Batch</h3><p class="text-[10px] text-stone-500 font-medium mb-4">Batch ini akan muncul di Dropdown Checkout User.</p>
+            <div class="flex space-x-2 mb-4">
+                <input type="text" id="newBatchInput" placeholder="Misal: Batch USA #02" class="input-box py-2.5 text-xs">
+                <button onclick="addBatch()" id="btnAddBatch" class="bg-black text-white text-[10px] font-extrabold px-4 py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95">TAMBAH</button>
             </div>
-            <div id="attrListArea" class="space-y-2 overflow-y-auto hide-scroll flex-1 pb-2"></div>
-        </div>
-    </div>
-
-    <!-- MODAL VOUCHER -->
-    <div id="voucherModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-[24px] sm:rounded-[32px] shadow-2xl p-5 sm:p-8 relative border border-stone-100 max-h-[90vh] flex flex-col">
-            <button onclick="closeVoucherModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-            <div class="flex-shrink-0 pr-8">
-                <h3 class="font-extrabold text-lg sm:text-xl mb-1 text-pink-600">Kelola Voucher Diskon</h3><p class="text-[10px] text-stone-500 font-medium mb-4 sm:mb-6">Buat kode promo untuk pembeli.</p>
-            </div>
-            
-            <div class="overflow-y-auto hide-scroll flex-1 pr-1">
-                <div class="bg-pink-50 p-4 rounded-2xl mb-6 border border-pink-100 space-y-3">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div><label class="text-[10px] font-bold text-stone-500 uppercase">Kode Voucher</label><input type="text" id="vCode" placeholder="Misal: HEMAT10" class="input-box py-2 text-xs uppercase mt-1"></div>
-                        <div><label class="text-[10px] font-bold text-stone-500 uppercase">Batas Pemakaian</label><input type="number" id="vLimit" placeholder="Misal: 50" class="input-box py-2 text-xs mt-1"></div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div><label class="text-[10px] font-bold text-stone-500 uppercase">Tipe Diskon</label><select id="vType" class="input-box py-2 text-xs mt-1"><option value="nominal">Nominal (Rp)</option><option value="percent">Persen (%)</option></select></div>
-                        <div><label class="text-[10px] font-bold text-stone-500 uppercase">Nilai Diskon</label><input type="number" id="vValue" placeholder="Misal: 10000 / 10" class="input-box py-2 text-xs mt-1"></div>
-                    </div>
-                    <button onclick="addVoucher()" id="btnAddVoucher" class="w-full bg-pink-600 text-white font-extrabold py-3 rounded-xl hover:bg-pink-700 transition text-xs mt-2">+ SIMPAN VOUCHER</button>
-                </div>
-                
-                <p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-3">Voucher Aktif</p>
-                <div id="voucherListArea" class="space-y-2 pb-2"></div>
-            </div>
+            <div id="batchListArea" class="space-y-2 max-h-60 overflow-y-auto hide-scroll pb-2"></div>
         </div>
     </div>
 
     <!-- MODAL FORM PRODUK -->
     <div id="productModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[24px] sm:rounded-[32px] shadow-2xl p-5 sm:p-8 relative border border-stone-100 max-h-[90vh] flex flex-col">
-            <h3 class="font-extrabold text-lg sm:text-xl mb-4 sm:mb-6 flex-shrink-0" id="prodModalTitle">Tambah Produk</h3>
-            
-            <div class="overflow-y-auto hide-scroll flex-1 pr-1 space-y-4">
+        <div class="bg-white w-full max-w-md rounded-[32px] shadow-2xl p-8 relative border border-stone-100 max-h-[90vh] overflow-y-auto hide-scroll">
+            <h3 class="font-extrabold text-xl mb-6" id="prodModalTitle">Tambah Produk</h3>
+            <div class="space-y-4">
                 <input type="hidden" id="prodId">
                 <div>
                     <label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-2 tracking-widest">Foto Produk</label>
@@ -321,115 +179,93 @@
                     </label>
                 </div>
                 <div class="input-float"><input type="text" id="prodName" placeholder=" " required><label>Nama Produk</label></div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div class="input-float"><input type="number" id="prodPrice" placeholder=" " required><label>Harga (Rp)</label></div>
-                    <div class="relative sm:mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black py-3 sm:py-2.5 text-sm"></select></div>
+                    <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black"><option value="Skincare">Skincare</option><option value="Fashion">Fashion</option><option value="Food">Food & Snacks</option></select></div>
                 </div>
-                <div class="relative"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full py-3 sm:py-2.5 text-sm"></select></div>
+                <div class="relative mt-2"><label class="text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black w-full"><option value="USA">USA</option><option value="JAPAN">Japan</option><option value="KOREA">Korea</option></select></div>
             </div>
-            
-            <div class="flex space-x-3 mt-6 pt-2 border-t border-stone-100 flex-shrink-0">
+            <div class="flex space-x-3 mt-8">
                 <button onclick="closeProductModal()" class="flex-1 bg-white border border-stone-200 text-black font-extrabold py-3.5 rounded-2xl transition hover:bg-stone-50 text-[11px] tracking-widest uppercase">BATAL</button>
                 <button onclick="saveProduct()" id="btnSaveProduct" class="flex-1 bg-black text-white font-extrabold py-3.5 rounded-2xl shadow-lg hover:bg-stone-800 transition text-[11px] tracking-widest uppercase">SIMPAN</button>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT UTAMA ADMIN -->
     <script>
-        // UX TAMBAHAN: Hamburger Menu Mobile Navigation
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbztjaLEsdsASxFJwZ7hMEMwXIp9BRSWpA0sjQqPhBqLL1a_di7iCx5H5XlMghrlfYTr/exec';
         
-        // Auto-close sidebar on mobile when nav button is clicked
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if(window.innerWidth < 768) { toggleSidebar(); }
-            });
-        });
-
-        // ANTI-INSPECT ELEMENT & RIGHT CLICK (KEAMANAN WEB)
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123) return false; 
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false; 
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) return false; 
-            if (e.ctrlKey && e.keyCode == 85) return false; 
-        };
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyDHHp8I0lsuyyo8nMfFmRR5ILHH5COvwvc",
-          authDomain: "portwish-b2fe3.firebaseapp.com",
-          databaseURL: "https://portwish-b2fe3-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "portwish-b2fe3"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // KONFIGURASI CLOUDINARY ADMIN
-        const cloudName = 'dlgisjmq2';
-        const uploadPreset = 'portwish_foto';
-
-        let catalogDB = []; let batchesDB = []; let countriesDB = ['USA', 'Japan', 'Korea']; let categoriesDB = ['Skincare', 'Fashion', 'Food & Snacks']; 
-        let ordersDB = []; let usersDB = []; let vouchersDB = {}; let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
+        let catalogDB = []; let batchesDB = []; let ordersDB = []; 
+        let usersDB = JSON.parse(localStorage.getItem('pw_users')) || [];
+        
+        let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
         const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
-        let currentEditingOrderIndex = null; let currentUploadedImageBase64 = null; 
-        let currentAttrType = ''; let currentProofUrlDownload = '';
+        let currentEditingOrderIndex = null;
+        let currentUploadedImageBase64 = null; 
+        let pauseSync = false;
 
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-        // FIREBASE LISTENER 
-        db.ref('catalog').on('value', snap => { catalogDB = snap.val() ? Object.values(snap.val()) : []; if(document.getElementById('catalogTab').classList.contains('active')) renderCatalog(); });
-        db.ref('batches').on('value', snap => { batchesDB = snap.val() ? Object.values(snap.val()) : []; if(!document.getElementById('attributeModal').classList.contains('hidden') && currentAttrType==='batches') renderAttrList(); });
-        db.ref('countries').on('value', snap => { if(snap.val()) countriesDB = Object.values(snap.val()); if(!document.getElementById('attributeModal').classList.contains('hidden') && currentAttrType==='countries') renderAttrList(); });
-        db.ref('categories').on('value', snap => { if(snap.val()) categoriesDB = Object.values(snap.val()); if(!document.getElementById('attributeModal').classList.contains('hidden') && currentAttrType==='categories') renderAttrList(); });
-        db.ref('users').on('value', snap => { usersDB = snap.val() ? Object.values(snap.val()) : []; if(document.getElementById('usersTab').classList.contains('active')) renderUsers(); });
-        db.ref('vouchers').on('value', snap => { vouchersDB = snap.val() || {}; if(!document.getElementById('voucherModal').classList.contains('hidden')) renderVouchers(); });
-        
-        db.ref('orders').on('value', snap => {
-            const data = snap.val();
-            ordersDB = data ? Object.values(data).sort((a,b) => b.timestamp - a.timestamp) : [];
-            refreshActiveTab();
-        });
-
-        // LOGIN ADMIN
-        async function loginAdmin() {
+        function loginAdmin() {
             const email = document.getElementById('adminEmail').value, pass = document.getElementById('adminPass').value;
-            const btn = document.getElementById('btnAdminLogin'); btn.innerHTML = `<span class="loader loader-white"></span>`;
-            
-            try {
-                const snap = await db.ref('admin_account').once('value');
-                let adminData = snap.val();
-                
-                if(!adminData) {
-                    adminData = { email: 'admin@portwish.id', pass: 'admin123' };
-                    await db.ref('admin_account').set(adminData);
-                }
-
-                if(email === adminData.email && pass === adminData.pass) {
-                    document.getElementById('loginErrorMsg').classList.add('hidden');
-                    document.getElementById('adminLoginGate').classList.add('opacity-0'); 
-                    setTimeout(() => { document.getElementById('adminLoginGate').classList.add('hidden'); showAdminToast("Login Berhasil!"); switchTab('dashboard'); btn.innerHTML = "MASUK DASHBOARD"; }, 500);
-                } else { 
-                    document.getElementById('loginErrorMsg').classList.remove('hidden'); document.getElementById('adminPass').value = ''; btn.innerHTML = "MASUK DASHBOARD";
-                }
-            } catch(e) {
-                console.error(e); btn.innerHTML = "MASUK DASHBOARD"; showAdminToast("Gagal koneksi ke database.");
+            if(email === 'admin@portwish.id' && pass === 'admin123') {
+                document.getElementById('loginErrorMsg').classList.add('hidden');
+                document.getElementById('btnAdminLogin').innerHTML = `<span class="loader loader-white"></span>`;
+                fetchDatabase(); 
+            } else { 
+                document.getElementById('loginErrorMsg').classList.remove('hidden'); document.getElementById('adminPass').value = ''; 
             }
         }
         function handleEnter(e) { if (e.key === 'Enter') loginAdmin(); }
-        
-        // LOGOUT INSTAN
         function logoutAdmin() {
-            if(confirm("Yakin ingin keluar dari panel admin?")) { window.location.reload(); }
+            if(confirm("Yakin ingin keluar dari panel admin?")) {
+                document.getElementById('adminEmail').value = ''; document.getElementById('adminPass').value = '';
+                document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
+                document.getElementById('adminLoginGate').classList.remove('hidden'); setTimeout(() => { document.getElementById('adminLoginGate').classList.remove('opacity-0'); }, 10);
+            }
+        }
+
+        function fetchDatabase() {
+            fetch(scriptURL + "?t=" + new Date().getTime()).then(res => res.json()).then(data => {
+                processIncomingData(data);
+                document.getElementById('adminLoginGate').classList.add('opacity-0'); 
+                setTimeout(() => { document.getElementById('adminLoginGate').classList.add('hidden'); showAdminToast("Login Berhasil!"); }, 500); 
+                switchTab('dashboard');
+            }).catch(err => {
+                document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
+                alert("Gagal memuat data dari server Google Sheets.");
+            });
+        }
+
+        // --- SILENT POLLING ---
+        setInterval(() => {
+            if(!document.getElementById('adminLoginGate').classList.contains('hidden') || pauseSync) return;
+            fetch(scriptURL + "?t=" + new Date().getTime()).then(res => res.json()).then(data => { 
+                processIncomingData(data); 
+                refreshActiveTab(); 
+            }).catch(err => console.log("Silent fetch error"));
+        }, 8000);
+
+        function processIncomingData(data) {
+            catalogDB = data.catalog || [];
+            batchesDB = data.batches || [];
+            ordersDB = (data.orders || []).map(o => ({
+                id: o.id, date: o.date, user: { name: o.user.name, phone: o.user.phone, email: o.user.email },
+                address: o.address, batch: o.batch, total: o.total, status: o.status, resi: o.resi, 
+                latestTracking: o.latestTracking, trackingTime: o.trackingTime, proofImg: o.proofImg, 
+                items: JSON.parse(o.itemsInfo || "[]")
+            }));
+            
+            ordersDB.forEach(o => {
+                if(!usersDB.find(u => u.email === o.user.email)) {
+                    usersDB.push({ name: o.user.name, email: o.user.email, phone: o.user.phone, pass: "123" });
+                    localStorage.setItem('pw_users', JSON.stringify(usersDB));
+                }
+            });
         }
 
         function refreshActiveTab() {
-            const activeTab = document.querySelector('.tab-content.active') ? document.querySelector('.tab-content.active').id : 'dashboardTab';
+            const activeTab = document.querySelector('.tab-content.active').id;
             if(activeTab === 'dashboardTab') renderDashboard();
             if(activeTab === 'ordersTab') renderOrders(document.querySelector('#ordersTab input').value);
             if(activeTab === 'trackingTab') renderTracking();
@@ -456,260 +292,180 @@
         let salesChartInstance = null;
         function initChart() {
             const ctx = document.getElementById('salesChart').getContext('2d'); if(salesChartInstance) salesChartInstance.destroy();
-            salesChartInstance = new Chart(ctx, { type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], datasets: [{ data: salesMonthly, borderColor: '#107c41', backgroundColor: 'rgba(16, 124, 65, 0.05)', borderWidth: 3, pointBackgroundColor: '#fff', pointBorderColor: '#107c41', pointBorderWidth: 2, pointRadius: 4, fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f5f5f4', drawBorder: false } }, x: { grid: { display: false, drawBorder: false } } } } });
+            salesChartInstance = new Chart(ctx, { 
+                type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], datasets: [{ data: salesMonthly, borderColor: '#107c41', backgroundColor: 'rgba(16, 124, 65, 0.05)', borderWidth: 3, pointBackgroundColor: '#fff', pointBorderColor: '#107c41', pointBorderWidth: 2, pointRadius: 4, fill: true, tension: 0.4 }] }, 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f5f5f4', drawBorder: false } }, x: { grid: { display: false, drawBorder: false } } } } 
+            });
         }
 
         function renderDashboard() {
-            try {
-                let totalRev = 0; let shippingOrd = 0; let pendingOrd = 0; let newSalesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-                
-                ordersDB.forEach(o => {
-                    const oTotal = parseInt(o.total) || 0;
-                    if(o.status !== 'AWAITING VERIFICATION') { totalRev += oTotal; }
-                    if(o.status === 'IN TRANSIT') { shippingOrd++; }
-                    if(o.status === 'AWAITING VERIFICATION' || o.status === 'PROCESS (INPUT RESI)') { pendingOrd++; }
+            const totalRev = ordersDB.filter(o => o.status !== 'AWAITING VERIFICATION').reduce((sum, o) => sum + parseInt(o.total), 0);
+            const shippingOrd = ordersDB.filter(o => o.status === 'IN TRANSIT').length;
+            const pendingOrd = ordersDB.filter(o => o.status === 'AWAITING VERIFICATION' || o.status === 'PROCESS (INPUT RESI)').length;
 
-                    if(o.status !== 'AWAITING VERIFICATION' && o.date) {
-                        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                        for(let i=0; i<12; i++){
-                            if(String(o.date).includes(months[i])) { newSalesMonthly[i] += oTotal; break; }
-                        }
-                    }
+            document.getElementById('statRevenue').textContent = formatRp(totalRev); 
+            document.getElementById('statOrders').textContent = shippingOrd; 
+            document.getElementById('statPending').textContent = pendingOrd; document.getElementById('pendingCount').textContent = pendingOrd;
+            document.getElementById('activeShipmentDot').style.display = shippingOrd > 0 ? 'block' : 'none'; 
+            
+            const recentBody = document.getElementById('recentOrdersBody'); recentBody.innerHTML = '';
+            const latestOrders = ordersDB.slice(0, 5); 
+            if(latestOrders.length === 0) {
+                recentBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400 font-bold">Belum ada transaksi.</td></tr>`;
+            } else {
+                latestOrders.forEach(o => {
+                    let badgeClass = o.status === "IN TRANSIT" ? "bg-black text-white border-black" : (o.status === "PROCESS (INPUT RESI)" ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-orange-100 text-orange-700 border-orange-200");
+                    let resiText = o.resi ? `<span class="font-extrabold text-black bg-cream-100 px-2 py-1 rounded-md border border-stone-200">${o.resi}</span>` : `<span class="text-stone-400 italic text-[10px]">Belum diinput</span>`;
+                    recentBody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 align-middle"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-400 font-bold">${o.id}</p></td><td class="p-4 align-middle"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block ${badgeClass}">${o.status}</span></td><td class="p-4 text-xs align-middle">${resiText}</td><td class="p-4 font-extrabold text-black text-right align-middle">${formatRp(parseInt(o.total))}</td></tr>`;
                 });
-
-                document.getElementById('statRevenue').textContent = formatRp(totalRev); 
-                document.getElementById('statOrders').textContent = shippingOrd; 
-                document.getElementById('statPending').textContent = pendingOrd; 
-                
-                const pCountEl = document.getElementById('pendingCount');
-                if(pCountEl) { pCountEl.textContent = pendingOrd; pCountEl.style.display = pendingOrd > 0 ? 'inline-block' : 'none'; }
-                document.getElementById('activeShipmentDot').style.display = shippingOrd > 0 ? 'block' : 'none'; 
-                
-                const recentBody = document.getElementById('recentOrdersBody'); recentBody.innerHTML = '';
-                const latestOrders = ordersDB.slice(0, 5); 
-                if(latestOrders.length === 0) {
-                    recentBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400 font-bold">Belum ada transaksi.</td></tr>`;
-                } else {
-                    latestOrders.forEach(o => {
-                        let badgeClass = o.status === "IN TRANSIT" ? "bg-black text-white border-black" : (o.status === "PROCESS (INPUT RESI)" ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-orange-100 text-orange-700 border-orange-200");
-                        let resiText = o.resi ? `<span class="font-extrabold text-black bg-cream-100 px-2 py-1 rounded-md border border-stone-200">${o.resi}</span>` : `<span class="text-stone-400 italic text-[10px]">Belum diinput</span>`;
-                        let custName = 'Unknown';
-                        if(o.user && o.user.name) custName = o.user.name; else if (o.userEmail) custName = o.userEmail;
-                        recentBody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 align-middle"><p class="font-extrabold text-black">${custName}</p><p class="text-[10px] text-stone-400 font-bold">${o.id || '-'}</p></td><td class="p-4 align-middle"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block ${badgeClass}">${o.status || '-'}</span></td><td class="p-4 text-xs align-middle">${resiText}</td><td class="p-4 font-extrabold text-black text-right align-middle">${formatRp(parseInt(o.total || 0))}</td></tr>`;
-                    });
-                }
-                salesMonthly = newSalesMonthly;
-                initChart();
-            } catch(e) { console.error("Dashboard Render Error:", e); }
+            }
+            initChart();
         }
 
         function exportToExcel() {
-            const data = ordersDB.map(o => ({ "Tanggal Transaksi": o.date, "ID Pesanan": o.id, "Email Pelanggan": o.userEmail, "Alamat Lengkap": o.address, "Batch": o.batch, "Status Pembayaran": o.status, "Nomor Resi": o.resi || 'Belum Ada', "Total Pendapatan (Rp)": parseInt(o.total) }));
+            const data = ordersDB.map(o => ({ "Tanggal Transaksi": o.date, "ID Pesanan": o.id, "Nama Pelanggan": o.user.name, "No. WhatsApp": o.user.phone, "Alamat Lengkap": o.address, "Batch": o.batch, "Status Pembayaran": o.status, "Nomor Resi": o.resi || 'Belum Ada', "Total Pendapatan (Rp)": parseInt(o.total) }));
             const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan"); XLSX.writeFile(wb, "Laporan_Keuangan_Portwish.xlsx"); showAdminToast("Laporan Keuangan Berhasil Diunduh!");
         }
 
         function renderOrders(search = '') {
-            try {
-                const tbody = document.getElementById('orderTableBody'); tbody.innerHTML = '';
-                let filtered = ordersDB;
-                if(search) {
-                    search = search.toLowerCase();
-                    filtered = ordersDB.filter(o => {
-                        let idMatch = (o.id || "").toLowerCase().includes(search);
-                        let nameMatch = false;
-                        if(o.user && o.user.name) nameMatch = o.user.name.toLowerCase().includes(search);
-                        return idMatch || nameMatch;
-                    });
+            const tbody = document.getElementById('orderTableBody'); tbody.innerHTML = '';
+            let filtered = search ? ordersDB.filter(o => o.id.toLowerCase().includes(search) || o.user.name.toLowerCase().includes(search)) : ordersDB;
+            filtered.forEach((o, index) => {
+                let badgeClass = o.status === "IN TRANSIT" ? "bg-black text-white border-black" : (o.status === "PROCESS (INPUT RESI)" ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-orange-100 text-orange-700 border-orange-200");
+                let resiAction = ``;
+                if(o.status === "AWAITING VERIFICATION") { 
+                    resiAction = `<div class="flex space-x-2 w-full max-w-[200px]"><button onclick="viewProof('${o.id}')" class="flex-1 bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:text-black hover:border-black transition whitespace-nowrap">CEK BUKTI</button><button onclick="approveOrder('${o.id}')" class="flex-1 bg-black text-white text-[9px] font-extrabold px-2 py-2 rounded-lg shadow-sm hover:bg-stone-800 transition whitespace-nowrap" id="btnAppv_${o.id}">APPROVE</button></div>`; 
+                } else if(o.status === "PROCESS (INPUT RESI)") { 
+                    resiAction = `<div class="flex items-center space-x-2 mt-2"><input type="text" id="resiInput_${o.id}" placeholder="Input Resi..." class="border border-stone-300 rounded-lg px-2 py-1.5 text-xs w-32 outline-none focus:border-black bg-white"><button onclick="saveResi('${o.id}')" id="btnResi_${o.id}" class="bg-blue-600 text-white text-[10px] font-extrabold px-3 py-2 rounded-lg hover:bg-blue-700 transition">KIRIM</button></div>`; 
+                } else { 
+                    resiAction = `<span class="text-xs font-extrabold text-black block mt-1">Resi: ${o.resi}</span>`; 
                 }
-
-                filtered.forEach((o, index) => {
-                    let badgeClass = o.status === "IN TRANSIT" ? "bg-black text-white border-black" : (o.status === "PROCESS (INPUT RESI)" ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-orange-100 text-orange-700 border-orange-200");
-                    let resiAction = ``;
-                    
-                    if(o.status === "AWAITING VERIFICATION") { 
-                        resiAction = `<div class="flex space-x-2 w-full max-w-[200px] mt-2"><button onclick="viewProof('${o.id}')" class="flex-1 bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-2.5 sm:py-2 rounded-lg shadow-sm hover:text-black hover:border-black transition whitespace-nowrap">CEK BUKTI</button><button onclick="approveOrder('${o.id}')" class="flex-1 bg-black text-white text-[9px] font-extrabold px-2 py-2.5 sm:py-2 rounded-lg shadow-sm hover:bg-stone-800 transition whitespace-nowrap" id="btnAppv_${o.id}">APPROVE</button></div>`; 
-                    } else if(o.status === "PROCESS (INPUT RESI)" || o.status === "IN TRANSIT") { 
-                        let btnText = o.status === "IN TRANSIT" ? "EDIT RESI" : "KIRIM";
-                        resiAction = `<div class="flex items-center space-x-2 mt-2"><input type="text" id="resiInput_${o.id}" value="${o.resi || ''}" placeholder="Input Resi..." class="border border-stone-300 rounded-lg px-2 py-2 sm:py-1.5 text-xs w-28 sm:w-32 outline-none focus:border-black bg-white"><button onclick="saveResi('${o.id}')" id="btnResi_${o.id}" class="bg-blue-600 text-white text-[10px] font-extrabold px-3 py-2.5 sm:py-2 rounded-lg hover:bg-blue-700 transition">${btnText}</button></div>`; 
-                    } else { 
-                        resiAction = `<span class="text-xs font-extrabold text-black block mt-2">Resi: ${o.resi || '-'}</span>`; 
-                    }
-                    
-                    let custName = 'Unknown'; let custPhone = '-';
-                    if(o.user && o.user.name) custName = o.user.name; else if(o.userEmail) custName = o.userEmail;
-                    if(o.user && o.user.phone) custPhone = o.user.phone;
-
-                    tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black align-top">${o.id || '-'}<br><span class="text-[9px] text-stone-400 font-bold">${o.date || '-'}</span></td><td class="p-4 align-top"><p class="font-extrabold text-black">${custName}</p><p class="text-[10px] text-stone-500 font-bold">${custPhone}</p></td><td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch || '-'}</td><td class="p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total || 0))}</td><td class="p-4 align-top min-w-[200px]"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block ${badgeClass}">${o.status || '-'}</span><div>${resiAction}</div></td><td class="p-4 text-center align-middle"><button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button></td></tr>`;
-                });
-            } catch(e) { console.error("Orders Render Error:", e); }
+                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black align-top">${o.id}<br><span class="text-[9px] text-stone-400 font-bold">${o.date}</span></td><td class="p-4 align-top"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[10px] text-stone-500 font-bold">${o.user.phone}</p></td><td class="p-4 text-[10px] font-extrabold text-stone-500 align-top">${o.batch}</td><td class="p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total))}</td><td class="p-4 align-top"><span class="text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block mb-2 ${badgeClass}">${o.status}</span><div>${resiAction}</div></td><td class="p-4 text-center align-middle"><button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button></td></tr>`;
+            });
         }
 
-        function filterOrders(val) { renderOrders(val); }
+        function filterOrders(val) { renderOrders(val.toLowerCase()); }
 
         function approveOrder(orderId) { 
-            const btn = document.getElementById(`btnAppv_${orderId}`); if(btn) { btn.innerHTML = "..."; btn.disabled = true; }
-            db.ref('orders/' + orderId).update({ status: "PROCESS (INPUT RESI)" }).then(() => { showAdminToast("Payment Approved!"); });
+            const btn = document.getElementById(`btnAppv_${orderId}`);
+            if(btn) { btn.innerHTML = "..."; btn.disabled = true; }
+            pauseSync = true;
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "PROCESS (INPUT RESI)"}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+            .then(() => {
+                const idx = ordersDB.findIndex(x => x.id === orderId);
+                ordersDB[idx].status = "PROCESS (INPUT RESI)"; showAdminToast("Payment Approved!"); refreshActiveTab(); 
+                setTimeout(() => pauseSync = false, 3000);
+            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); if(btn){btn.innerHTML = "APPROVE"; btn.disabled = false;} pauseSync = false; });
         }
 
         function saveResi(orderId) { 
             const r = document.getElementById(`resiInput_${orderId}`).value; if(!r) return alert("Silakan input nomor resi!"); 
             const btn = document.getElementById(`btnResi_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
-            db.ref('orders/' + orderId).update({ resi: r, status: "IN TRANSIT" }).then(() => { showAdminToast("Resi berhasil disimpan!"); });
+            pauseSync = true;
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, status: "IN TRANSIT", resi: r}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+            .then(() => {
+                const idx = ordersDB.findIndex(x => x.id === orderId);
+                ordersDB[idx].resi = r; ordersDB[idx].status = "IN TRANSIT"; showAdminToast("Resi diinput!"); refreshActiveTab();
+                setTimeout(() => pauseSync = false, 3000);
+            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "KIRIM"; btn.disabled = false; pauseSync = false; });
+        }
+
+        function getDirectUrl(url) {
+            if (!url) return 'https://placehold.co/400';
+            if (url.includes('drive.google.com')) {
+                let id = "";
+                if(url.includes('id=')) id = url.split('id=')[1].split('&')[0];
+                else if (url.includes('/file/d/')) id = url.split('/file/d/')[1].split('/')[0];
+                if(id) return `https://lh3.googleusercontent.com/d/${id}=w1000`;
+            }
+            return url;
         }
 
         function viewProof(orderId) {
-            const index = ordersDB.findIndex(x => x.id === orderId); currentEditingOrderIndex = index;
-            const order = ordersDB[index]; 
-            document.getElementById('proofImage').src = order.proofImg;
-            currentProofUrlDownload = order.proofImg;
+            const index = ordersDB.findIndex(x => x.id === orderId);
+            currentEditingOrderIndex = index;
+            const order = ordersDB[index];
+            const imgSrc = getDirectUrl(order.proofImg);
+            document.getElementById('proofImage').src = imgSrc;
+            const downloadBtn = document.getElementById('downloadProofBtn'); downloadBtn.href = imgSrc; downloadBtn.download = `Bukti_Transfer_${order.id}.jpg`;
             document.getElementById('proofModal').classList.remove('hidden');
         }
         function closeProofModal() { document.getElementById('proofModal').classList.add('hidden'); currentEditingOrderIndex = null; }
-        
-        // FUNGSI DOWNLOAD BUKTI TRANSFER OTOMATIS
-        function forceDownloadProof() {
-            if(!currentProofUrlDownload) return;
-            let downloadUrl = currentProofUrlDownload;
-            if(downloadUrl.includes('cloudinary.com') && downloadUrl.includes('/upload/')) {
-                downloadUrl = downloadUrl.replace('/upload/', '/upload/fl_attachment/');
-            }
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = downloadUrl;
-            a.download = 'Bukti_Transfer.jpg';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            showAdminToast("Mengunduh bukti pembayaran...");
-        }
-
         function approveFromProof() {
             if(currentEditingOrderIndex !== null) {
-                document.getElementById('btnProofApprove').innerHTML = "MEMPROSES..."; approveOrder(ordersDB[currentEditingOrderIndex].id);
+                document.getElementById('btnProofApprove').innerHTML = "MEMPROSES...";
+                approveOrder(ordersDB[currentEditingOrderIndex].id);
                 setTimeout(() => { document.getElementById('btnProofApprove').innerHTML = "VERIFIKASI"; closeProofModal(); }, 1000);
             }
         }
 
         function renderTracking() {
-            try {
-                const container = document.getElementById('trackingListArea'); container.innerHTML = '';
-                const active = ordersDB.filter(o => o.status === "IN TRANSIT");
-                if(active.length === 0) { container.innerHTML = `<div class="text-center py-10"><p class="text-stone-400 font-bold text-sm">Belum ada paket yang sedang dikirim (IN TRANSIT).</p></div>`; return; }
-                active.forEach(o => {
-                    let custName = 'Unknown';
-                    if(o.user && o.user.name) custName = o.user.name; else if(o.userEmail) custName = o.userEmail;
-                    
-                    container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow"><div class="flex-1"><p class="font-extrabold text-base sm:text-lg text-black">${o.id || '-'} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-1 sm:ml-2 border border-stone-200">${custName}</span></p><div class="mt-2 flex flex-wrap gap-2 items-center"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-3 sm:pr-4">Resi: <span class="text-black font-extrabold">${o.resi || "Belum Ada"}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch || '-'}</p></div><div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Terakhir:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Menunggu update pertama...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div></div><div class="w-full md:w-2/5 flex flex-col space-y-2 bg-cream-50 p-4 rounded-2xl border border-stone-100"><input type="text" id="manualTrack_${o.id}" placeholder="Ketik status terkini (Cth: Tiba di Bandung)..." class="border border-stone-200 rounded-xl px-4 py-3 text-xs font-bold bg-white text-black focus:border-black outline-none transition-colors"><button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md mt-2">TAMBAHKAN HISTORY</button></div></div>`;
-                });
-            } catch(e) { console.error("Tracking Render Error:", e); }
+            const container = document.getElementById('trackingListArea'); container.innerHTML = '';
+            const active = ordersDB.filter(o => o.status === "IN TRANSIT" && o.resi);
+            if(active.length === 0) { container.innerHTML = `<div class="text-center py-10"><p class="text-stone-400 font-bold text-sm">Belum ada paket yang sedang dikirim (IN TRANSIT).</p></div>`; return; }
+            active.forEach(o => {
+                container.innerHTML += `<div class="border border-stone-200 rounded-[20px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white shadow-sm hover:shadow-md transition-shadow"><div class="flex-1"><p class="font-extrabold text-lg text-black">${o.id} <span class="text-[10px] text-stone-500 bg-stone-100 px-2 py-1 rounded-md ml-2 border border-stone-200">${o.user.name}</span></p><div class="mt-2 flex items-center space-x-4"><p class="text-[10px] font-bold text-stone-400 border-r border-stone-200 pr-4">Resi: <span class="text-black font-extrabold">${o.resi}</span></p><p class="text-[10px] font-bold text-stone-400">${o.batch}</p></div><div class="mt-4 bg-blue-50/50 border border-blue-100 p-3 rounded-xl"><p class="text-[9px] text-stone-500 font-bold mb-1 uppercase tracking-widest">Status Web Pengguna:</p><p class="font-extrabold text-blue-700 text-xs">${o.latestTracking || 'Waiting for first update...'}</p><p class="text-[9px] text-stone-400 font-bold mt-1">${o.trackingTime || '-'}</p></div></div><div class="w-full md:w-2/5 flex flex-col space-y-2 bg-cream-50 p-4 rounded-2xl border border-stone-100"><input type="text" id="manualTrack_${o.id}" placeholder="Ketik status terkini..." class="border border-stone-200 rounded-xl px-4 py-3 text-xs font-bold bg-white text-black focus:border-black outline-none transition-colors"><button onclick="updateManualTracking('${o.id}')" id="btnTrack_${o.id}" class="bg-black text-white text-[10px] font-extrabold px-4 py-3 rounded-xl w-full hover:bg-stone-800 transition-colors uppercase tracking-widest shadow-md">UPDATE USER STATUS</button></div></div>`;
+            });
         }
 
-        async function updateManualTracking(orderId) {
+        function updateManualTracking(orderId) {
             const v = document.getElementById(`manualTrack_${orderId}`).value; if(!v) return alert("Ketikan status terlebih dahulu!");
             const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
             const btn = document.getElementById(`btnTrack_${orderId}`); btn.innerHTML = "..."; btn.disabled = true;
-
-            const order = ordersDB.find(o => o.id === orderId);
-            let history = order.trackingHistory ? [...order.trackingHistory] : [];
-            if(history.length === 0 && order.latestTracking) { history.push({ status: order.latestTracking, time: order.trackingTime }); }
             
-            history.unshift({ status: v, time: t }); // Masukkan ke array paling atas
-            await db.ref('orders/' + orderId).update({ latestTracking: v, trackingTime: t, trackingHistory: history });
-            
-            document.getElementById(`manualTrack_${orderId}`).value = '';
-            showAdminToast("Status berhasil ditambahkan!");
-            btn.innerHTML = "TAMBAHKAN HISTORY"; btn.disabled = false;
+            pauseSync = true;
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "updateOrder", orderId: orderId, latestTracking: v, trackingTime: t}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+            .then(() => {
+                const idx = ordersDB.findIndex(x => x.id === orderId);
+                ordersDB[idx].latestTracking = v; ordersDB[idx].trackingTime = t; showAdminToast("Status diupdate!"); renderTracking();
+                setTimeout(() => pauseSync = false, 3000);
+            }).catch(e => { showAdminToast("Gangguan jaringan, coba lagi."); btn.innerHTML = "UPDATE USER STATUS"; btn.disabled = false; pauseSync = false; });
         }
 
         function openInvoice(orderId) {
             const o = ordersDB.find(x => x.id === orderId);
-            document.getElementById('invId').textContent = o.id || '-'; document.getElementById('invDate').textContent = `Date: ${o.date || '-'}`; 
-            
-            let custName = 'Unknown'; let custEmail = 'Unknown';
-            if(o.user && o.user.name) custName = o.user.name; else if(o.userEmail) custName = o.userEmail;
-            if(o.user && o.user.email) custEmail = o.user.email; else if(o.userEmail) custEmail = o.userEmail;
-
-            document.getElementById('invName').textContent = custName; document.getElementById('invEmail').textContent = custEmail; 
-            document.getElementById('invAddress').textContent = o.address || '-'; document.getElementById('invBatch').textContent = o.batch || '-';
-            document.getElementById('invResiShow').textContent = o.resi || "PENDING";
+            document.getElementById('invId').textContent = o.id; document.getElementById('invDate').textContent = `Date: ${o.date}`; document.getElementById('invName').textContent = o.user.name; document.getElementById('invEmail').textContent = o.user.email; document.getElementById('invAddress').textContent = o.address; document.getElementById('invBatch').textContent = o.batch;
             const tbody = document.getElementById('invItems'); tbody.innerHTML = '';
-            
-            let grouped = {}; let itemsParsed = [];
-            try { itemsParsed = JSON.parse(o.itemsInfo || "[]"); } catch(e) {}
-            if (itemsParsed.length === 0 && o.items) itemsParsed = o.items; 
-
-            if(itemsParsed && itemsParsed.length > 0){
-                itemsParsed.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
-                for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-4 border-b border-stone-100"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold mt-1">${i.country} • ${i.category}</p></td><td class="py-4 text-center font-bold border-b border-stone-100">x${i.qty}</td><td class="py-4 text-right font-extrabold text-black border-b border-stone-100">${formatRp(i.price * i.qty)}</td></tr>`; }
-            }
-
-            if(o.discount && o.discount > 0) {
-                document.getElementById('invDiscountBox').style.display = 'flex';
-                document.getElementById('invDiscount').textContent = `- ${formatRp(parseInt(o.discount))}`;
-            } else { document.getElementById('invDiscountBox').style.display = 'none'; }
-
-            document.getElementById('invSubtotal').textContent = formatRp(parseInt(o.total || 0) + parseInt(o.discount || 0)); 
-            document.getElementById('invTotalMain').textContent = formatRp(parseInt(o.total || 0));
+            let grouped = {}; o.items.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
+            for(let k in grouped) { const i = grouped[k]; tbody.innerHTML += `<tr><td class="py-4 border-b border-stone-100"><p class="font-extrabold text-black">${i.name}</p><p class="text-[9px] text-stone-400 uppercase tracking-widest font-bold">${i.country} • ${i.category}</p></td><td class="py-4 text-center font-bold border-b border-stone-100">x${i.qty}</td><td class="py-4 text-right font-extrabold text-black border-b border-stone-100">${formatRp(i.price * i.qty)}</td></tr>`; }
+            document.getElementById('invSubtotal').textContent = formatRp(parseInt(o.total)); document.getElementById('invTotalMain').textContent = formatRp(parseInt(o.total));
             document.getElementById('invoiceModal').classList.remove('hidden');
         }
         function closeInvoiceModal() { document.getElementById('invoiceModal').classList.add('hidden'); }
         function printInvoice() { window.print(); }
 
-        // --- MANAJEMEN VOUCHER ---
-        function openVoucherModal() { renderVouchers(); document.getElementById('voucherModal').classList.remove('hidden'); }
-        function closeVoucherModal() { document.getElementById('voucherModal').classList.add('hidden'); }
-        function renderVouchers() {
-            const area = document.getElementById('voucherListArea'); area.innerHTML = '';
-            const keys = Object.keys(vouchersDB);
-            if(keys.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada voucher aktif.</p>`; return; }
-            keys.forEach(k => { 
-                const v = vouchersDB[k];
-                const textVal = v.type === 'percent' ? `${v.value}%` : formatRp(parseInt(v.value));
-                area.innerHTML += `<div class="flex justify-between items-center bg-white p-3 sm:p-4 rounded-xl border border-stone-100 shadow-sm mb-2"><div class="flex-1"><span class="text-xs font-extrabold text-pink-600 block uppercase">${k}</span><span class="text-[9px] sm:text-[10px] font-bold text-stone-400 block mt-0.5 sm:mt-1">Potongan: ${textVal} | Sisa Kuota: <span class="text-black">${v.limit}</span></span></div><button onclick="deleteVoucher('${k}')" class="bg-red-50 text-red-500 p-2 sm:p-2.5 rounded-lg hover:bg-red-100 transition flex-shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; 
-            });
+        function openBatchModal() { renderBatches(); document.getElementById('batchModal').classList.remove('hidden'); }
+        function closeBatchModal() { document.getElementById('batchModal').classList.add('hidden'); }
+        function renderBatches() {
+            const area = document.getElementById('batchListArea'); area.innerHTML = '';
+            if(batchesDB.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada batch tersedia.</p>`; return; }
+            batchesDB.forEach((b, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100"><span class="text-xs font-bold text-black">${b}</span><button onclick="deleteBatch(${i})" class="text-stone-400 hover:text-red-500 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
         }
-        function addVoucher() {
-            const code = document.getElementById('vCode').value.trim().toUpperCase(); const limit = document.getElementById('vLimit').value; const type = document.getElementById('vType').value; const value = document.getElementById('vValue').value;
-            if(!code || !limit || !value) return alert("Lengkapi form voucher!");
-            document.getElementById('btnAddVoucher').innerHTML = "...";
-            db.ref('vouchers/' + code).set({ type: type, value: value, limit: parseInt(limit) }).then(() => {
-                document.getElementById('vCode').value = ''; document.getElementById('vLimit').value = ''; document.getElementById('vValue').value = ''; showAdminToast("Voucher berhasil dibuat!"); document.getElementById('btnAddVoucher').innerHTML = "+ SIMPAN VOUCHER";
-            });
-        }
-        function deleteVoucher(code) { if(confirm(`Hapus voucher ${code}?`)) { db.ref('vouchers/' + code).remove().then(() => showAdminToast("Voucher dihapus.")); } }
-
-        // --- MANAJEMEN ATRIBUT ---
-        function openBatchModal() { currentAttrType = 'batches'; document.getElementById('attrModalTitle').textContent = "Daftar Batch"; document.getElementById('attrModalDesc').textContent = "Batch akan muncul di Dropdown Checkout User."; document.getElementById('newAttrInput').placeholder = "Misal: Batch USA #02"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
-        function openCountryModal() { currentAttrType = 'countries'; document.getElementById('attrModalTitle').textContent = "Daftar Negara"; document.getElementById('attrModalDesc').textContent = "Negara untuk filter dan data produk."; document.getElementById('newAttrInput').placeholder = "Misal: Singapore"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
-        function openCategoryModal() { currentAttrType = 'categories'; document.getElementById('attrModalTitle').textContent = "Daftar Kategori"; document.getElementById('attrModalDesc').textContent = "Kategori untuk filter dan data produk."; document.getElementById('newAttrInput').placeholder = "Misal: Sepatu"; renderAttrList(); document.getElementById('attributeModal').classList.remove('hidden'); }
-        function closeAttributeModal() { document.getElementById('attributeModal').classList.add('hidden'); }
-
-        function renderAttrList() {
-            const area = document.getElementById('attrListArea'); area.innerHTML = '';
-            let list = [];
-            if(currentAttrType === 'batches') list = batchesDB; if(currentAttrType === 'countries') list = countriesDB; if(currentAttrType === 'categories') list = categoriesDB;
-            if(list.length === 0) { area.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">Belum ada data.</p>`; return; }
-            list.forEach((item, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-3 rounded-xl border border-stone-100 mb-2"><span class="text-xs font-bold text-black">${item}</span><button onclick="deleteAttr(${i})" class="text-stone-400 hover:text-red-500 transition p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
-        }
-        function addAttr() {
-            const val = document.getElementById('newAttrInput').value.trim();
+        function addBatch() {
+            const val = document.getElementById('newBatchInput').value.trim();
             if(val) {
-                document.getElementById('btnAddAttr').innerHTML = "..."; let list = [];
-                if(currentAttrType === 'batches') list = [...batchesDB, val]; if(currentAttrType === 'countries') list = [...countriesDB, val]; if(currentAttrType === 'categories') list = [...categoriesDB, val];
-                db.ref(currentAttrType).set(list).then(() => { document.getElementById('newAttrInput').value = ''; showAdminToast("Data ditambahkan!"); document.getElementById('btnAddAttr').innerHTML = "TAMBAH"; });
+                document.getElementById('btnAddBatch').innerHTML = "...";
+                const newBatches = [...batchesDB, val];
+                pauseSync = true;
+                fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+                .then(() => { batchesDB = newBatches; document.getElementById('newBatchInput').value = ''; renderBatches(); showAdminToast("Batch ditambahkan!"); document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; setTimeout(() => pauseSync = false, 3000); })
+                .catch(e => { document.getElementById('btnAddBatch').innerHTML = "TAMBAH"; showAdminToast("Gangguan jaringan"); pauseSync = false; });
             }
         }
-        function deleteAttr(index) {
-            let list = [];
-            if(currentAttrType === 'batches') { list = [...batchesDB]; list.splice(index, 1); } if(currentAttrType === 'countries') { list = [...countriesDB]; list.splice(index, 1); } if(currentAttrType === 'categories') { list = [...categoriesDB]; list.splice(index, 1); }
-            showAdminToast("Menghapus..."); db.ref(currentAttrType).set(list).then(() => { showAdminToast("Data dihapus."); });
+        function deleteBatch(index) {
+            const newBatches = [...batchesDB]; newBatches.splice(index, 1);
+            showAdminToast("Menghapus...");
+            pauseSync = true;
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveBatches", batches: newBatches}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+            .then(() => { batchesDB = newBatches; renderBatches(); showAdminToast("Batch dihapus."); setTimeout(() => pauseSync = false, 3000); })
+            .catch(e => { showAdminToast("Gangguan jaringan"); pauseSync = false; });
         }
 
-        // --- CATALOG DENGAN CLOUDINARY UPLOAD API ---
         function renderCatalog() {
             const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
             catalogDB.forEach(p => {
-                grid.innerHTML += `<div class="bg-white rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 z-10 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white/90 sm:bg-white text-blue-600 p-2 sm:p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white/90 sm:bg-white text-red-600 p-2 sm:p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${p.img}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-2 sm:top-3 left-2 sm:left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-3 sm:p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-[11px] sm:text-xs mb-1 sm:mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-2 sm:pt-3"><p class="text-[8px] sm:text-[9px] text-stone-400 font-bold uppercase tracking-widest truncate max-w-[50%]">${p.category}</p><p class="font-extrabold text-xs sm:text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
+                const imgSrc = getDirectUrl(p.img);
+                grid.innerHTML += `<div class="bg-white rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="openProductModal(${p.id})" class="bg-white text-blue-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct(${p.id})" class="bg-white text-red-600 p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${imgSrc}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-3 left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-xs mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-3"><p class="text-[9px] text-stone-400 font-bold uppercase tracking-widest">${p.category}</p><p class="font-extrabold text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
             });
         }
 
@@ -720,15 +476,12 @@
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width, height = img.height;
-                        const MAX_WIDTH = 800; // Kompres Max 800px (Katalog)
-                        if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
-                        canvas.width = width; canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
+                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+                        const MAX_WIDTH = 400; const scaleSize = MAX_WIDTH / img.width;
+                        canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         
-                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.8); 
+                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.6); 
                         document.getElementById('prodImgPreview').src = currentUploadedImageBase64;
                         document.getElementById('prodImgPreview').classList.remove('hidden');
                         document.getElementById('uploadPlaceholder').classList.add('opacity-0');
@@ -740,12 +493,9 @@
         }
 
         function openProductModal(id = null) {
-            const selCat = document.getElementById('prodCat'); selCat.innerHTML = ''; categoriesDB.forEach(c => selCat.innerHTML += `<option value="${c}">${c}</option>`);
-            const selCou = document.getElementById('prodCountry'); selCou.innerHTML = ''; countriesDB.forEach(c => selCou.innerHTML += `<option value="${c}">${c}</option>`);
-
             if(id) {
                 const p = catalogDB.find(x => x.id === id); document.getElementById('prodModalTitle').textContent = "Edit Product"; document.getElementById('prodId').value = p.id; 
-                currentUploadedImageBase64 = p.img; document.getElementById('prodImgPreview').src = p.img; document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
+                currentUploadedImageBase64 = p.img; document.getElementById('prodImgPreview').src = getDirectUrl(p.img); document.getElementById('prodImgPreview').classList.remove('hidden'); document.getElementById('uploadPlaceholder').classList.add('opacity-0');
                 document.getElementById('prodName').value = p.name; document.getElementById('prodPrice').value = p.price; document.getElementById('prodCat').value = p.category; document.getElementById('prodCountry').value = p.country; 
             } else { 
                 document.getElementById('prodModalTitle').textContent = "Add New Product"; document.getElementById('prodId').value = ""; 
@@ -757,98 +507,39 @@
 
         function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
         
-        async function uploadToCloudinary(base64Image) {
-            const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-            const formData = new FormData();
-            formData.append('file', base64Image);
-            formData.append('upload_preset', uploadPreset);
-            const response = await fetch(url, { method: 'POST', body: formData });
-            if(!response.ok) throw new Error("Upload ke Cloudinary Gagal");
-            const data = await response.json();
-            return data.secure_url;
-        }
-
-        async function saveProduct() {
+        function saveProduct() {
             const name = document.getElementById('prodName').value, price = document.getElementById('prodPrice').value;
             if(!name || !price || !currentUploadedImageBase64) return alert("Mohon lengkapi Nama Produk, Harga, dan Upload Foto!");
             const btn = document.getElementById('btnSaveProduct'); btn.innerHTML = "MENYIMPAN..."; btn.disabled = true;
 
-            try {
-                const id = document.getElementById('prodId').value;
-                const newProdId = id ? parseInt(id) : Date.now();
-                let finalImageUrl = currentUploadedImageBase64;
+            const id = document.getElementById('prodId').value;
+            const newProd = { id: id ? parseInt(id) : Date.now(), name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: currentUploadedImageBase64 };
 
-                if (currentUploadedImageBase64.startsWith('data:image')) {
-                    finalImageUrl = await uploadToCloudinary(currentUploadedImageBase64);
-                } 
-
-                const newProd = { id: newProdId, name: name, price: parseInt(price), category: document.getElementById('prodCat').value, country: document.getElementById('prodCountry').value, img: finalImageUrl };
-                await db.ref('catalog/' + newProdId).set(newProd);
-
-                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); showAdminToast("Katalog diperbarui!");
-            } catch (error) {
-                console.error(error);
-                btn.innerHTML = "SIMPAN"; btn.disabled = false;
-                alert("GAGAL UPLOAD FOTO!\n\nPastikan Cloud Name dan Upload Preset Anda sudah benar.");
-            }
+            pauseSync = true;
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "saveProduct", product: newProd}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+            .then(() => {
+                if(id) { const i = catalogDB.findIndex(x => x.id === parseInt(id)); catalogDB[i] = newProd; } else { catalogDB.push(newProd); }
+                btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); renderCatalog(); showAdminToast("Katalog diperbarui! Refresh web jika gambar belum sinkron.");
+                setTimeout(() => pauseSync = false, 3000);
+            }).catch(e => { btn.innerHTML = "SIMPAN"; btn.disabled = false; showAdminToast("Gangguan Jaringan"); pauseSync = false; });
         }
 
         function deleteProduct(id) { 
             if(confirm("Yakin ingin menghapus produk ini?")) { 
                 showAdminToast("Menghapus produk...");
-                db.ref('catalog/' + id).remove().then(() => { showAdminToast("Product deleted."); });
+                pauseSync = true;
+                fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "deleteProduct", productId: id}), headers: {'Content-Type': 'text/plain;charset=utf-8'} })
+                .then(() => { catalogDB = catalogDB.filter(x => x.id !== id); renderCatalog(); showAdminToast("Product deleted."); setTimeout(() => pauseSync = false, 3000); })
+                .catch(e => { showAdminToast("Gangguan Jaringan"); pauseSync = false; });
             } 
         }
 
-        async function adminResetUserPassword(email) {
-            const newPass = prompt(`Masukkan password baru untuk akun:\n${email}`);
-            if(!newPass || newPass.trim() === '') return;
-            
-            const safeEmailKey = email.replace(/\./g, ',');
-            try {
-                await db.ref('users/' + safeEmailKey).update({ pass: newPass.trim() });
-                showAdminToast("Password user berhasil direset!");
-            } catch(e) { alert("Gagal mereset password."); }
-        }
-function exportUsersToExcel() {
-            if (!usersDB || usersDB.length === 0) {
-                showAdminToast("Tidak ada data pelanggan untuk diunduh.");
-                return;
-            }
-
-            // Memformat data agar rapi saat masuk ke Excel
-            const data = usersDB.map(u => ({
-                "Nama Lengkap": u.name || '-',
-                "Email": u.email || '-',
-                "No. WhatsApp": u.phone || '-',
-                "Password": u.pass || '-'
-            }));
-
-            // Proses generate Excel menggunakan SheetJS (XLSX)
-            const ws = XLSX.utils.json_to_sheet(data); 
-            const wb = XLSX.utils.book_new(); 
-            XLSX.utils.book_append_sheet(wb, ws, "Database Pelanggan"); 
-            XLSX.writeFile(wb, "Database_Pelanggan_Portwish.xlsx"); 
-            
-            showAdminToast("Database Pelanggan Berhasil Diunduh!");
-        }
         function renderUsers() {
-            try {
-                const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
-                if(!usersDB || usersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-xs text-stone-400">Belum ada pelanggan terdaftar.</td></tr>`; return; }
-                usersDB.forEach((u, i) => { 
-                    if(u && u.email) {
-                        tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors">
-                            <td class="p-4 font-extrabold text-black">${u.name || '-'}</td>
-                            <td class="p-4 text-stone-600 font-bold text-xs">${u.email || '-'}</td>
-                            <td class="p-4 text-stone-600 font-bold text-xs">${u.phone || '-'}</td>
-                            <td class="p-4 text-stone-600 font-bold text-xs text-center">${u.pass || '-'}</td>
-                            <td class="p-4 text-center"><button onclick="adminResetUserPassword('${u.email}')" class="bg-orange-50 text-orange-600 px-3 py-2 sm:py-1.5 rounded-lg text-[10px] font-extrabold tracking-widest hover:bg-orange-100 transition shadow-sm">RESET PASS</button></td>
-                        </tr>`; 
-                    }
-                });
-            } catch(e) { console.error("Users Render Error:", e); }
+            const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
+            if(usersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400">Belum ada pelanggan terdaftar.</td></tr>`; return; }
+            usersDB.forEach((u, i) => { tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black">${u.name}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.email}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.phone}</td><td class="p-4 text-stone-600 font-bold text-xs">${u.pass || '123'}</td></tr>`; });
         }
+
     </script>
 </body>
 </html>
