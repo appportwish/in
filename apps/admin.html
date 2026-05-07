@@ -159,6 +159,7 @@
                     <div class="flex flex-col sm:flex-row gap-4">
                         <div class="input-float flex-1"><input type="text" id="vCode" placeholder=" " required style="text-transform: uppercase;"><label>Kode Voucher (Misal: PROMO20)</label></div>
                         <div class="input-float flex-1"><input type="number" id="vNominal" placeholder=" " required><label>Potongan Harga (Rp)</label></div>
+                        <div class="input-float flex-1"><input type="number" id="vQuota" placeholder=" " required><label>Batas Kuota Pengguna</label></div>
                         <button onclick="addVoucher()" id="btnAddVoucher" class="bg-black text-white text-[11px] font-extrabold px-6 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors self-end h-full">SIMPAN VOUCHER</button>
                     </div>
                 </div>
@@ -166,7 +167,12 @@
                     <div class="p-6 border-b border-stone-100 bg-cream-50/50"><h3 class="font-extrabold text-lg">Daftar Voucher Aktif</h3></div>
                     <div class="overflow-x-auto hide-scroll">
                         <table class="w-full text-left border-collapse whitespace-nowrap">
-                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-4 font-extrabold">Kode Voucher</th><th class="p-4 font-extrabold">Potongan (Rp)</th><th class="p-4 font-extrabold text-right">Aksi</th></tr></thead>
+                            <thead><tr class="bg-stone-50 text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200">
+                                <th class="p-4 font-extrabold">Kode Voucher</th>
+                                <th class="p-4 font-extrabold">Potongan (Rp)</th>
+                                <th class="p-4 font-extrabold text-center">Sisa Kuota</th>
+                                <th class="p-4 font-extrabold text-right">Aksi</th>
+                            </tr></thead>
                             <tbody id="voucherTableBody" class="text-sm"></tbody>
                         </table>
                     </div>
@@ -510,7 +516,7 @@
         }
 
         // =========================================================
-        // ORDER MANAGEMENT (TAB PESANAN & RESI) - TANPA INPUT RESI
+        // ORDER MANAGEMENT (TAB PESANAN & RESI)
         // =========================================================
         function getBadgeColor(status) {
             const s = status.toLowerCase();
@@ -527,10 +533,8 @@
             filtered.forEach((o) => {
                 let badgeClass = getBadgeColor(o.status);
                 
-                // HAPUS Opsi Shipped dan Completed dari Dropdown Pesanan
                 let availableStatuses = STATUS_OPTIONS.filter(s => s !== "Shipped to Customer" && s !== "Completed");
                 
-                // Pastikan status saat ini tetap muncul di dropdown (meskipun itu shipped/completed) biar nggak ngereset visual
                 if (!availableStatuses.includes(o.status) && o.status.toUpperCase() !== "AWAITING VERIFICATION") {
                     availableStatuses.push(o.status);
                 }
@@ -538,7 +542,6 @@
                 let dropdownOptions = availableStatuses.map(s => {
                     let isSelected = '';
                     if (o.status.toLowerCase() === s.toLowerCase()) isSelected = 'selected';
-                    // Mapping status lama ke status baru
                     if (o.status === 'AWAITING VERIFICATION' && s === 'Pending Payment') isSelected = 'selected';
                     return `<option value="${s}" ${isSelected}>${s}</option>`;
                 }).join('');
@@ -782,27 +785,37 @@
         function deleteCountry(index) { const newC = [...countriesDB]; newC.splice(index, 1); db.ref('countries').set(newC).then(() => showAdminToast("Negara dihapus.")); }
 
         // =========================================================
-        // VOUCHERS MANAGEMENT
+        // VOUCHERS MANAGEMENT (DENGAN BATAS KUOTA)
         // =========================================================
         function renderVouchers() {
             const tbody = document.getElementById('voucherTableBody'); tbody.innerHTML = '';
-            if(vouchersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-xs text-stone-400">Belum ada voucher.</td></tr>`; return; }
+            if(vouchersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400">Belum ada voucher.</td></tr>`; return; }
             vouchersDB.forEach(v => {
-                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-4 font-extrabold text-black tracking-widest">${v.code}</td><td class="p-4 text-black font-extrabold text-xs">${formatRp(parseInt(v.discount))}</td><td class="p-4 text-right"><button onclick="deleteVoucher('${v.dbKey}')" class="text-stone-400 hover:text-red-500 font-bold text-[10px] bg-white border border-stone-200 px-3 py-1.5 rounded-lg shadow-sm">HAPUS</button></td></tr>`;
+                if(!v.code) return; // Penawar bug undefined data sebelumnya
+                let quotaText = v.quota ? `${(v.quota - (v.used || 0))} dari ${v.quota}` : 'Unlimited';
+                
+                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors">
+                    <td class="p-4 font-extrabold text-black tracking-widest">${v.code}</td>
+                    <td class="p-4 text-black font-extrabold text-xs">${formatRp(parseInt(v.discount || 0))}</td>
+                    <td class="p-4 text-center text-stone-600 font-bold text-xs">${quotaText}</td>
+                    <td class="p-4 text-right"><button onclick="deleteVoucher('${v.dbKey}')" class="text-stone-400 hover:text-red-500 font-bold text-[10px] bg-white border border-stone-200 px-3 py-1.5 rounded-lg shadow-sm">HAPUS</button></td>
+                </tr>`;
             });
         }
 
         function addVoucher() {
             const code = document.getElementById('vCode').value.toUpperCase().trim();
             const discount = document.getElementById('vNominal').value;
-            if(!code || !discount) return alert("Isi Kode Voucher dan Nominal!");
+            const quota = document.getElementById('vQuota').value;
+            if(!code || !discount || !quota) return alert("Isi Kode, Nominal, dan Batas Kuota!");
 
             const btn = document.getElementById('btnAddVoucher'); btn.innerHTML = "...";
-            const newVouch = { code: code, discount: parseInt(discount) };
+            const newVouch = { code: code, discount: parseInt(discount), quota: parseInt(quota), used: 0 };
             
             db.ref('vouchers').push(newVouch).then(() => {
                 document.getElementById('vCode').value = '';
                 document.getElementById('vNominal').value = '';
+                document.getElementById('vQuota').value = '';
                 btn.innerHTML = "SIMPAN VOUCHER";
                 showAdminToast("Voucher berhasil dibuat!");
             });
