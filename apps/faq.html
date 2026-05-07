@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portwish - FAQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { cream: { 50: '#FCFAF8', 100: '#F7F4ED', 200: '#EBE5D9' }, black: '#2E2E2E' } } } }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FCFAF8; color: #2E2E2E; -webkit-tap-highlight-color: transparent; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="selection:bg-black selection:text-white relative overflow-x-hidden">
+
+    <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200/60 shadow-sm">
+        <div class="max-w-md mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="https://appportwish.github.io/in/apps/index.html" class="bg-cream-50 p-2 rounded-full border border-stone-100 text-stone-500 hover:text-black transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </a>
+            <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-6 md:h-7 w-auto object-contain">
+            <div class="w-9"></div> </div>
+    </nav>
+
+    <main class="max-w-md mx-auto pb-12 px-6 pt-8">
+        <div class="text-center mb-8">
+            <p class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-2">Help Center</p>
+            <h1 class="text-3xl font-extrabold text-black leading-tight tracking-tight">Frequently Asked<br>Questions</h1>
+        </div>
+
+        <div class="space-y-4" id="faqContainer">
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">What is Portwish?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    Portwish is a curated personal shopping & international sourcing platform that helps customers shop products from multiple countries including USA, Japan, Korea, Europe, and Indonesia.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">What products are available?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    We focus on curated everyday products such as beauty & skincare, body care, snacks & lifestyle products, vitamins & wellness, fashion & accessories, and home essentials.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">How does the batch system work?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    Each country has its own shipping batch schedule. During checkout, customers will be able to choose their preferred available batch before completing payment.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">Can I combine products from different countries?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    Products from different countries are processed separately based on their respective shipping batches and sourcing locations.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">How do I place an order?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    <ul class="list-disc pl-4 space-y-1 font-semibold text-black">
+                        <li>Browse products on the website</li>
+                        <li>Add items to cart</li>
+                        <li>Select your preferred batch</li>
+                        <li>Proceed to checkout</li>
+                        <li>Complete payment</li>
+                        <li>Track your order status directly from your account</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">What payment methods are available?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    We currently accept QRIS and manual bank transfer. Orders will be processed after payment verification is completed.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">How can I track my order?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    Customers can track their order status directly through their account dashboard. Order statuses include: Pending Payment, Payment Confirmed, Waiting for Batch, Purchased, In Transit, Arrived at Warehouse, Shipped to Customer, and Completed.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">Do you accept custom requests?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    Yes. For custom requests or products not listed on the website, please contact us directly through WhatsApp.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">Are all products authentic?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    Yes. We only source products from trusted stores, official retailers, and verified suppliers.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">Can orders experience delays?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    International shipments may occasionally experience delays due to flight schedules, customs clearance, supplier availability, or shipping conditions.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">Can I cancel my order?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    Orders that have already been purchased or secured cannot be cancelled. Please make sure all order details are correct before completing payment.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">Do you offer refunds or returns?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    Due to the nature of international personal shopping and overseas sourcing, refunds and returns are generally not available unless there is an error from our side.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[24px] border border-stone-200 shadow-sm transition-all group overflow-hidden">
+                <button class="w-full px-6 py-5 flex justify-between items-center text-left" onclick="toggleFaq(this)">
+                    <span class="font-extrabold text-sm text-black pr-4">How can I contact Portwish?</span>
+                    <div class="bg-cream-50 p-1.5 rounded-full text-stone-400 group-hover:text-black group-hover:bg-cream-100 transition"><svg class="h-4 w-4 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div>
+                </button>
+                <div class="hidden px-6 pb-5 pt-1 border-t border-stone-50 text-[13px] text-stone-500 leading-relaxed">
+                    For customer support, order inquiries, or custom requests, please contact us through WhatsApp, Instagram DM, or email support if available.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleFaq(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('svg');
+            
+            // Close all other FAQs
+            document.querySelectorAll('#faqContainer > div > div').forEach(div => {
+                if(div !== content && !div.classList.contains('hidden')) {
+                    div.classList.add('hidden');
+                    div.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
+                }
+            });
+
+            // Toggle current FAQ
+            if(content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+    </script>
+</body>
+</html>
