@@ -292,7 +292,23 @@
                 </table>
                 <div class="flex justify-end">
                     <div class="w-2/3 md:w-1/2">
-                        <div class="flex justify-between py-1.5 text-stone-500 font-bold text-xs"><span>Service & Shipping</span><span>Included</span></div>
+                       <div class="flex justify-end">
+    <div class="w-full sm:w-3/4 md:w-2/3 pl-4">
+        <div class="flex justify-between py-1.5 text-stone-500 font-bold text-xs">
+            <span>Service & Shipping</span>
+            <span class="text-orange-500 font-extrabold">Not Included*</span>
+        </div>
+        <div class="flex justify-between py-1.5 text-green-600 font-bold text-xs" id="uInvDiscountBox" style="display: none;">
+            <span>Voucher Discount</span>
+            <span id="uInvDiscount">- Rp 0</span>
+        </div>
+        <div class="flex justify-between py-3 border-t-2 border-black mt-1 text-base">
+            <span class="font-extrabold text-black">TOTAL PAID</span>
+            <span class="font-extrabold text-black" id="uInvTotal">Rp 0</span>
+        </div>
+        <p class="text-[9px] text-stone-400 font-medium text-right mt-1 leading-relaxed italic">*Biaya ongkir pengiriman lokal belum termasuk. Admin akan menghubungi Anda via WhatsApp saat barang tiba dan siap dikirim.</p>
+    </div>
+</div>
                         <div class="flex justify-between py-1.5 text-green-600 font-bold text-xs" id="uInvDiscountBox" style="display: none;"><span>Voucher Discount</span><span id="uInvDiscount">- Rp 0</span></div>
                         <div class="flex justify-between py-3 border-t-2 border-black mt-1 text-base"><span class="font-extrabold text-black">TOTAL PAID</span><span class="font-extrabold text-black" id="uInvTotal">Rp 0</span></div>
                     </div>
