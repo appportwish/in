@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portwish Admin - System Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
+
+    <script>
+        tailwind.config = { theme: { extend: { colors: { cream: { 50: '#FCFAF8', 100: '#F7F4ED', 200: '#EBE5D9' }, black: '#2E2E2E' } } } }
+    </script>
+    <style>
+        :root { --primary: #2E2E2E; --bg: #FCFAF8; } body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--primary); }
+        .hide-scroll::-webkit-scrollbar { display: none; } .tab-content { display: none; animation: fadeIn 0.3s ease; } .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .input-box { width: 100%; border: 2px solid #e7e5e4; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; outline: none; background: #fff; } .input-box:focus { border-color: var(--primary); }
+        .input-float { position: relative; margin-top: 8px; } .input-float input, .input-float select, .input-float textarea { border: none; border-bottom: 2px solid #e7e5e4; border-radius: 0; padding: 20px 0 8px 0; background: transparent; transition: all 0.3s ease; outline: none; width: 100%; font-weight: 600; color: var(--primary); } .input-float input:focus, .input-float select:focus, .input-float textarea:focus { border-bottom-color: var(--primary); } .input-float label { position: absolute; top: 16px; left: 0; color: #a8a29e; font-size: 14px; transition: all 0.3s ease; pointer-events: none; } .input-float input:focus ~ label, .input-float input:not(:placeholder-shown) ~ label, .input-float select:focus ~ label, .input-float select:not([value=""]) ~ label, .input-float textarea:focus ~ label, .input-float textarea:not(:placeholder-shown) ~ label { top: 0px; font-size: 10px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .loader { border: 3px solid #e7e5e4; border-top: 3px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; } .loader-white { border-top-color: #fff; border-color: rgba(255,255,255,0.3); } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @media print { body * { visibility: hidden; } #invoiceModal, #invoiceModal * { visibility: visible; } #invoiceModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white; padding: 20px; } .no-print { display: none !important; } }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row h-screen overflow-hidden selection:bg-black selection:text-white bg-cream-50">
+
+    <div id="adminLoginGate" class="fixed inset-0 z-[999] bg-cream-50 flex items-center justify-center p-4 md:px-4 transition-opacity duration-500">
+        <div class="bg-white w-full max-w-sm rounded-[24px] md:rounded-[32px] p-6 md:p-8 shadow-2xl border border-stone-200 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-stone-100 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl"></div>
+            <div class="relative z-10">
+                <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" alt="Portwish" class="h-8 md:h-10 mx-auto mb-6">
+                <h2 class="text-xl md:text-2xl font-extrabold tracking-tight mb-1">System Control</h2>
+                <p class="text-[10px] md:text-xs text-stone-500 font-medium mb-8">Masukan kredensial admin untuk akses.</p>
+                <div class="space-y-5 text-left mb-8">
+                    <div class="input-float"><input type="email" id="adminEmail" placeholder=" " required onkeypress="handleEnter(event)"><label>Admin Email</label></div>
+                    <div class="input-float"><input type="password" id="adminPass" placeholder=" " required onkeypress="handleEnter(event)"><label>Password</label></div>
+                </div>
+                <p id="loginErrorMsg" class="text-[10px] text-red-500 font-bold uppercase tracking-widest mb-4 hidden">Akses Ditolak! Kredensial Salah.</p>
+                <button onclick="loginAdmin()" id="btnAdminLogin" class="w-full bg-black text-white font-extrabold py-3.5 md:py-4 rounded-2xl shadow-xl hover:bg-stone-800 transition active:scale-95 text-sm">MASUK DASHBOARD</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminToast" class="fixed top-4 md:top-10 left-1/2 transform -translate-x-1/2 z-[1000] transition-all duration-500 translate-y-[-150%] opacity-0 pointer-events-none w-max max-w-[90vw]">
+        <div class="bg-black/95 backdrop-blur-md text-white text-[10px] md:text-[11px] font-bold px-4 md:px-5 py-2.5 md:py-3 rounded-full shadow-2xl flex items-center space-x-2 border border-stone-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            <span id="adminToastMsg">Success</span>
+        </div>
+    </div>
+
+    <aside class="w-full md:w-64 bg-white border-t md:border-t-0 md:border-r border-stone-200 flex flex-row md:flex-col justify-between z-[60] fixed bottom-0 md:relative h-[65px] md:h-auto shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:shadow-none transition-all">
+        <div class="flex-1 md:flex-none flex flex-col overflow-hidden w-[calc(100%-65px)] md:w-full">
+            <div class="h-20 items-center px-8 border-b border-stone-100 hidden md:flex shrink-0">
+                <img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-7"><span class="ml-2 text-[9px] font-extrabold bg-cream-100 text-black px-2 py-0.5 rounded uppercase tracking-widest border border-stone-200">ADMIN</span>
+            </div>
+            <nav class="px-3 md:p-4 py-2 flex flex-row md:flex-col gap-2 md:gap-0 md:space-y-2 overflow-x-auto hide-scroll items-center h-full md:h-auto w-full md:items-stretch">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn shrink-0 w-auto md:w-full flex items-center space-x-2 md:space-x-3 px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl bg-black text-white font-bold text-xs md:text-sm transition-all shadow-md"><svg class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><span class="whitespace-nowrap">Dashboard</span></button>
+                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn shrink-0 w-auto md:w-full flex items-center space-x-2 md:space-x-3 px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-xs md:text-sm transition-all"><svg class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span class="whitespace-nowrap flex items-center">Pesanan & Resi <span class="ml-1.5 md:ml-auto bg-red-500 text-white text-[9px] md:text-[10px] px-1.5 md:px-2 py-0.5 rounded-full" id="pendingCount">0</span></span></button>
+                <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn shrink-0 w-auto md:w-full flex items-center space-x-2 md:space-x-3 px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-xs md:text-sm transition-all"><svg class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg><span class="whitespace-nowrap">Kelola Katalog</span></button>
+                <button onclick="switchTab('research')" id="nav-research" class="nav-btn shrink-0 w-auto md:w-full flex items-center space-x-2 md:space-x-3 px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-xs md:text-sm transition-all"><svg class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z" /></svg><span class="whitespace-nowrap">Riset Produk</span></button>
+                <button onclick="switchTab('vouchers')" id="nav-vouchers" class="nav-btn shrink-0 w-auto md:w-full flex items-center space-x-2 md:space-x-3 px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-xs md:text-sm transition-all"><svg class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg><span class="whitespace-nowrap">Kelola Voucher</span></button>
+                <button onclick="switchTab('users')" id="nav-users" class="nav-btn shrink-0 w-auto md:w-full flex items-center space-x-2 md:space-x-3 px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl text-stone-500 hover:bg-cream-50 hover:text-black font-bold text-xs md:text-sm transition-all"><svg class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg><span class="whitespace-nowrap">Database Akun</span></button>
+            </nav>
+        </div>
+        <div class="w-[65px] md:w-full p-2 md:p-4 border-l md:border-l-0 md:border-t border-stone-100 flex items-center justify-center shrink-0">
+            <button onclick="logoutAdmin()" class="w-full h-full flex justify-center items-center md:space-x-3 md:px-4 md:py-3 rounded-xl text-red-500 hover:bg-red-50 font-bold text-sm transition-all" title="Keluar">
+                <svg class="h-5 w-5 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                <span class="hidden md:block whitespace-nowrap">Keluar Admin</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto w-full relative pb-[65px] md:pb-0">
+        <header class="h-16 md:h-20 bg-white/90 backdrop-blur-md border-b border-stone-200 sticky top-0 z-10 flex items-center justify-between px-4 md:px-8 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+            <h2 class="text-lg md:text-xl font-extrabold tracking-tight truncate pr-4" id="headerTitle">Dashboard Analytics</h2>
+            <div class="flex items-center space-x-3 md:space-x-4 shrink-0"><span class="text-[10px] md:text-xs font-bold text-stone-400 uppercase tracking-widest hidden sm:block" id="currentDate"></span><div class="h-8 w-8 md:h-10 md:w-10 bg-black rounded-full border-2 border-stone-200 flex items-center justify-center text-white font-bold shadow-sm text-xs md:text-base">A</div></div>
+        </header>
+
+        <div class="p-4 md:p-8">
+            <div id="dashboardTab" class="tab-content active space-y-4 md:space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                    <div class="bg-white p-5 md:p-6 rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-cream-100 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Total Pendapatan</p><h3 class="text-2xl md:text-3xl font-extrabold truncate" id="statRevenue">Rp 0</h3></div></div>
+                    <div class="bg-white p-5 md:p-6 rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Dalam Proses</p><h3 class="text-2xl md:text-3xl font-extrabold" id="statOrders">0</h3></div></div>
+                    <div class="bg-white p-5 md:p-6 rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm relative overflow-hidden group"><div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div><div class="relative z-10"><p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Menunggu Konfirmasi</p><h3 class="text-2xl md:text-3xl font-extrabold text-orange-600" id="statPending">0</h3></div></div>
+                </div>
+                <div class="bg-white p-5 md:p-6 rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 md:gap-4">
+                        <div><h3 class="font-extrabold text-base md:text-lg">Kurva Penjualan 2026</h3><p class="text-[10px] md:text-xs text-stone-500 font-medium">Statistik pendapatan per bulan</p></div>
+                        <button onclick="exportToExcel()" class="bg-[#107c41] w-full sm:w-auto justify-center hover:bg-[#0b5e31] text-white text-[10px] font-extrabold px-4 py-2.5 md:py-3 rounded-xl uppercase tracking-widest flex items-center shadow-md transition-colors active:scale-95"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1.5 16h-1.8l-1.6-3.8-1.7 3.8H8.6l2.6-5.4-2.4-5.2h1.8l1.4 3.6 1.5-3.6h1.7l-2.4 5.2 2.7 5.4zM13 9V3.5L18.5 9H13z"/></svg> UNDUH EXCEL</button>
+                    </div>
+                    <div class="w-full h-48 md:h-72"><canvas id="salesChart"></canvas></div>
+                </div>
+                <div class="bg-white p-5 md:p-6 rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4 md:mb-6">
+                        <div><h3 class="font-extrabold text-base md:text-lg">Transaksi Terkini</h3><p class="text-[10px] md:text-xs text-stone-500 font-medium">Pantau nama pemesan dan nomor resi</p></div>
+                        <button onclick="switchTab('orders')" class="text-[10px] font-extrabold text-stone-500 hover:text-black uppercase tracking-widest transition-colors flex items-center whitespace-nowrap">Semua <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                    </div>
+                    <div class="overflow-x-auto hide-scroll w-full"><table class="w-full text-left border-collapse whitespace-nowrap min-w-[500px]"><thead><tr class="bg-stone-50 text-[9px] md:text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-3 md:p-4 font-extrabold rounded-tl-xl">Pelanggan</th><th class="p-3 md:p-4 font-extrabold">Status Pesanan</th><th class="p-3 md:p-4 font-extrabold">No. Resi</th><th class="p-3 md:p-4 font-extrabold text-right rounded-tr-xl">Total Bayar</th></tr></thead><tbody id="recentOrdersBody" class="text-xs md:text-sm"></tbody></table></div>
+                </div>
+            </div>
+
+            <div id="ordersTab" class="tab-content">
+                <div class="bg-white rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
+                    <div class="p-4 md:p-6 border-b border-stone-100 flex flex-col md:flex-row justify-between items-center bg-cream-50/50 gap-3 md:gap-4">
+                        <h3 class="font-extrabold text-base md:text-lg w-full md:w-auto">Semua Transaksi</h3>
+                        <div class="flex space-x-2 w-full md:w-auto">
+                            <input type="text" id="orderSearchInput" placeholder="Cari ID / Nama..." class="input-box flex-1 md:w-64 py-2 text-xs md:text-sm font-semibold" oninput="filterOrders(this.value)">
+                            <button onclick="document.getElementById('orderSearchInput').value=''; renderOrders();" class="bg-stone-100 text-stone-600 px-3 py-2 rounded-xl text-[9px] md:text-[10px] font-extrabold border border-stone-200 hover:bg-stone-200 shrink-0">RESET</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto hide-scroll w-full">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
+                            <thead>
+                                <tr class="bg-stone-50 text-[9px] md:text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200 whitespace-nowrap">
+                                    <th class="p-3 md:p-4 font-extrabold">Order ID</th>
+                                    <th class="p-3 md:p-4 font-extrabold">Pelanggan</th>
+                                    <th class="p-3 md:p-4 font-extrabold">Batch</th>
+                                    <th class="p-3 md:p-4 font-extrabold">Total</th>
+                                    <th class="p-3 md:p-4 font-extrabold w-56 md:w-64">Status & Aksi</th>
+                                    <th class="p-3 md:p-4 font-extrabold text-center">Invoice</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderTableBody" class="text-xs md:text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="catalogTab" class="tab-content">
+                <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 md:mb-6 gap-3">
+                    <h3 class="font-extrabold text-lg md:text-xl">Kelola Produk</h3>
+                    <div class="flex space-x-2 overflow-x-auto hide-scroll pb-1 w-full md:w-auto">
+                        <button onclick="openCountryModal()" class="shrink-0 bg-white border border-stone-200 text-stone-600 text-[9px] md:text-[10px] font-extrabold px-3 py-2 md:px-4 md:py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors whitespace-nowrap">K. Negara</button>
+                        <button onclick="openCategoryModal()" class="shrink-0 bg-white border border-stone-200 text-stone-600 text-[9px] md:text-[10px] font-extrabold px-3 py-2 md:px-4 md:py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors whitespace-nowrap">K. Kategori</button>
+                        <button onclick="openBatchModal()" class="shrink-0 bg-white border border-stone-200 text-stone-600 text-[9px] md:text-[10px] font-extrabold px-3 py-2 md:px-4 md:py-2.5 rounded-xl uppercase tracking-widest shadow-sm hover:text-black hover:border-black transition-colors flex items-center whitespace-nowrap"><svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 md:h-4 md:w-4 mr-1 md:mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg> K. Batch</button>
+                        <button onclick="openProductModal()" class="shrink-0 bg-black text-white text-[9px] md:text-[10px] font-extrabold px-3 py-2 md:px-4 md:py-2.5 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors whitespace-nowrap">+ Tambah Produk</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6" id="adminCatalogGrid"></div>
+            </div>
+
+            <div id="researchTab" class="tab-content">
+                <div class="bg-white rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden p-4 md:p-6 mb-4 md:mb-6">
+                    <h3 class="font-extrabold text-base md:text-lg mb-2 md:mb-4">Tambah Target Riset</h3>
+                    <p class="text-[9px] md:text-[10px] font-medium text-stone-500 mb-4">Simpan link referensi, barang incaran, atau harga kompetitor sebelum dipublish.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4">
+                        <div class="input-float"><input type="text" id="rName" placeholder=" " required><label>Nama Barang / Topik</label></div>
+                        <div class="input-float"><input type="url" id="rLink" placeholder=" " required><label>Link Referensi (URL)</label></div>
+                        <div class="input-float"><input type="text" id="rNote" placeholder=" " required><label>Catatan Target</label></div>
+                    </div>
+                    <button onclick="addResearch()" id="btnAddResearch" class="w-full bg-black text-white text-[10px] md:text-[11px] font-extrabold px-6 py-3 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors">SIMPAN RISET</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="researchGridArea"></div>
+            </div>
+
+            <div id="vouchersTab" class="tab-content">
+                <div class="bg-white rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden p-4 md:p-6 mb-4 md:mb-6">
+                    <h3 class="font-extrabold text-base md:text-lg mb-4">Buat Voucher Diskon</h3>
+                    <div class="flex flex-col lg:flex-row gap-3 md:gap-4 items-end">
+                        <div class="input-float w-full"><input type="text" id="vCode" placeholder=" " required style="text-transform: uppercase;"><label>Kode Voucher</label></div>
+                        <div class="input-float w-full"><input type="number" id="vNominal" placeholder=" " required><label>Potongan (Rp)</label></div>
+                        <div class="input-float w-full"><input type="number" id="vQuota" placeholder=" " required><label>Batas Kuota</label></div>
+                        <button onclick="addVoucher()" id="btnAddVoucher" class="w-full lg:w-auto bg-black text-white text-[10px] md:text-[11px] font-extrabold px-6 py-3 md:py-3.5 rounded-xl uppercase tracking-widest shadow-md hover:bg-stone-800 transition-colors shrink-0">SIMPAN VOUCHER</button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
+                    <div class="p-4 md:p-6 border-b border-stone-100 bg-cream-50/50"><h3 class="font-extrabold text-base md:text-lg">Daftar Voucher Aktif</h3></div>
+                    <div class="overflow-x-auto hide-scroll w-full">
+                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[500px]">
+                            <thead><tr class="bg-stone-50 text-[9px] md:text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200">
+                                <th class="p-3 md:p-4 font-extrabold">Kode Voucher</th>
+                                <th class="p-3 md:p-4 font-extrabold">Potongan (Rp)</th>
+                                <th class="p-3 md:p-4 font-extrabold text-center">Sisa Kuota</th>
+                                <th class="p-3 md:p-4 font-extrabold text-right">Aksi</th>
+                            </tr></thead>
+                            <tbody id="voucherTableBody" class="text-xs md:text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="usersTab" class="tab-content">
+                <div class="bg-white rounded-[20px] md:rounded-[24px] border border-stone-200 shadow-sm overflow-hidden">
+                    <div class="p-4 md:p-6 border-b border-stone-100 bg-cream-50/50"><h3 class="font-extrabold text-base md:text-lg">Database Akun Pelanggan</h3></div>
+                    <div class="overflow-x-auto hide-scroll w-full"><table class="w-full text-left border-collapse whitespace-nowrap min-w-[600px]"><thead><tr class="bg-stone-50 text-[9px] md:text-[10px] uppercase tracking-widest text-stone-500 border-b border-stone-200"><th class="p-3 md:p-4 font-extrabold">Nama Lengkap</th><th class="p-3 md:p-4 font-extrabold">Email</th><th class="p-3 md:p-4 font-extrabold">No. WhatsApp</th><th class="p-3 md:p-4 font-extrabold">Password</th></tr></thead><tbody id="userTableBody" class="text-xs md:text-sm"></tbody></table></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="invoiceModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-0 md:p-4">
+        <div class="bg-white w-full max-w-2xl h-full md:h-auto max-h-[100vh] md:max-h-[90vh] rounded-none md:rounded-[32px] shadow-2xl overflow-hidden flex flex-col">
+            <div class="p-3 md:p-4 border-b border-stone-100 flex justify-between items-center bg-cream-50 no-print shrink-0 mt-4 md:mt-0">
+                <h3 class="font-extrabold text-base md:text-lg text-black ml-2 md:ml-0">Detail Invoice</h3>
+                <div class="flex space-x-2 mr-2 md:mr-0">
+                    <button onclick="printInvoice()" class="bg-black text-white text-[9px] md:text-[10px] font-extrabold px-3 md:px-4 py-2 rounded-lg uppercase tracking-widest hover:bg-stone-800 transition">Print PDF</button>
+                    <button onclick="closeInvoiceModal()" class="bg-white border border-stone-200 text-stone-600 px-2.5 md:px-3 py-2 rounded-lg hover:bg-stone-100"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                </div>
+            </div>
+            <div class="p-4 md:p-8 overflow-y-auto flex-1 text-black bg-white" id="invoicePrintArea">
+                <div class="flex flex-col sm:flex-row justify-between items-start mb-6 md:mb-10 border-b border-stone-200 pb-6 md:pb-8 gap-4">
+                    <div><img src="https://res.cloudinary.com/dvtgxw9jj/image/upload/v1777637480/IMG_9379_spswky.png" class="h-6 md:h-8 mb-3 md:mb-4"><p class="text-[9px] md:text-[10px] text-stone-500 font-bold uppercase tracking-widest">Premium Personal Shopper</p></div>
+                    <div class="text-left sm:text-right"><h1 class="text-3xl md:text-4xl font-extrabold tracking-tighter mb-1">INVOICE</h1><p class="font-bold text-sm text-stone-500" id="invId">INV-000000</p><p class="text-[10px] md:text-xs font-semibold mt-1 text-stone-400" id="invDate">Date: -</p></div>
+                </div>
+                <div class="flex flex-col sm:flex-row justify-between mb-6 md:mb-8 gap-4">
+                    <div><p class="text-[9px] md:text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Billed To:</p><h4 class="font-extrabold text-base md:text-lg" id="invName">Nama Pelanggan</h4><p class="text-xs md:text-sm text-stone-600 mt-1 font-medium" id="invEmail">email@domain.com</p><p class="text-xs md:text-sm text-stone-600 max-w-xs mt-1 font-medium" id="invAddress">Alamat</p></div>
+                    <div class="text-left sm:text-right"><p class="text-[9px] md:text-[10px] text-stone-400 font-extrabold uppercase tracking-widest mb-1">Batch:</p><span class="bg-cream-100 text-black font-extrabold px-3 py-1 rounded-full text-[10px] md:text-xs border border-stone-200 inline-block" id="invBatch">BATCH NAME</span></div>
+                </div>
+                <div class="overflow-x-auto hide-scroll pb-2">
+                    <table class="w-full text-left border-collapse mb-6 md:mb-8 min-w-[400px]"><thead><tr class="border-b-2 border-black text-[9px] md:text-[10px] uppercase tracking-widest text-stone-500"><th class="py-2 md:py-3 font-extrabold w-2/3">Deskripsi Produk</th><th class="py-2 md:py-3 font-extrabold text-center">Qty</th><th class="py-2 md:py-3 font-extrabold text-right">Harga</th></tr></thead><tbody id="invItems" class="text-xs md:text-sm font-semibold border-b border-stone-200"></tbody></table>
+                </div>
+                <div class="flex justify-end"><div class="w-full sm:w-1/2"><div class="flex justify-between py-2 text-sm text-stone-500 font-bold"><span>Subtotal</span><span id="invSubtotal">Rp 0</span></div><div class="flex justify-between py-3 border-t-2 border-black mt-2 text-base md:text-lg"><span class="font-extrabold text-black">TOTAL</span><span class="font-extrabold text-black" id="invTotalMain">Rp 0</span></div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="proofModal" class="fixed inset-0 z-[110] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-[24px] md:rounded-[32px] p-5 md:p-6 max-w-sm w-full text-center relative border border-stone-100 shadow-2xl">
+            <button onclick="closeProofModal()" class="absolute top-3 md:top-4 right-3 md:right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black transition-colors border border-stone-200"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <h3 class="font-extrabold text-base md:text-lg mb-4 text-black text-left">Bukti Pembayaran</h3>
+            <div class="bg-cream-50 p-2 rounded-[20px] md:rounded-[24px] border border-stone-200 mb-4"><img id="proofImage" src="https://placehold.co/400" alt="Bukti Transfer" class="w-full rounded-[14px] md:rounded-[16px] object-cover max-h-[50vh]"></div>
+            
+            <div class="flex space-x-2 md:space-x-3">
+                <a id="downloadProofBtn" href="#" target="_blank" download="Bukti_Transfer.jpg" class="flex-1 bg-white border border-stone-200 text-black font-extrabold py-3 md:py-3.5 rounded-xl md:rounded-2xl shadow-sm hover:bg-stone-50 transition text-[9px] md:text-[11px] uppercase tracking-widest flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 md:h-4 md:w-4 mr-1 md:mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> UNDUH
+                </a>
+                <button id="verifyProofBtn" onclick="verifyPayment()" class="flex-1 bg-green-600 text-white font-extrabold py-3 md:py-3.5 rounded-xl md:rounded-2xl shadow-xl hover:bg-green-700 transition text-[9px] md:text-[11px] uppercase tracking-widest">
+                    VERIFIKASI
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals untuk Batch, Kategori, Negara (Disesuaikan Padding & Radiusnya) -->
+    <div id="batchModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[24px] md:rounded-[32px] shadow-2xl p-5 md:p-6 relative border border-stone-100">
+            <button onclick="closeBatchModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <h3 class="font-extrabold text-base md:text-lg mb-1 pr-8">Daftar Batch</h3><p class="text-[9px] md:text-[10px] text-stone-500 font-medium mb-4">Batch ini akan muncul di Dropdown Checkout.</p>
+            <div class="flex space-x-2 mb-4">
+                <input type="text" id="newBatchInput" placeholder="Misal: Batch USA #02" class="input-box py-2 md:py-2.5 text-xs">
+                <button onclick="addBatch()" id="btnAddBatch" class="bg-black text-white text-[9px] md:text-[10px] font-extrabold px-3 md:px-4 py-2 md:py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95 shrink-0">TAMBAH</button>
+            </div>
+            <div id="batchListArea" class="space-y-2 max-h-60 overflow-y-auto hide-scroll pb-2"></div>
+        </div>
+    </div>
+
+    <div id="countryModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[24px] md:rounded-[32px] shadow-2xl p-5 md:p-6 relative border border-stone-100">
+            <button onclick="closeCountryModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <h3 class="font-extrabold text-base md:text-lg mb-1 pr-8">Daftar Negara</h3><p class="text-[9px] md:text-[10px] text-stone-500 font-medium mb-4">Negara asal produk belanja.</p>
+            <div class="flex space-x-2 mb-4">
+                <input type="text" id="newCountryInput" placeholder="Misal: SINGAPORE" class="input-box py-2 md:py-2.5 text-xs uppercase">
+                <button onclick="addCountry()" id="btnAddCountry" class="bg-black text-white text-[9px] md:text-[10px] font-extrabold px-3 md:px-4 py-2 md:py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95 shrink-0">TAMBAH</button>
+            </div>
+            <div id="countryListArea" class="space-y-2 max-h-60 overflow-y-auto hide-scroll pb-2"></div>
+        </div>
+    </div>
+
+    <div id="categoryModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[24px] md:rounded-[32px] shadow-2xl p-5 md:p-6 relative border border-stone-100">
+            <button onclick="closeCategoryModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <h3 class="font-extrabold text-base md:text-lg mb-1 pr-8">Daftar Kategori</h3><p class="text-[9px] md:text-[10px] text-stone-500 font-medium mb-4">Kategori tipe produk.</p>
+            <div class="flex space-x-2 mb-4">
+                <input type="text" id="newCategoryInput" placeholder="Misal: Sepatu" class="input-box py-2 md:py-2.5 text-xs">
+                <button onclick="addCategory()" id="btnAddCategory" class="bg-black text-white text-[9px] md:text-[10px] font-extrabold px-3 md:px-4 py-2 md:py-2.5 rounded-xl transition hover:bg-stone-800 active:scale-95 shrink-0">TAMBAH</button>
+            </div>
+            <div id="categoryListArea" class="space-y-2 max-h-60 overflow-y-auto hide-scroll pb-2"></div>
+        </div>
+    </div>
+
+    <div id="productModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[24px] md:rounded-[32px] shadow-2xl p-5 md:p-8 relative border border-stone-100 max-h-[90vh] overflow-y-auto hide-scroll">
+            <h3 class="font-extrabold text-lg md:text-xl mb-4 md:mb-6" id="prodModalTitle">Tambah Produk</h3>
+            <div class="space-y-3 md:space-y-4">
+                <input type="hidden" id="prodId">
+                <div>
+                    <label class="text-[9px] md:text-[10px] font-extrabold text-stone-400 uppercase block mb-1 md:mb-2 tracking-widest">Foto Produk</label>
+                    <label class="flex flex-col items-center justify-center w-full h-28 md:h-32 border-2 border-stone-200 border-dashed rounded-xl md:rounded-2xl cursor-pointer hover:bg-cream-50 transition-all bg-cream-50/50 overflow-hidden relative group" id="uploadArea">
+                        <div class="flex flex-col items-center justify-center text-stone-500 group-hover:scale-105 transition-transform" id="uploadPlaceholder"><div class="bg-white p-2 rounded-full shadow-sm mb-2 border border-stone-100"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 md:w-5 md:h-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg></div><p class="text-[9px] md:text-[10px] font-bold text-black">Klik untuk Upload Foto</p></div>
+                        <img id="prodImgPreview" src="" class="hidden absolute inset-0 w-full h-full object-contain bg-white">
+                        <input id="prodImgFile" type="file" class="hidden" accept="image/*" onchange="previewUploadedImage(event)" />
+                    </label>
+                </div>
+                <div class="input-float"><input type="text" id="prodName" placeholder=" " required><label>Nama Produk</label></div>
+                <div class="input-float"><textarea id="prodDesc" placeholder=" " required class="input-box bg-transparent" style="padding-top:20px; resize:none" rows="2"></textarea><label style="top:12px;">Deskripsi Produk</label></div>
+                
+                <div class="grid grid-cols-2 gap-3 md:gap-4">
+                    <div class="input-float"><input type="number" id="prodPrice" placeholder=" " required><label>Harga (Rp)</label></div>
+                    <div class="input-float"><input type="number" id="prodWeight" placeholder=" " required><label>Berat (Gram)</label></div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mt-2">
+                    <div class="relative"><label class="text-[9px] md:text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black py-2.5 md:py-3 text-xs md:text-sm"></select></div>
+                    <div class="relative"><label class="text-[9px] md:text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black py-2.5 md:py-3 text-xs md:text-sm"></select></div>
+                </div>
+            </div>
+            <div class="flex space-x-2 md:space-x-3 mt-6 md:mt-8">
+                <button onclick="closeProductModal()" class="flex-1 bg-white border border-stone-200 text-black font-extrabold py-3 md:py-3.5 rounded-xl md:rounded-2xl transition hover:bg-stone-50 text-[9px] md:text-[11px] tracking-widest uppercase">BATAL</button>
+                <button onclick="saveProduct()" id="btnSaveProduct" class="flex-1 bg-black text-white font-extrabold py-3 md:py-3.5 rounded-xl md:rounded-2xl shadow-lg hover:bg-stone-800 transition text-[9px] md:text-[11px] tracking-widest uppercase">SIMPAN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC TETAP UTUH -->
+    <script>
+        // =========================================================
+        // 1. KONFIGURASI FIREBASE REALTIME DATABASE 
+        // =========================================================
+        const firebaseConfig = {
+            databaseURL: "https://portwish-b2fe3-default-rtdb.asia-southeast1.firebasedatabase.app" 
+        };
+        
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const db = firebase.database();
+
+        // =========================================================
+        // DEFINISI STATUS ORDER TERBARU (FULL 8 OPSI)
+        // =========================================================
+        const STATUS_OPTIONS = [
+            "Pending Payment",
+            "Payment Confirmed",
+            "Waiting for Batch",
+            "Purchased",
+            "In Transit",
+            "Arrived at Warehouse",
+            "Shipped to Customer",
+            "Completed"
+        ];
+        
+        let catalogDB = []; let batchesDB = []; let ordersDB = []; let vouchersDB = []; let researchDB = [];
+        let categoriesDB = ["Skincare", "Fashion", "Food & Snacks"]; 
+        let countriesDB = ["USA", "JAPAN", "KOREA"]; 
+
+        let usersDB = JSON.parse(localStorage.getItem('pw_users')) || [];
+        let salesMonthly = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
+        const formatRp = (num) => 'Rp ' + num.toLocaleString('id-ID');
+        let currentUploadedImageBase64 = null; 
+        let currentProofOrderId = null; // Menyimpan ID order saat modal verifikasi dibuka
+
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        // =========================================================
+        // AUTENTIKASI
+        // =========================================================
+        function loginAdmin() {
+            const email = document.getElementById('adminEmail').value;
+            const pass = document.getElementById('adminPass').value;
+            if(!email || !pass) return;
+
+            document.getElementById('loginErrorMsg').classList.add('hidden');
+            document.getElementById('btnAdminLogin').innerHTML = `<span class="loader loader-white"></span>`;
+            
+            db.ref('admin_account').once('value').then((snapshot) => {
+                const adminData = snapshot.val();
+                if ((adminData && email === adminData.email && pass === adminData.password) ||
+                    (email === 'admin@portwish.id' && pass === 'admin123')) {
+                    
+                    document.getElementById('adminLoginGate').classList.add('opacity-0'); 
+                    setTimeout(() => { 
+                        document.getElementById('adminLoginGate').classList.add('hidden'); 
+                        showAdminToast("Login Berhasil!"); 
+                        switchTab('dashboard');
+                    }, 500);
+                    
+                    setupRealtimeListeners();
+                } else { throw new Error("Kredensial Salah"); }
+            }).catch(err => {
+                document.getElementById('loginErrorMsg').classList.remove('hidden'); 
+                document.getElementById('adminPass').value = ''; 
+                document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
+            });
+        }
+        function handleEnter(e) { if (e.key === 'Enter') loginAdmin(); }
+        function logoutAdmin() {
+            if(confirm("Yakin ingin keluar dari panel admin?")) {
+                document.getElementById('adminEmail').value = ''; document.getElementById('adminPass').value = '';
+                document.getElementById('btnAdminLogin').innerHTML = `MASUK DASHBOARD`;
+                document.getElementById('adminLoginGate').classList.remove('hidden'); 
+                setTimeout(() => { document.getElementById('adminLoginGate').classList.remove('opacity-0'); }, 10);
+            }
+        }
+
+        // =========================================================
+        // FETCH DATA DARI REALTIME DATABASE 
+        // =========================================================
+        function setupRealtimeListeners() {
+            db.ref('catalog').on('value', snap => {
+                const data = snap.val() || {};
+                catalogDB = Object.keys(data).map(k => ({...data[k], dbKey: k}));
+                if(document.querySelector('.tab-content.active').id === 'catalogTab') renderCatalog();
+            });
+
+            db.ref('batches').on('value', snap => {
+                batchesDB = snap.val() || [];
+                if(!document.getElementById('batchModal').classList.contains('hidden')) renderBatches();
+            });
+
+            db.ref('categories').on('value', snap => {
+                if(snap.exists()) categoriesDB = snap.val() || [];
+                updateDropdowns();
+                if(!document.getElementById('categoryModal').classList.contains('hidden')) renderCategories();
+            });
+
+            db.ref('countries').on('value', snap => {
+                if(snap.exists()) countriesDB = snap.val() || [];
+                updateDropdowns();
+                if(!document.getElementById('countryModal').classList.contains('hidden')) renderCountries();
+            });
+
+            db.ref('vouchers').on('value', snap => {
+                const data = snap.val() || {};
+                vouchersDB = Object.keys(data).map(k => ({...data[k], dbKey: k}));
+                if(document.querySelector('.tab-content.active').id === 'vouchersTab') renderVouchers();
+            });
+
+            db.ref('research').on('value', snap => {
+                const data = snap.val() || {};
+                researchDB = Object.keys(data).map(k => ({...data[k], dbKey: k}));
+                if(document.querySelector('.tab-content.active').id === 'researchTab') renderResearch();
+            });
+
+            db.ref('orders').on('value', snap => {
+                const data = snap.val() || {};
+                ordersDB = Object.keys(data).map(key => {
+                    let o = data[key];
+                    return {
+                        dbKey: key, 
+                        id: o.id || key, 
+                        date: o.date, 
+                        user: o.user || { name:'', phone:'', email:'' },
+                        address: o.address, 
+                        batch: o.batch, 
+                        total: o.total, 
+                        status: o.status || 'Pending Payment', 
+                        resi: o.resi, 
+                        latestTracking: o.latestTracking, 
+                        trackingTime: o.trackingTime,
+                        trackingHistory: o.trackingHistory || [], 
+                        proofImg: o.proofImg, 
+                        items: typeof o.itemsInfo === 'string' ? JSON.parse(o.itemsInfo) : (o.itemsInfo || [])
+                    };
+                });
+                
+                ordersDB.forEach(o => {
+                    if(!usersDB.find(u => u.email === o.user.email)) {
+                        usersDB.push({ name: o.user.name, email: o.user.email, phone: o.user.phone, pass: "123" });
+                        localStorage.setItem('pw_users', JSON.stringify(usersDB));
+                    }
+                });
+
+                refreshActiveTab();
+            });
+        }
+
+        function updateDropdowns() {
+            const catSelect = document.getElementById('prodCat');
+            const countrySelect = document.getElementById('prodCountry');
+            if(catSelect) catSelect.innerHTML = categoriesDB.map(c => `<option value="${c}">${c}</option>`).join('');
+            if(countrySelect) countrySelect.innerHTML = countriesDB.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function refreshActiveTab() {
+            const activeTab = document.querySelector('.tab-content.active').id;
+            if(activeTab === 'dashboardTab') renderDashboard();
+            if(activeTab === 'ordersTab') renderOrders(document.getElementById('orderSearchInput').value);
+            if(activeTab === 'catalogTab') renderCatalog();
+            if(activeTab === 'researchTab') renderResearch();
+            if(activeTab === 'vouchersTab') renderVouchers();
+            if(activeTab === 'usersTab') renderUsers();
+        }
+
+        function showAdminToast(msg) {
+            const toast = document.getElementById('adminToast'); document.getElementById('adminToastMsg').textContent = msg;
+            toast.classList.remove('translate-y-[-150%]', 'opacity-0'); toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => { toast.classList.remove('translate-y-0', 'opacity-100'); toast.classList.add('translate-y-[-150%]', 'opacity-0'); }, 3000);
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active')); document.getElementById(tabId + 'Tab').classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => { btn.classList.remove('bg-black', 'text-white', 'shadow-md'); btn.classList.add('text-stone-500'); });
+            const activeBtn = document.getElementById('nav-' + tabId); 
+            if(activeBtn) {
+                activeBtn.classList.remove('text-stone-500', 'hover:bg-cream-50', 'hover:text-black'); activeBtn.classList.add('bg-black', 'text-white', 'shadow-md');
+            }
+            
+            const titles = { 'dashboard': 'Dashboard Analytics', 'orders': 'Order Management', 'catalog': 'Manage Catalog', 'research': 'Riset Target Belanja', 'vouchers': 'Voucher Management', 'users': 'User Database' }; 
+            document.getElementById('headerTitle').textContent = titles[tabId];
+            refreshActiveTab();
+        }
+
+        // =========================================================
+        // DASHBOARD & EXCEL EXPORT
+        // =========================================================
+        let salesChartInstance = null;
+        function initChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d'); if(salesChartInstance) salesChartInstance.destroy();
+            salesChartInstance = new Chart(ctx, { 
+                type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], datasets: [{ data: salesMonthly, borderColor: '#107c41', backgroundColor: 'rgba(16, 124, 65, 0.05)', borderWidth: 3, pointBackgroundColor: '#fff', pointBorderColor: '#107c41', pointBorderWidth: 2, pointRadius: 4, fill: true, tension: 0.4 }] }, 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f5f5f4', drawBorder: false } }, x: { grid: { display: false, drawBorder: false } } } } 
+            });
+        }
+
+        function renderDashboard() {
+            const totalRev = ordersDB.filter(o => o.status !== 'Pending Payment' && o.status.toUpperCase() !== 'AWAITING VERIFICATION').reduce((sum, o) => sum + parseInt(o.total || 0), 0);
+            const shippingOrd = ordersDB.filter(o => ['Purchased', 'In Transit', 'IN TRANSIT', 'Arrived at Warehouse', 'Shipped to Customer'].includes(o.status)).length;
+            const pendingOrd = ordersDB.filter(o => ['Pending Payment', 'AWAITING VERIFICATION', 'Payment Confirmed', 'Waiting for Batch'].includes(o.status)).length;
+
+            document.getElementById('statRevenue').textContent = formatRp(totalRev); 
+            document.getElementById('statOrders').textContent = shippingOrd; 
+            document.getElementById('statPending').textContent = pendingOrd; 
+            const pc = document.getElementById('pendingCount');
+            if(pc) pc.textContent = pendingOrd;
+            
+            const recentBody = document.getElementById('recentOrdersBody'); recentBody.innerHTML = '';
+            const latestOrders = ordersDB.slice(0, 5); 
+            if(latestOrders.length === 0) {
+                recentBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400 font-bold">Belum ada transaksi.</td></tr>`;
+            } else {
+                latestOrders.forEach(o => {
+                    let badgeClass = getBadgeColor(o.status);
+                    let resiText = o.resi ? `<span class="font-extrabold text-black bg-cream-100 px-2 py-1 rounded-md border border-stone-200">${o.resi}</span>` : `<span class="text-stone-400 italic text-[10px]">-</span>`;
+                    recentBody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-3 md:p-4 align-middle"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[9px] md:text-[10px] text-stone-400 font-bold">${o.id}</p></td><td class="p-3 md:p-4 align-middle"><span class="text-[8px] md:text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block ${badgeClass}">${o.status}</span></td><td class="p-3 md:p-4 text-xs align-middle">${resiText}</td><td class="p-3 md:p-4 font-extrabold text-black text-right align-middle">${formatRp(parseInt(o.total))}</td></tr>`;
+                });
+            }
+            initChart();
+        }
+
+        function exportToExcel() {
+            const data = ordersDB.map(o => ({ "Tanggal Transaksi": o.date, "ID Pesanan": o.id, "Nama Pelanggan": o.user.name, "No. WhatsApp": o.user.phone, "Alamat Lengkap": o.address, "Batch": o.batch, "Status Pembayaran": o.status, "Nomor Resi": o.resi || 'Belum Ada', "Total Pendapatan (Rp)": parseInt(o.total) }));
+            const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan"); XLSX.writeFile(wb, "Laporan_Keuangan_Portwish.xlsx"); showAdminToast("Laporan Keuangan Berhasil Diunduh!");
+        }
+
+        // =========================================================
+        // ORDER MANAGEMENT (TAB PESANAN & RESI - ALL IN ONE)
+        // =========================================================
+        function getBadgeColor(status) {
+            const s = status.toLowerCase();
+            if(s.includes("pending") || s.includes("awaiting")) return "bg-red-100 text-red-700 border-red-200";
+            if(s.includes("completed")) return "bg-green-100 text-green-700 border-green-200";
+            if(s.includes("shipped")) return "bg-blue-100 text-blue-700 border-blue-200";
+            if(s.includes("purchased") || s.includes("in transit") || s.includes("arrived")) return "bg-black text-white border-black";
+            return "bg-orange-100 text-orange-700 border-orange-200"; 
+        }
+
+        function renderOrders(search = '') {
+            const tbody = document.getElementById('orderTableBody'); tbody.innerHTML = '';
+            let filtered = search ? ordersDB.filter(o => o.id.toLowerCase().includes(search) || o.user.name.toLowerCase().includes(search)) : ordersDB;
+            filtered.forEach((o) => {
+                let badgeClass = getBadgeColor(o.status);
+                
+                // MENGGUNAKAN FULL 8 OPSI STATUS
+                let dropdownOptions = STATUS_OPTIONS.map(s => {
+                    let isSelected = '';
+                    if (o.status.toLowerCase() === s.toLowerCase()) isSelected = 'selected';
+                    if (o.status === 'AWAITING VERIFICATION' && s === 'Pending Payment') isSelected = 'selected';
+                    return `<option value="${s}" ${isSelected}>${s}</option>`;
+                }).join('');
+                
+                let proofBtn = o.proofImg && (o.status === 'Pending Payment' || o.status === 'AWAITING VERIFICATION') ? `<button onclick="viewProof('${o.id}')" class="bg-white border border-stone-200 text-stone-600 text-[9px] font-extrabold px-2 py-1.5 md:py-2 rounded-lg shadow-sm hover:text-black hover:border-black transition mb-2 w-full">LIHAT BUKTI BAYAR</button>` : (o.proofImg ? `<button onclick="viewProof('${o.id}')" class="bg-transparent text-stone-400 hover:text-black text-[9px] font-extrabold py-1 transition mb-2 w-full underline">Lihat Bukti Bayar</button>` : '');
+
+                let statusAction = `
+                    <div class="mt-2 w-full">
+                        ${proofBtn}
+                        <select id="statusSelect_${o.id}" onchange="toggleResiInput('${o.id}')" class="input-box bg-cream-50 py-1.5 px-2 text-[9px] md:text-[10px] w-full font-bold mb-2 outline-none border-stone-200">
+                            ${dropdownOptions}
+                        </select>
+                        <input type="text" id="resiInput_${o.id}" placeholder="Input Nomor Resi..." class="input-box py-1.5 px-2 text-[9px] md:text-[10px] w-full mb-2 bg-white border-stone-200" style="display: ${o.status === 'Shipped to Customer' ? 'block' : 'none'}" value="${o.resi || ''}">
+                        <button onclick="updateOrderStatus('${o.id}')" id="btnUpdate_${o.id}" class="bg-black text-white text-[8px] md:text-[9px] font-extrabold px-3 py-2 rounded-lg w-full hover:bg-stone-800 transition shadow-sm">SIMPAN STATUS</button>
+                    </div>
+                `;
+                
+                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors">
+                    <td class="p-3 md:p-4 font-extrabold text-black align-top">${o.id}<br><span class="text-[8px] md:text-[9px] text-stone-400 font-bold">${o.date}</span></td>
+                    <td class="p-3 md:p-4 align-top"><p class="font-extrabold text-black">${o.user.name}</p><p class="text-[9px] md:text-[10px] text-stone-500 font-bold">${o.user.phone}</p></td>
+                    <td class="p-3 md:p-4 text-[9px] md:text-[10px] font-extrabold text-stone-500 align-top">${o.batch}</td>
+                    <td class="p-3 md:p-4 font-extrabold text-black align-top">${formatRp(parseInt(o.total))}</td>
+                    <td class="p-3 md:p-4 align-top whitespace-normal min-w-[180px] md:min-w-[200px]">
+                        <span class="text-[8px] md:text-[9px] font-extrabold px-2.5 py-1 rounded-full border inline-block mb-1 ${badgeClass}">${o.status}</span>
+                        ${statusAction}
+                    </td>
+                    <td class="p-3 md:p-4 text-center align-top pt-4 md:pt-5">
+                        <button onclick="openInvoice('${o.id}')" class="text-stone-400 hover:text-black bg-white border border-stone-200 p-2 md:p-2.5 rounded-xl shadow-sm transition-colors" title="Lihat Invoice"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button>
+                    </td>
+                </tr>`;
+            });
+        }
+
+        function filterOrders(val) { renderOrders(val.toLowerCase()); }
+
+        function toggleResiInput(orderId) {
+            const sel = document.getElementById(`statusSelect_${orderId}`).value;
+            const resiBox = document.getElementById(`resiInput_${orderId}`);
+            if(sel === 'Shipped to Customer') {
+                resiBox.style.display = 'block';
+            } else {
+                resiBox.style.display = 'none';
+            }
+        }
+
+        function updateOrderStatus(orderId) { 
+            const newStatus = document.getElementById(`statusSelect_${orderId}`).value;
+            const resiVal = document.getElementById(`resiInput_${orderId}`).value.trim();
+            const btn = document.getElementById(`btnUpdate_${orderId}`);
+
+            if(newStatus === 'Shipped to Customer' && !resiVal) {
+                return alert("Harap isi nomor resi jika pesanan dikirim!");
+            }
+
+            const order = ordersDB.find(x => x.id === orderId);
+            if(!order || !order.dbKey) return alert("Error: Order Data tidak valid!");
+
+            btn.innerHTML = "..."; btn.disabled = true;
+
+            const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
+            
+            // AUTO GENERATE TRACKING MESSAGE
+            let trackingMsg = '';
+            if (newStatus === 'Pending Payment') trackingMsg = 'Menunggu pembayaran dari pelanggan.';
+            else if (newStatus === 'Payment Confirmed') trackingMsg = 'Pembayaran telah dikonfirmasi. Menunggu jadwal batch.';
+            else if (newStatus === 'Waiting for Batch') trackingMsg = 'Pesanan sedang menunggu jadwal batch keberangkatan.';
+            else if (newStatus === 'Purchased') trackingMsg = 'Barang telah dibeli oleh Personal Shopper.';
+            else if (newStatus === 'In Transit') trackingMsg = 'Barang sedang dalam perjalanan (In Transit).';
+            else if (newStatus === 'Arrived at Warehouse') trackingMsg = 'Barang telah tiba di Gudang Portwish.';
+            else if (newStatus === 'Shipped to Customer') trackingMsg = 'Barang telah diserahkan ke Kurir Lokal. Resi: ' + resiVal;
+            else if (newStatus === 'Completed') trackingMsg = 'Pesanan telah diterima oleh pelanggan.';
+
+            let historyArray = order.trackingHistory ? [...order.trackingHistory] : [];
+            
+            // Cek agar tidak duplikat pesan beruntun (kecuali update resi)
+            if (historyArray.length === 0 || historyArray[historyArray.length - 1].status !== trackingMsg) {
+                historyArray.push({ status: trackingMsg, time: t });
+            }
+
+            db.ref('orders/' + order.dbKey).update({
+                status: newStatus,
+                resi: (newStatus === 'Shipped to Customer' || resiVal) ? resiVal : (order.resi || ''),
+                latestTracking: trackingMsg,
+                trackingTime: t,
+                trackingHistory: historyArray
+            }).then(() => {
+                showAdminToast("Status & Logistik diupdate!");
+                btn.innerHTML = "SIMPAN STATUS"; btn.disabled = false;
+            }).catch(e => {
+                showAdminToast("Gagal mengupdate status.");
+                btn.innerHTML = "SIMPAN STATUS"; btn.disabled = false;
+            });
+        }
+
+        // =========================================================
+        // VIEW PROOF & VERIFY (MODAL)
+        // =========================================================
+        function getDirectUrl(url) {
+            if (!url) return 'https://placehold.co/400';
+            if (url.includes('drive.google.com')) {
+                let id = "";
+                if(url.includes('id=')) id = url.split('id=')[1].split('&')[0];
+                else if (url.includes('/file/d/')) id = url.split('/file/d/')[1].split('/')[0];
+                if(id) return `https://lh3.googleusercontent.com/d/${id}=w1000`;
+            }
+            return url;
+        }
+
+        function viewProof(orderId) {
+            currentProofOrderId = orderId;
+            const order = ordersDB.find(x => x.id === orderId);
+            const imgSrc = getDirectUrl(order.proofImg);
+            document.getElementById('proofImage').src = imgSrc;
+            const downloadBtn = document.getElementById('downloadProofBtn'); 
+            downloadBtn.href = imgSrc; 
+            downloadBtn.download = `Bukti_Transfer_${order.id}.jpg`;
+
+            // Sembunyikan tombol verifikasi jika sudah diverifikasi
+            if(order.status !== 'Pending Payment' && order.status !== 'AWAITING VERIFICATION') {
+                document.getElementById('verifyProofBtn').style.display = 'none';
+            } else {
+                document.getElementById('verifyProofBtn').style.display = 'block';
+            }
+
+            document.getElementById('proofModal').classList.remove('hidden');
+        }
+
+        function closeProofModal() { 
+            currentProofOrderId = null;
+            document.getElementById('proofModal').classList.add('hidden'); 
+        }
+
+        function verifyPayment() {
+            if(!currentProofOrderId) return;
+            const order = ordersDB.find(x => x.id === currentProofOrderId);
+            if(!order || !order.dbKey) return alert("Data order tidak valid.");
+
+            const btn = document.getElementById('verifyProofBtn');
+            btn.innerHTML = "..."; btn.disabled = true;
+
+            const t = new Date().toLocaleString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + ' WIB';
+            const msg = "Pembayaran telah diverifikasi oleh Admin. Menunggu jadwal batch.";
+            
+            let historyArray = order.trackingHistory ? [...order.trackingHistory] : [];
+            historyArray.push({ status: msg, time: t });
+
+            db.ref('orders/' + order.dbKey).update({ 
+                status: 'Payment Confirmed',
+                latestTracking: msg,
+                trackingTime: t,
+                trackingHistory: historyArray
+            }).then(() => {
+                showAdminToast("Pembayaran diverifikasi!");
+                btn.innerHTML = "VERIFIKASI"; btn.disabled = false;
+                closeProofModal();
+            }).catch(e => {
+                showAdminToast("Gagal memverifikasi.");
+                btn.innerHTML = "VERIFIKASI"; btn.disabled = false;
+            });
+        }
+
+        // =========================================================
+        // INVOICE & BATCH & NEGARA & KATEGORI (BERAT DITAMBAHKAN)
+        // =========================================================
+        function openInvoice(orderId) {
+            const o = ordersDB.find(x => x.id === orderId);
+            document.getElementById('invId').textContent = o.id; document.getElementById('invDate').textContent = `Date: ${o.date}`; document.getElementById('invName').textContent = o.user.name; document.getElementById('invEmail').textContent = o.user.email; document.getElementById('invAddress').textContent = o.address; document.getElementById('invBatch').textContent = o.batch;
+            const tbody = document.getElementById('invItems'); tbody.innerHTML = '';
+            
+            let itemsParsed = [];
+            try { 
+                if(o.itemsInfo) itemsParsed = JSON.parse(o.itemsInfo); 
+                else if(o.items) itemsParsed = Array.isArray(o.items) ? o.items : Object.values(o.items);
+            } catch(e) {}
+            if(!Array.isArray(itemsParsed)) itemsParsed = [];
+            
+            let grouped = {}; 
+            itemsParsed.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
+            
+            for(let k in grouped) { 
+                const i = grouped[k]; 
+                tbody.innerHTML += `<tr><td class="py-3 md:py-4 border-b border-stone-100"><p class="font-extrabold text-black text-xs md:text-sm pr-2">${i.name}</p><p class="text-[8px] md:text-[9px] text-stone-400 uppercase tracking-widest font-bold mt-1">${i.country} • ${i.category} • ${i.weight || 0}g</p></td><td class="py-3 md:py-4 text-center font-bold border-b border-stone-100">x${i.qty}</td><td class="py-3 md:py-4 text-right font-extrabold text-black border-b border-stone-100">${formatRp(i.price * i.qty)}</td></tr>`; 
+            }
+            document.getElementById('invSubtotal').textContent = formatRp(parseInt(o.total)); document.getElementById('invTotalMain').textContent = formatRp(parseInt(o.total));
+            document.getElementById('invoiceModal').classList.remove('hidden');
+        }
+        function closeInvoiceModal() { document.getElementById('invoiceModal').classList.add('hidden'); }
+        function printInvoice() { window.print(); }
+
+        /* BATCH */
+        function openBatchModal() { renderBatches(); document.getElementById('batchModal').classList.remove('hidden'); }
+        function closeBatchModal() { document.getElementById('batchModal').classList.add('hidden'); }
+        function renderBatches() {
+            const area = document.getElementById('batchListArea'); area.innerHTML = '';
+            if(batchesDB.length === 0) { area.innerHTML = `<p class="text-[10px] md:text-xs text-stone-400 text-center py-4">Belum ada batch tersedia.</p>`; return; }
+            batchesDB.forEach((b, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-2.5 md:p-3 rounded-xl border border-stone-100"><span class="text-[10px] md:text-xs font-bold text-black truncate pr-2">${b}</span><button onclick="deleteBatch(${i})" class="text-stone-400 hover:text-red-500 transition shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
+        }
+        function addBatch() {
+            const val = document.getElementById('newBatchInput').value.trim();
+            if(val) {
+                document.getElementById('btnAddBatch').innerHTML = "...";
+                const newBatches = [...batchesDB, val];
+                db.ref('batches').set(newBatches).then(() => {
+                    document.getElementById('newBatchInput').value = '';
+                    showAdminToast("Batch ditambahkan!"); 
+                    document.getElementById('btnAddBatch').innerHTML = "TAMBAH";
+                });
+            }
+        }
+        function deleteBatch(index) { const newBatches = [...batchesDB]; newBatches.splice(index, 1); db.ref('batches').set(newBatches).then(() => showAdminToast("Batch dihapus.")); }
+
+        /* KATEGORI */
+        function openCategoryModal() { renderCategories(); document.getElementById('categoryModal').classList.remove('hidden'); }
+        function closeCategoryModal() { document.getElementById('categoryModal').classList.add('hidden'); }
+        function renderCategories() {
+            const area = document.getElementById('categoryListArea'); area.innerHTML = '';
+            if(categoriesDB.length === 0) { area.innerHTML = `<p class="text-[10px] md:text-xs text-stone-400 text-center py-4">Belum ada kategori tersedia.</p>`; return; }
+            categoriesDB.forEach((c, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-2.5 md:p-3 rounded-xl border border-stone-100"><span class="text-[10px] md:text-xs font-bold text-black truncate pr-2">${c}</span><button onclick="deleteCategory(${i})" class="text-stone-400 hover:text-red-500 transition shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
+        }
+        function addCategory() {
+            const val = document.getElementById('newCategoryInput').value.trim();
+            if(val) {
+                document.getElementById('btnAddCategory').innerHTML = "...";
+                const newCat = [...categoriesDB, val];
+                db.ref('categories').set(newCat).then(() => {
+                    document.getElementById('newCategoryInput').value = ''; showAdminToast("Kategori ditambahkan!"); document.getElementById('btnAddCategory').innerHTML = "TAMBAH";
+                });
+            }
+        }
+        function deleteCategory(index) { const newCat = [...categoriesDB]; newCat.splice(index, 1); db.ref('categories').set(newCat).then(() => showAdminToast("Kategori dihapus.")); }
+
+        /* NEGARA */
+        function openCountryModal() { renderCountries(); document.getElementById('countryModal').classList.remove('hidden'); }
+        function closeCountryModal() { document.getElementById('countryModal').classList.add('hidden'); }
+        function renderCountries() {
+            const area = document.getElementById('countryListArea'); area.innerHTML = '';
+            if(countriesDB.length === 0) { area.innerHTML = `<p class="text-[10px] md:text-xs text-stone-400 text-center py-4">Belum ada negara tersedia.</p>`; return; }
+            countriesDB.forEach((c, i) => { area.innerHTML += `<div class="flex justify-between items-center bg-cream-50 p-2.5 md:p-3 rounded-xl border border-stone-100"><span class="text-[10px] md:text-xs font-bold text-black truncate pr-2">${c}</span><button onclick="deleteCountry(${i})" class="text-stone-400 hover:text-red-500 transition shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div>`; });
+        }
+        function addCountry() {
+            const val = document.getElementById('newCountryInput').value.trim().toUpperCase();
+            if(val) {
+                document.getElementById('btnAddCountry').innerHTML = "...";
+                const newC = [...countriesDB, val];
+                db.ref('countries').set(newC).then(() => {
+                    document.getElementById('newCountryInput').value = ''; showAdminToast("Negara ditambahkan!"); document.getElementById('btnAddCountry').innerHTML = "TAMBAH";
+                });
+            }
+        }
+        function deleteCountry(index) { const newC = [...countriesDB]; newC.splice(index, 1); db.ref('countries').set(newC).then(() => showAdminToast("Negara dihapus.")); }
+
+        // =========================================================
+        // VOUCHERS MANAGEMENT
+        // =========================================================
+        function renderVouchers() {
+            const tbody = document.getElementById('voucherTableBody'); tbody.innerHTML = '';
+            if(vouchersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400">Belum ada voucher.</td></tr>`; return; }
+            vouchersDB.forEach(v => {
+                if(!v.code) return; 
+                let quotaText = v.quota ? `${(v.quota - (v.used || 0))} dari ${v.quota}` : 'Unlimited';
+                
+                tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors">
+                    <td class="p-3 md:p-4 font-extrabold text-black tracking-widest">${v.code}</td>
+                    <td class="p-3 md:p-4 text-black font-extrabold text-xs">${formatRp(parseInt(v.discount || 0))}</td>
+                    <td class="p-3 md:p-4 text-center text-stone-600 font-bold text-xs">${quotaText}</td>
+                    <td class="p-3 md:p-4 text-right"><button onclick="deleteVoucher('${v.dbKey}')" class="text-stone-400 hover:text-red-500 font-bold text-[9px] md:text-[10px] bg-white border border-stone-200 px-3 py-1.5 md:py-2 rounded-lg shadow-sm">HAPUS</button></td>
+                </tr>`;
+            });
+        }
+
+        function addVoucher() {
+            const code = document.getElementById('vCode').value.toUpperCase().trim();
+            const discount = document.getElementById('vNominal').value;
+            const quota = document.getElementById('vQuota').value;
+            if(!code || !discount || !quota) return alert("Isi Kode, Nominal, dan Batas Kuota!");
+
+            const btn = document.getElementById('btnAddVoucher'); btn.innerHTML = "...";
+            const newVouch = { code: code, discount: parseInt(discount), quota: parseInt(quota), used: 0 };
+            
+            db.ref('vouchers').push(newVouch).then(() => {
+                document.getElementById('vCode').value = '';
+                document.getElementById('vNominal').value = '';
+                document.getElementById('vQuota').value = '';
+                btn.innerHTML = "SIMPAN VOUCHER";
+                showAdminToast("Voucher berhasil dibuat!");
+            });
+        }
+
+        function deleteVoucher(key) {
+            if(confirm("Yakin ingin menghapus voucher ini?")) {
+                db.ref('vouchers/' + key).remove().then(() => showAdminToast("Voucher dihapus."));
+            }
+        }
+
+        // =========================================================
+        // RISET PRODUK MANAGEMENT
+        // =========================================================
+        function renderResearch() {
+            const grid = document.getElementById('researchGridArea'); grid.innerHTML = '';
+            if(researchDB.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10"><p class="text-stone-400 font-bold text-xs md:text-sm">Belum ada riset tersimpan.</p></div>`; return; }
+            researchDB.forEach(r => {
+                grid.innerHTML += `<div class="bg-white p-4 md:p-5 rounded-[20px] border border-stone-200 shadow-sm flex flex-col justify-between"><div><div class="flex justify-between items-start"><h4 class="font-extrabold text-black mb-1 line-clamp-2 pr-2 text-sm md:text-base">${r.name}</h4><button onclick="deleteResearch('${r.dbKey}')" class="text-stone-400 hover:text-red-500 shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><p class="text-[9px] md:text-[10px] text-stone-500 font-medium mb-4 italic">"${r.note}"</p></div><a href="${r.link}" target="_blank" class="w-full block text-center bg-cream-50 border border-stone-200 text-black text-[9px] md:text-[10px] font-extrabold px-4 py-2.5 rounded-xl hover:bg-stone-100 transition-colors">BUKA LINK REFERENSI</a></div>`;
+            });
+        }
+
+        function addResearch() {
+            const name = document.getElementById('rName').value.trim();
+            const link = document.getElementById('rLink').value.trim();
+            const note = document.getElementById('rNote').value.trim();
+            
+            if(!name || !link) return alert("Isi Nama Barang dan Link Referensi!");
+
+            const btn = document.getElementById('btnAddResearch'); btn.innerHTML = "...";
+            const newRes = { name: name, link: link, note: note || '-' };
+            
+            db.ref('research').push(newRes).then(() => {
+                document.getElementById('rName').value = '';
+                document.getElementById('rLink').value = '';
+                document.getElementById('rNote').value = '';
+                btn.innerHTML = "SIMPAN RISET";
+                showAdminToast("Riset berhasil disimpan!");
+            });
+        }
+
+        function deleteResearch(key) {
+            if(confirm("Yakin ingin menghapus riset ini?")) {
+                db.ref('research/' + key).remove().then(() => showAdminToast("Riset dihapus."));
+            }
+        }
+
+        // =========================================================
+        // CATALOG MANAGEMENT & IMAGE PREVIEW
+        // =========================================================
+        function renderCatalog() {
+            const grid = document.getElementById('adminCatalogGrid'); grid.innerHTML = '';
+            catalogDB.forEach(p => {
+                const imgSrc = getDirectUrl(p.img);
+                grid.innerHTML += `<div class="bg-white rounded-[20px] md:rounded-[24px] overflow-hidden shadow-sm border border-stone-100 flex flex-col group relative hover:shadow-md transition-shadow"><div class="absolute top-2 right-2 flex space-x-1 z-10 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="openProductModal('${p.dbKey}')" class="bg-white text-blue-600 p-2 md:p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button><button onclick="deleteProduct('${p.dbKey}')" class="bg-white text-red-600 p-2 md:p-2.5 rounded-full shadow-md hover:scale-110 transition-transform"><svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button></div><div class="relative pb-[100%] bg-cream-50 border-b border-stone-50"><img src="${imgSrc}" onerror="this.src='https://placehold.co/400';" class="absolute inset-0 w-full h-full object-cover"><span class="absolute top-3 left-3 bg-white/95 text-black border border-stone-100 text-[8px] font-extrabold px-2 md:px-2.5 py-0.5 md:py-1 rounded-full uppercase tracking-widest shadow-sm">${p.country}</span></div><div class="p-3 md:p-4 flex-1 flex flex-col justify-between"><h3 class="font-bold text-xs mb-2 text-black line-clamp-2 leading-relaxed">${p.name}</h3><div class="mt-auto flex justify-between items-end pt-2 md:pt-3"><p class="text-[8px] md:text-[9px] text-stone-400 font-bold uppercase tracking-widest">${p.category}<br><span class="text-stone-300 font-medium lowercase capitalize">${p.weight || 0}g</span></p><p class="font-extrabold text-xs md:text-sm text-black">${formatRp(parseInt(p.price))}</p></div></div></div>`;
+            });
+        }
+
+        function previewUploadedImage(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+                        const MAX_WIDTH = 400; const scaleSize = MAX_WIDTH / img.width;
+                        canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.6); 
+                        document.getElementById('prodImgPreview').src = currentUploadedImageBase64;
+                        document.getElementById('prodImgPreview').classList.remove('hidden');
+                        document.getElementById('uploadPlaceholder').classList.add('opacity-0');
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function openProductModal(dbKey = null) {
+            document.getElementById('prodId').value = ""; 
+            currentUploadedImageBase64 = null; 
+            document.getElementById('prodImgFile').value = ''; 
+            document.getElementById('prodImgPreview').classList.add('hidden'); 
+            document.getElementById('uploadPlaceholder').classList.remove('opacity-0');
+            document.getElementById('prodName').value = ""; 
+            document.getElementById('prodPrice').value = ""; 
+            document.getElementById('prodDesc').value = ""; 
+            document.getElementById('prodWeight').value = "";
+
+            if(dbKey) {
+                const p = catalogDB.find(x => x.dbKey === dbKey); 
+                document.getElementById('prodModalTitle').textContent = "Edit Product"; 
+                document.getElementById('prodId').value = p.dbKey; 
+                currentUploadedImageBase64 = p.img; 
+                document.getElementById('prodImgPreview').src = getDirectUrl(p.img); 
+                document.getElementById('prodImgPreview').classList.remove('hidden'); 
+                document.getElementById('uploadPlaceholder').classList.add('opacity-0');
+                document.getElementById('prodName').value = p.name; 
+                document.getElementById('prodPrice').value = p.price; 
+                document.getElementById('prodCat').value = p.category; 
+                document.getElementById('prodCountry').value = p.country; 
+                document.getElementById('prodDesc').value = p.description || ''; 
+                document.getElementById('prodWeight').value = p.weight || ''; 
+            } else { 
+                document.getElementById('prodModalTitle').textContent = "Add New Product"; 
+            }
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
+        
+        function saveProduct() {
+            const name = document.getElementById('prodName').value, price = document.getElementById('prodPrice').value;
+            const desc = document.getElementById('prodDesc').value, weight = document.getElementById('prodWeight').value;
+            
+            if(!name || !price || !desc || !weight || !currentUploadedImageBase64) return alert("Mohon lengkapi Nama Produk, Harga, Deskripsi, Berat, dan Upload Foto!");
+            const btn = document.getElementById('btnSaveProduct'); btn.innerHTML = "MENYIMPAN..."; btn.disabled = true;
+
+            const dbKey = document.getElementById('prodId').value;
+
+            const prodData = { 
+                id: dbKey ? dbKey : Date.now().toString(),
+                name: name, 
+                price: parseInt(price), 
+                description: desc,
+                weight: parseInt(weight),
+                category: document.getElementById('prodCat').value, 
+                country: document.getElementById('prodCountry').value, 
+                img: currentUploadedImageBase64
+            };
+
+            if (dbKey) {
+                db.ref('catalog/' + dbKey).update(prodData).then(() => {
+                    btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); 
+                    showAdminToast("Data produk diperbarui!");
+                });
+            } else {
+                db.ref('catalog').push(prodData).then(() => {
+                    btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); 
+                    showAdminToast("Produk baru ditambahkan!");
+                });
+            }
+        }
+
+        function deleteProduct(dbKey) { 
+            if(confirm("Yakin ingin menghapus produk ini?")) { 
+                showAdminToast("Menghapus produk...");
+                db.ref('catalog/' + dbKey).remove().then(() => {
+                    showAdminToast("Produk terhapus dari Database.");
+                });
+            } 
+        }
+
+        // =========================================================
+        // USER DATABASE
+        // =========================================================
+        function renderUsers() {
+            const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
+            if(usersDB.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-xs text-stone-400">Belum ada pelanggan terdaftar.</td></tr>`; return; }
+            usersDB.forEach((u, i) => { tbody.innerHTML += `<tr class="border-b border-stone-100 hover:bg-cream-100/50 transition-colors"><td class="p-3 md:p-4 font-extrabold text-black">${u.name}</td><td class="p-3 md:p-4 text-stone-600 font-bold text-xs">${u.email}</td><td class="p-3 md:p-4 text-stone-600 font-bold text-xs">${u.phone}</td><td class="p-3 md:p-4 text-stone-600 font-bold text-xs">${u.pass || '123'}</td></tr>`; });
+        }
+
+    </script>
+</body>
+</html>
