@@ -739,7 +739,13 @@
             if(!Array.isArray(itemsParsed)) itemsParsed = [];
             
             let grouped = {}; 
-            itemsParsed.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
+            
+            // PERBAIKAN: Pisahkan item berdasarkan Varian (Nama sudah mengandung varian)
+            itemsParsed.forEach(i => { 
+                let uniqueKey = i.id + '_' + (i.name || '');
+                if(!grouped[uniqueKey]) grouped[uniqueKey] = {...i, qty: 0}; 
+                grouped[uniqueKey].qty += 1; 
+            });
             
             for(let k in grouped) { 
                 const i = grouped[k]; 
