@@ -271,7 +271,7 @@
         </div>
     </div>
 
-    <!-- MODAL PRODUK DENGAN TAMBAHAN VARIAN -->
+    <!-- MODAL PRODUK DENGAN TAMBAHAN VARIAN (DYNAMIC BUILDER) -->
     <div id="productModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-[24px] md:rounded-[32px] shadow-2xl p-5 md:p-8 relative border border-stone-100 max-h-[90vh] overflow-y-auto hide-scroll">
             <h3 class="font-extrabold text-lg md:text-xl mb-4 md:mb-6" id="prodModalTitle">Tambah Produk</h3>
@@ -298,10 +298,14 @@
                     <div class="relative"><label class="text-[9px] md:text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black py-2.5 md:py-3 text-xs md:text-sm"></select></div>
                 </div>
 
-                <!-- MENU VARIAN DITAMBAHKAN DI SINI -->
-                <div class="input-float mt-2">
-                    <input type="text" id="prodVariants" placeholder=" " autocomplete="off">
-                    <label>Varian (Pisahkan dgn koma: Merah, L, XL)</label>
+                <!-- MENU VARIAN DITAMBAHKAN DI SINI (DYNAMIC) -->
+                <div class="mt-4 pt-4 border-t border-stone-100">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest">Pengaturan Varian</h4>
+                        <button type="button" onclick="addVariantOptionRow()" class="bg-cream-100 text-black text-[9px] font-extrabold px-3 py-1.5 rounded-lg uppercase tracking-widest hover:bg-stone-200 transition">+ Tambah Opsi</button>
+                    </div>
+                    <div class="input-float mb-4"><input type="text" id="variantLabel" placeholder=" " autocomplete="off"><label>Judul Varian (Contoh: Warna / Ukuran)</label></div>
+                    <div id="variantOptionsContainer" class="space-y-3"></div>
                 </div>
 
             </div>
@@ -932,6 +936,20 @@
             }
         }
 
+        // --- FUNGSI DYNAMIC VARIANT BUILDER ---
+        function addVariantOptionRow(name = '', price = 0) {
+            const container = document.getElementById('variantOptionsContainer');
+            const id = Date.now() + Math.floor(Math.random() * 1000);
+            const html = `
+                <div class="flex items-center space-x-2 variant-row" id="varRow_${id}">
+                    <div class="flex-1 input-float"><input type="text" class="var-name" placeholder=" " value="${name}" required><label>Nama Opsi</label></div>
+                    <div class="flex-1 input-float"><input type="number" class="var-price" placeholder=" " value="${price}" required><label>Harga (+Rp)</label></div>
+                    <button type="button" onclick="document.getElementById('varRow_${id}').remove()" class="bg-red-50 text-red-500 p-3 rounded-xl hover:bg-red-100 transition shrink-0 mt-2"><svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
         function openProductModal(dbKey = null) {
             document.getElementById('prodId').value = ""; 
             currentUploadedImageBase64 = null; 
@@ -942,7 +960,10 @@
             document.getElementById('prodPrice').value = ""; 
             document.getElementById('prodDesc').value = ""; 
             document.getElementById('prodWeight').value = "";
-            document.getElementById('prodVariants').value = ""; // Bersihkan varian
+            
+            // Bersihkan form varian
+            document.getElementById('variantLabel').value = ""; 
+            document.getElementById('variantOptionsContainer').innerHTML = ""; 
 
             if(dbKey) {
                 const p = catalogDB.find(x => x.dbKey === dbKey); 
@@ -959,8 +980,16 @@
                 document.getElementById('prodDesc').value = p.description || ''; 
                 document.getElementById('prodWeight').value = p.weight || ''; 
                 
-                // Load varian jika ada
-                document.getElementById('prodVariants').value = p.variants ? (Array.isArray(p.variants) ? p.variants.join(', ') : p.variants) : '';
+                // Load varian (mendukung format object baru dan array lama)
+                if (p.variants && p.variants.label) {
+                    document.getElementById('variantLabel').value = p.variants.label;
+                    if (p.variants.options && Array.isArray(p.variants.options)) {
+                        p.variants.options.forEach(opt => addVariantOptionRow(opt.name, opt.price));
+                    }
+                } else if (p.variants && Array.isArray(p.variants)) {
+                    document.getElementById('variantLabel').value = "Pilih Varian";
+                    p.variants.forEach(vName => addVariantOptionRow(vName, 0));
+                }
             } else { 
                 document.getElementById('prodModalTitle').textContent = "Add New Product"; 
             }
@@ -972,15 +1001,30 @@
         function saveProduct() {
             const name = document.getElementById('prodName').value, price = document.getElementById('prodPrice').value;
             const desc = document.getElementById('prodDesc').value, weight = document.getElementById('prodWeight').value;
-            const variantsRaw = document.getElementById('prodVariants').value;
             
             if(!name || !price || !desc || !weight || !currentUploadedImageBase64) return alert("Mohon lengkapi Nama Produk, Harga, Deskripsi, Berat, dan Upload Foto!");
             const btn = document.getElementById('btnSaveProduct'); btn.innerHTML = "MENYIMPAN..."; btn.disabled = true;
 
             const dbKey = document.getElementById('prodId').value;
 
-            // Olah string varian menjadi array
-            const variantsArray = variantsRaw ? variantsRaw.split(',').map(v => v.trim()).filter(v => v !== '') : [];
+            // Olah Data Varian dari Builder
+            const variantsRawLabel = document.getElementById('variantLabel').value.trim();
+            const varRows = document.querySelectorAll('.variant-row');
+            let variantsData = null;
+
+            if (variantsRawLabel || varRows.length > 0) {
+                let options = [];
+                varRows.forEach(row => {
+                    let vName = row.querySelector('.var-name').value.trim();
+                    let vPrice = row.querySelector('.var-price').value || 0;
+                    if(vName) {
+                        options.push({ name: vName, price: parseInt(vPrice) });
+                    }
+                });
+                if (options.length > 0) {
+                    variantsData = { label: variantsRawLabel || "Varian", options: options };
+                }
+            }
 
             const prodData = { 
                 id: dbKey ? dbKey : Date.now().toString(),
@@ -990,7 +1034,7 @@
                 weight: parseInt(weight),
                 category: document.getElementById('prodCat').value, 
                 country: document.getElementById('prodCountry').value, 
-                variants: variantsArray, // Simpan varian sebagai array
+                variants: variantsData, // Format Object baru { label: '', options: [] }
                 img: currentUploadedImageBase64
             };
 
