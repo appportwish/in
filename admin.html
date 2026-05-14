@@ -367,7 +367,7 @@
             db.ref('admin_account').once('value').then((snapshot) => {
                 const adminData = snapshot.val();
                 if ((adminData && email === adminData.email && pass === adminData.password) ||
-                    (email === 'admin@portwish.id' && pass === 'admin123')) {
+                    (email === 'admin@port-wish.com' && pass === 'admin123')) {
                     
                     document.getElementById('adminLoginGate').classList.add('opacity-0'); 
                     setTimeout(() => { 
