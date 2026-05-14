@@ -328,6 +328,23 @@
         const db = firebase.database();
 
         // =========================================================
+        // KONFIGURASI CLOUDINARY
+        // =========================================================
+        const cloudName = 'dlgisjmq2';
+        const uploadPreset = 'portwish_foto';
+
+        async function uploadToCloudinary(base64Image) {
+            const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+            const formData = new FormData();
+            formData.append('file', base64Image);
+            formData.append('upload_preset', uploadPreset);
+            const response = await fetch(url, { method: 'POST', body: formData });
+            if(!response.ok) throw new Error("Upload ke Cloudinary Gagal");
+            const data = await response.json();
+            return data.secure_url;
+        }
+
+        // =========================================================
         // DEFINISI STATUS ORDER TERBARU (FULL 8 OPSI)
         // =========================================================
         const STATUS_OPTIONS = [
@@ -998,12 +1015,14 @@
 
         function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
         
-        function saveProduct() {
+        async function saveProduct() {
             const name = document.getElementById('prodName').value, price = document.getElementById('prodPrice').value;
             const desc = document.getElementById('prodDesc').value, weight = document.getElementById('prodWeight').value;
             
             if(!name || !price || !desc || !weight || !currentUploadedImageBase64) return alert("Mohon lengkapi Nama Produk, Harga, Deskripsi, Berat, dan Upload Foto!");
-            const btn = document.getElementById('btnSaveProduct'); btn.innerHTML = "MENYIMPAN..."; btn.disabled = true;
+            const btn = document.getElementById('btnSaveProduct'); 
+            btn.innerHTML = "MENYIMPAN..."; 
+            btn.disabled = true;
 
             const dbKey = document.getElementById('prodId').value;
 
@@ -1026,28 +1045,41 @@
                 }
             }
 
-            const prodData = { 
-                id: dbKey ? dbKey : Date.now().toString(),
-                name: name, 
-                price: parseInt(price), 
-                description: desc,
-                weight: parseInt(weight),
-                category: document.getElementById('prodCat').value, 
-                country: document.getElementById('prodCountry').value, 
-                variants: variantsData, // Format Object baru { label: '', options: [] }
-                img: currentUploadedImageBase64
-            };
+            try {
+                let finalImageUrl = currentUploadedImageBase64;
+                
+                // CEK: Kalau valuenya berawalan 'data:image', berarti ini foto baru (Base64)
+                // Kita lempar dulu ke Cloudinary
+                if (currentUploadedImageBase64.startsWith('data:image')) {
+                    btn.innerHTML = "UPLOAD FOTO...";
+                    finalImageUrl = await uploadToCloudinary(currentUploadedImageBase64);
+                }
 
-            if (dbKey) {
-                db.ref('catalog/' + dbKey).update(prodData).then(() => {
+                const prodData = { 
+                    id: dbKey ? dbKey : Date.now().toString(),
+                    name: name, 
+                    price: parseInt(price), 
+                    description: desc,
+                    weight: parseInt(weight),
+                    category: document.getElementById('prodCat').value, 
+                    country: document.getElementById('prodCountry').value, 
+                    variants: variantsData, 
+                    img: finalImageUrl // <--- SEKARANG PAKAI LINK URL CLOUDINARY
+                };
+
+                if (dbKey) {
+                    await db.ref('catalog/' + dbKey).update(prodData);
                     btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); 
                     showAdminToast("Data produk diperbarui!");
-                });
-            } else {
-                db.ref('catalog').push(prodData).then(() => {
+                } else {
+                    await db.ref('catalog').push(prodData);
                     btn.innerHTML = "SIMPAN"; btn.disabled = false; closeProductModal(); 
                     showAdminToast("Produk baru ditambahkan!");
-                });
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Upload Gagal! Pastikan Cloud Name dan Preset Cloudinary sudah benar.");
+                btn.innerHTML = "SIMPAN"; btn.disabled = false;
             }
         }
 
