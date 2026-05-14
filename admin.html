@@ -234,7 +234,7 @@
         </div>
     </div>
 
-    <!-- Modals untuk Batch, Kategori, Negara (Disesuaikan Padding & Radiusnya) -->
+    <!-- Modals untuk Batch, Kategori, Negara -->
     <div id="batchModal" class="fixed inset-0 z-[110] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-[24px] md:rounded-[32px] shadow-2xl p-5 md:p-6 relative border border-stone-100">
             <button onclick="closeBatchModal()" class="absolute top-4 right-4 bg-cream-50 p-2 rounded-full text-stone-500 hover:text-black"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
@@ -271,6 +271,7 @@
         </div>
     </div>
 
+    <!-- MODAL PRODUK DENGAN TAMBAHAN VARIAN (DYNAMIC BUILDER) -->
     <div id="productModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-[24px] md:rounded-[32px] shadow-2xl p-5 md:p-8 relative border border-stone-100 max-h-[90vh] overflow-y-auto hide-scroll">
             <h3 class="font-extrabold text-lg md:text-xl mb-4 md:mb-6" id="prodModalTitle">Tambah Produk</h3>
@@ -296,6 +297,17 @@
                     <div class="relative"><label class="text-[9px] md:text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Kategori</label><select id="prodCat" class="input-box bg-cream-50 border-stone-200 text-black py-2.5 md:py-3 text-xs md:text-sm"></select></div>
                     <div class="relative"><label class="text-[9px] md:text-[10px] font-extrabold text-stone-400 uppercase block mb-1">Negara Asal</label><select id="prodCountry" class="input-box bg-cream-50 border-stone-200 text-black py-2.5 md:py-3 text-xs md:text-sm"></select></div>
                 </div>
+
+                <!-- MENU VARIAN DITAMBAHKAN DI SINI (DYNAMIC) -->
+                <div class="mt-4 pt-4 border-t border-stone-100">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest">Pengaturan Varian</h4>
+                        <button type="button" onclick="addVariantOptionRow()" class="bg-cream-100 text-black text-[9px] font-extrabold px-3 py-1.5 rounded-lg uppercase tracking-widest hover:bg-stone-200 transition">+ Tambah Opsi</button>
+                    </div>
+                    <div class="input-float mb-4"><input type="text" id="variantLabel" placeholder=" " autocomplete="off"><label>Judul Varian (Contoh: Warna / Ukuran)</label></div>
+                    <div id="variantOptionsContainer" class="space-y-3"></div>
+                </div>
+
             </div>
             <div class="flex space-x-2 md:space-x-3 mt-6 md:mt-8">
                 <button onclick="closeProductModal()" class="flex-1 bg-white border border-stone-200 text-black font-extrabold py-3 md:py-3.5 rounded-xl md:rounded-2xl transition hover:bg-stone-50 text-[9px] md:text-[11px] tracking-widest uppercase">BATAL</button>
@@ -304,7 +316,6 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC TETAP UTUH -->
     <script>
         // =========================================================
         // 1. KONFIGURASI FIREBASE REALTIME DATABASE 
@@ -732,7 +743,13 @@
             if(!Array.isArray(itemsParsed)) itemsParsed = [];
             
             let grouped = {}; 
-            itemsParsed.forEach(i => { if(!grouped[i.id]) grouped[i.id] = {...i, qty: 0}; grouped[i.id].qty += 1; });
+            
+            // PERBAIKAN: Pisahkan item berdasarkan Varian (Nama sudah mengandung varian)
+            itemsParsed.forEach(i => { 
+                let uniqueKey = i.id + '_' + (i.name || '');
+                if(!grouped[uniqueKey]) grouped[uniqueKey] = {...i, qty: 0}; 
+                grouped[uniqueKey].qty += 1; 
+            });
             
             for(let k in grouped) { 
                 const i = grouped[k]; 
@@ -919,6 +936,20 @@
             }
         }
 
+        // --- FUNGSI DYNAMIC VARIANT BUILDER ---
+        function addVariantOptionRow(name = '', price = 0) {
+            const container = document.getElementById('variantOptionsContainer');
+            const id = Date.now() + Math.floor(Math.random() * 1000);
+            const html = `
+                <div class="flex items-center space-x-2 variant-row" id="varRow_${id}">
+                    <div class="flex-1 input-float"><input type="text" class="var-name" placeholder=" " value="${name}" required><label>Nama Opsi</label></div>
+                    <div class="flex-1 input-float"><input type="number" class="var-price" placeholder=" " value="${price}" required><label>Harga (+Rp)</label></div>
+                    <button type="button" onclick="document.getElementById('varRow_${id}').remove()" class="bg-red-50 text-red-500 p-3 rounded-xl hover:bg-red-100 transition shrink-0 mt-2"><svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
         function openProductModal(dbKey = null) {
             document.getElementById('prodId').value = ""; 
             currentUploadedImageBase64 = null; 
@@ -929,6 +960,10 @@
             document.getElementById('prodPrice').value = ""; 
             document.getElementById('prodDesc').value = ""; 
             document.getElementById('prodWeight').value = "";
+            
+            // Bersihkan form varian
+            document.getElementById('variantLabel').value = ""; 
+            document.getElementById('variantOptionsContainer').innerHTML = ""; 
 
             if(dbKey) {
                 const p = catalogDB.find(x => x.dbKey === dbKey); 
@@ -944,6 +979,17 @@
                 document.getElementById('prodCountry').value = p.country; 
                 document.getElementById('prodDesc').value = p.description || ''; 
                 document.getElementById('prodWeight').value = p.weight || ''; 
+                
+                // Load varian (mendukung format object baru dan array lama)
+                if (p.variants && p.variants.label) {
+                    document.getElementById('variantLabel').value = p.variants.label;
+                    if (p.variants.options && Array.isArray(p.variants.options)) {
+                        p.variants.options.forEach(opt => addVariantOptionRow(opt.name, opt.price));
+                    }
+                } else if (p.variants && Array.isArray(p.variants)) {
+                    document.getElementById('variantLabel').value = "Pilih Varian";
+                    p.variants.forEach(vName => addVariantOptionRow(vName, 0));
+                }
             } else { 
                 document.getElementById('prodModalTitle').textContent = "Add New Product"; 
             }
@@ -961,6 +1007,25 @@
 
             const dbKey = document.getElementById('prodId').value;
 
+            // Olah Data Varian dari Builder
+            const variantsRawLabel = document.getElementById('variantLabel').value.trim();
+            const varRows = document.querySelectorAll('.variant-row');
+            let variantsData = null;
+
+            if (variantsRawLabel || varRows.length > 0) {
+                let options = [];
+                varRows.forEach(row => {
+                    let vName = row.querySelector('.var-name').value.trim();
+                    let vPrice = row.querySelector('.var-price').value || 0;
+                    if(vName) {
+                        options.push({ name: vName, price: parseInt(vPrice) });
+                    }
+                });
+                if (options.length > 0) {
+                    variantsData = { label: variantsRawLabel || "Varian", options: options };
+                }
+            }
+
             const prodData = { 
                 id: dbKey ? dbKey : Date.now().toString(),
                 name: name, 
@@ -969,6 +1034,7 @@
                 weight: parseInt(weight),
                 category: document.getElementById('prodCat').value, 
                 country: document.getElementById('prodCountry').value, 
+                variants: variantsData, // Format Object baru { label: '', options: [] }
                 img: currentUploadedImageBase64
             };
 
